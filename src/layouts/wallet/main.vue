@@ -1,13 +1,13 @@
 <template>
   <q-layout view="hHh Lpr lFf">
-    <q-layout-header class="shift-title">
+    <q-header class="shift-title">
       <MainMenu />
       <q-toolbar-title>
         <div class="flex items-center justify-center" style="margin-top:7px">
-          <img src="statics/loki.svg" height="32" />
+          <img src="loki.svg" height="32" />
         </div>
       </q-toolbar-title>
-    </q-layout-header>
+    </q-header>
 
     <q-page-container>
       <!-- <AddressHeader :address="info.address" :title="info.name" /> -->
@@ -19,19 +19,25 @@
             <q-btn class="single-icon" size="md" icon="swap_horiz" />
           </router-link>
           <router-link to="/wallet/send">
-            <q-btn class="large-btn" :label="$t('buttons.send')" size="md" icon-right="arrow_right_alt" align="left" />
+            <q-btn
+              class="large-btn"
+              :label="$t('buttons.send')"
+              size="md"
+              icon-right="arrow_right_alt"
+              align="between"
+            />
           </router-link>
           <router-link to="/wallet/receive">
-            <q-btn class="large-btn" :label="$t('buttons.receive')" size="md" icon-right="save_alt" align="left" />
+            <q-btn class="large-btn" :label="$t('buttons.receive')" size="md" icon-right="save_alt" align="between" />
           </router-link>
           <router-link to="/wallet/servicenode">
-            <q-btn class="large-btn" :label="$t('buttons.serviceNode')" size="md" icon-right="router" align="left" />
+            <q-btn class="large-btn" :label="$t('buttons.serviceNode')" size="md" icon-right="router" align="between" />
           </router-link>
           <router-link to="/wallet/lns">
-            <q-btn class="large-btn" :label="$t('buttons.lns')" size="md" icon-right="text_fields" align="left" />
+            <q-btn class="large-btn" :label="$t('buttons.lns')" size="md" icon-right="text_fields" align="between" />
           </router-link>
           <router-link to="/wallet/advanced">
-            <q-btn class="large-btn" :label="$t('buttons.advanced')" size="md" icon-right="tune" align="left" />
+            <q-btn class="large-btn" :label="$t('buttons.advanced')" size="md" icon-right="tune" align="between" />
           </router-link>
           <router-link to="/wallet/addressbook" class="address">
             <q-btn class="single-icon" size="md" icon="person" />
@@ -96,6 +102,10 @@ export default {
   .single-icon {
     width: 38px;
     padding: 0;
+  }
+
+  a {
+    text-decoration: none;
   }
 
   .large-btn {

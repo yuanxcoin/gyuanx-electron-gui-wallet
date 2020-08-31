@@ -35,7 +35,15 @@
           <!-- Priority -->
           <div class="col-6 priority">
             <LokiField :label="$t('fieldLabels.priority')">
-              <q-select v-model="newTx.priority" :dark="theme == 'dark'" :options="priorityOptions" borderless dense />
+              <q-select
+                v-model="newTx.priority"
+                emit-value
+                map-options
+                :dark="theme == 'dark'"
+                :options="priorityOptions"
+                borderless
+                dense
+              />
             </LokiField>
           </div>
         </div>

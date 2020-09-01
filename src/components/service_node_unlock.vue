@@ -183,7 +183,6 @@ export default {
           color: this.theme == "dark" ? "white" : "dark"
         })
         .onOk(() => {
-          console.log("unlock warning");
           this.unlock(key);
         })
         .onDismiss(() => {})
@@ -206,7 +205,6 @@ export default {
 
       passwordDialog
         .onOk(password => {
-          console.log("unlocking");
           this.password = password || "";
           this.gatewayUnlock(this.password, this.key, false);
         })

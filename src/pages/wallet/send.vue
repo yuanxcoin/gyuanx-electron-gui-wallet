@@ -154,6 +154,9 @@ import LokiField from "components/loki_field";
 import WalletPassword from "src/mixins/wallet_password";
 const objectAssignDeep = require("object-assign-deep");
 
+// the case for doing nothing on a tx_status update
+const DO_NOTHING = 10;
+
 export default {
   components: {
     LokiField
@@ -169,7 +172,7 @@ export default {
         amount: 0,
         address: "",
         payment_id: "",
-        priority: priorityOptions[0],
+        priority: priorityOptions[0].value,
         address_book: {
           save: false,
           name: "",
@@ -224,6 +227,13 @@ export default {
         if (val.code == old.code) return;
         const { code, message } = val;
         switch (code) {
+          // the "nothing", so we can update state without doing anything
+          // in particular
+          case DO_NOTHING:
+            break;
+          case 1:
+            this.confirmTransactionDialog(val);
+            break;
           case 0:
             this.$q.notify({
               type: "positive",
@@ -235,7 +245,7 @@ export default {
               amount: 0,
               address: "",
               payment_id: "",
-              priority: 0,
+              priority: this.priorityOptions[0].value,
               address_book: {
                 save: false,
                 name: "",
@@ -270,6 +280,43 @@ export default {
     autoFill: function(info) {
       this.newTx.address = info.address;
       this.newTx.payment_id = info.payment_id;
+    },
+    // construct a dialog for confirming transactions
+    confirmTransactionDialog(val) {
+      const totalFees = val.txData.feeList.reduce((a, b) => a + b, 0);
+
+      // duplicated in wallet-rpc
+      const isBlink = [0, 2, 3, 4, 5].includes(val.txData.priority) ? true : false;
+      const blinkOrSlow = isBlink ? "Blink" : "Slow";
+      const message = `
+  Sending to: <some address><br />
+  Amount: <some amount><br />
+  Total fees: ${totalFees}<br />
+  Send speed: ${blinkOrSlow}
+  `;
+      this.$q
+        .dialog({
+          title: "Confirm transaction",
+          message: message,
+          // allows for formatting message
+          html: true,
+          ok: {
+            label: "Confirm",
+            flat: true,
+            color: "primary"
+          },
+          cancel: {
+            flat: true,
+            label: this.$t("dialog.buttons.cancel")
+          },
+          dark: this.theme == "dark",
+          color: this.theme == "dark" ? "white" : "dark"
+        })
+        .onOk(() => {
+          console.log("dialog says yes");
+        })
+        .onCancel(() => {})
+        .onDismiss(() => {});
     },
 
     async send() {
@@ -323,6 +370,7 @@ export default {
         return;
       }
 
+      // must wait for the dialog to be returned
       let passwordDialog = await this.showPasswordConfirmation({
         title: this.$t("dialog.transfer.title"),
         noPasswordMessage: this.$t("dialog.transfer.message"),
@@ -337,13 +385,15 @@ export default {
         .onOk(password => {
           password = password || "";
           this.$store.commit("gateway/set_tx_status", {
-            code: 1,
-            message: "Sending transaction",
+            code: DO_NOTHING,
+            message: "Getting transaction information",
             sending: true
           });
           const newTx = objectAssignDeep.noMutate(this.newTx, {
             password
           });
+
+          console.log("Calling transfer on the gateway");
           this.$gateway.send("wallet", "transfer", newTx);
         })
         .onDismiss(() => {})

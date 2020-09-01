@@ -1194,8 +1194,63 @@ export class WalletRPC {
     });
   }
 
+  // submits the transaction to the blockchain, irreversible from here
+  relayTransfer(transferMetadata, note) {
+    console.log("submitting the transfer, with metadata");
+    console.log(transferMetadata);
+    const priority = transferMetadata.params.priority.value;
+
+    // priority of "1" is considered a "slow" tx
+    const isBlink = [0, 2, 3, 4, 5].includes(priority) ? true : false;
+
+    const params = {
+      hex: transferMetadata.result.tx_metadata_list[0],
+      blink: isBlink
+    };
+
+    this.sendRPC("relay_tx", params)
+      .then(data => {
+        console.log("data after relay: ");
+        console.log(data);
+        // succeed after the tx has been relayed successfully
+
+        if (data.hasOwnProperty("error")) {
+          let error = data.error.message.charAt(0).toUpperCase() + data.error.message.slice(1);
+          this.sendGateway("set_tx_status", {
+            code: -1,
+            message: error,
+            sending: false
+          });
+          return;
+        }
+        // if successful
+        if (data.hasOwnProperty("result")) {
+          this.sendGateway("set_tx_status", {
+            code: 0,
+            i18n: "notification.positive.sendSuccess",
+            sending: false
+          });
+
+          const hash_list = data.result.tx_hash_list || [];
+          // Save notes
+          if (note && note !== "") {
+            hash_list.forEach(txid => this.saveTxNotes(txid, note));
+          }
+        }
+      })
+      .catch(() => {});
+
+    // this uses the old tx data, so must double check this.
+  }
+
+  // prepares params and provides a "confirm" popup to allow the user to check
+  // send address and tx fees before sending
+
+  // TODO: we may not need to send "note" here, if we send to submit
   transfer(password, amount, address, payment_id, priority, note, address_book = {}) {
-    crypto.pbkdf2(password, this.auth[2], 1000, 64, "sha512", (err, password_hash) => {
+    console.log("transfer being called");
+
+    const cryptoCallback = (err, password_hash) => {
       if (err) {
         this.sendGateway("set_tx_status", {
           code: -1,
@@ -1218,22 +1273,29 @@ export class WalletRPC {
       let sweep_all = amount == this.wallet_state.unlocked_balance;
 
       const rpc_endpoint = sweep_all ? "sweep_all" : "transfer_split";
-      const params = sweep_all
+      const rpcSpecificParams = sweep_all
         ? {
             address: address,
-            account_index: 0,
-            priority
+            account_index: 0
           }
         : {
-            destinations: [{ amount: amount, address: address }],
-            priority
+            destinations: [{ amount: amount, address: address }]
           };
+      const params = {
+        ...rpcSpecificParams,
+        priority,
+        do_not_relay: true,
+        get_tx_metadata: true
+      };
 
       if (payment_id) {
         params.payment_id = payment_id;
       }
 
+      console.log("sending rpc inside transfer");
       this.sendRPC(rpc_endpoint, params).then(data => {
+        console.log("sent transfer rpc, got data");
+        console.log(data);
         if (data.hasOwnProperty("error")) {
           let error = data.error.message.charAt(0).toUpperCase() + data.error.message.slice(1);
           this.sendGateway("set_tx_status", {
@@ -1244,25 +1306,32 @@ export class WalletRPC {
           return;
         }
 
+        // update state to show a confirm popup
+        console.log("set awaiting confirmation popup");
         this.sendGateway("set_tx_status", {
-          code: 0,
-          i18n: "notification.positive.sendSuccess",
-          sending: false
+          code: 1,
+          // TODO: translate
+          message: "Awaiting confirmation",
+          sending: false,
+          txData: {
+            amountList: data.result.amount_list,
+            metadataList: data.result.tx_metadata_list,
+            feeList: data.result.fee_list,
+            priority: data.params.priority,
+            destinations: data.params.destinations
+          }
         });
 
-        if (data.result) {
-          const hash_list = data.result.tx_hash_list || [];
-          // Save notes
-          if (note && note !== "") {
-            hash_list.forEach(txid => this.saveTxNotes(txid, note));
-          }
-        }
+        // relay the transfer if that was successful (and confirmed);
+        // this.relayTransfer(data, note);
       });
 
       if (address_book.hasOwnProperty("save") && address_book.save) {
         this.addAddressBook(address, payment_id, address_book.description, address_book.name);
       }
-    });
+    };
+
+    crypto.pbkdf2(password, this.auth[2], 1000, 64, "sha512", cryptoCallback);
   }
 
   purchaseLNS(password, type, name, value, owner, backupOwner) {

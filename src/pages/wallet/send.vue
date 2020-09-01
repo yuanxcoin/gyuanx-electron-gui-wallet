@@ -281,16 +281,22 @@ export default {
       this.newTx.address = info.address;
       this.newTx.payment_id = info.payment_id;
     },
-    // construct a dialog for confirming transactions
+    // helper for constructing a dialog for confirming transactions
     confirmTransactionDialog(val) {
-      const totalFees = val.txData.feeList.reduce((a, b) => a + b, 0);
-
+      console.log("Txdata");
+      console.log(val.txData);
+      // 1 billion
+      const ATOMS_IN_A_LOKI = 1000000000;
+      const totalFees = val.txData.feeList.reduce((a, b) => a + b, 0) / ATOMS_IN_A_LOKI;
+      const totalAmount = val.txData.amountList.reduce((a, b) => a + b, 0) / ATOMS_IN_A_LOKI;
+      // a tx can be split, but it's only one address is sent to
+      const destination = val.txData.destinations[0].address;
       // duplicated in wallet-rpc
       const isBlink = [0, 2, 3, 4, 5].includes(val.txData.priority) ? true : false;
       const blinkOrSlow = isBlink ? "Blink" : "Slow";
       const message = `
-  Sending to: <some address><br />
-  Amount: <some amount><br />
+  Sending to: ${destination}<br /><br />
+  Amount: ${totalAmount}<br />
   Total fees: ${totalFees}<br />
   Send speed: ${blinkOrSlow}
   `;
@@ -310,7 +316,8 @@ export default {
             label: this.$t("dialog.buttons.cancel")
           },
           dark: this.theme == "dark",
-          color: this.theme == "dark" ? "white" : "dark"
+          color: this.theme == "dark" ? "white" : "dark",
+          style: "min-width: 400px; word-wrap: break-word;"
         })
         .onOk(() => {
           console.log("dialog says yes");

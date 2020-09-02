@@ -139,7 +139,40 @@
           />
         </div>
       </div>
-
+      <q-dialog v-model="confirmTransaction" persistent>
+        <q-card class="confirm-tx-card" dark>
+          <q-card-section>
+            <div class="text-h6">{{ $t("dialog.confirmTransaction.title") }}</div>
+          </q-card-section>
+          <q-card-section>
+            <div class="confirm-list">
+              <div>
+                <span class="label">{{ $t("dialog.confirmTransaction.sendTo") }}: </span>
+                <br />
+                <span class="address-value">{{ confirmFields.destination }}</span>
+              </div>
+              <br />
+              <span class="label">{{ $t("strings.transactions.amount") }}: </span>
+              {{ confirmFields.totalAmount }} Loki
+              <br />
+              <span class="label">{{ $t("strings.transactions.fee") }}: </span> {{ confirmFields.totalFees }} Loki
+              <br />
+              <span class="label">{{ $t("dialog.confirmTransaction.priority") }}: </span>
+              {{ confirmFields.translatedBlinkOrSlow }}
+            </div>
+          </q-card-section>
+          <q-card-actions align="right">
+            <q-btn v-close-popup flat :label="$t('dialog.buttons.cancel')" color="negative" />
+            <q-btn
+              v-close-popup
+              class="confirm-send-btn"
+              flat
+              :label="$t('buttons.send')"
+              @click="onConfirmTransaction"
+            />
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
       <q-inner-loading :showing="tx_status.sending" :dark="theme == 'dark'">
         <q-spinner color="primary" size="30" />
       </q-inner-loading>
@@ -180,7 +213,9 @@ export default {
           description: ""
         }
       },
-      priorityOptions: priorityOptions
+      priorityOptions: priorityOptions,
+      confirmTransaction: false,
+      confirmFields: {}
     };
   },
   computed: mapState({
@@ -233,7 +268,7 @@ export default {
           case DO_NOTHING:
             break;
           case 1:
-            this.confirmTransactionDialog(val);
+            this.buildDialogFields(val);
             break;
           case 0:
             this.$q.notify({
@@ -282,18 +317,34 @@ export default {
       this.newTx.address = info.address;
       this.newTx.payment_id = info.payment_id;
     },
-    // helper for constructing a dialog for confirming transactions
-    confirmTransactionDialog(val) {
-      // the split_transfer rpc call can return several txs
+    buildDialogFields(val) {
+      this.confirmTransaction = true;
       const { feeList, amountList, destinations, metadataList, priority } = val.txData;
       const totalFees = feeList.reduce((a, b) => a + b, 0) / 1e9;
       const totalAmount = amountList.reduce((a, b) => a + b, 0) / 1e9;
       // a tx can be split, but only sent to one address
       const destination = destinations[0].address;
-      const note = this.newTx.note;
-      // not stored on chain, but we should only save a note to a completed tx
+
       const isBlink = [0, 2, 3, 4, 5].includes(priority) ? true : false;
-      const blinkOrSlow = isBlink ? "Blink" : "Slow";
+      const blinkOrSlow = isBlink ? "strings.priorityOptions.blink" : "strings.priorityOptions.slow";
+      const translatedBlinkOrSlow = this.$t(blinkOrSlow);
+      this.confirmFields = {
+        metadataList,
+        isBlink,
+        translatedBlinkOrSlow,
+        destination,
+        totalAmount,
+        totalFees
+      };
+    },
+    onConfirmTransaction() {
+      console.log("Confirming transaction");
+      // put the loading spinner up
+      this.$store.commit("gateway/set_tx_status", {
+        code: DO_NOTHING,
+        message: "Getting transaction information",
+        sending: true
+      });
       const { name, description, save } = this.newTx.address_book;
       const addressSave = {
         address: this.newTx.address,
@@ -304,14 +355,10 @@ export default {
           save
         }
       };
-      const message = `
-  <div class="confirm-tx-dialog">
-  <span class="label">Sending to:</span> ${destination}<br /><br />
-  <span class="label">Amount:</span> ${totalAmount} Loki<br />
-  <span class="label">Total fees:</span> ${totalFees} Loki<br />
-  <span class="label">Send speed:</span> ${blinkOrSlow}
-  </div>
-  `;
+
+      const note = this.newTx.note;
+      const metadataList = this.confirmFields.metadataList;
+      const isBlink = this.confirmFields.isBlink;
 
       const relayTxData = {
         metadataList,
@@ -319,39 +366,10 @@ export default {
         addressSave,
         note
       };
-      this.$q
-        .dialog({
-          title: "Confirm transaction",
-          message: message,
-          // allows for formatting message
-          html: true,
-          ok: {
-            label: "Confirm",
-            // flat: true,
-            color: "primary"
-          },
-          cancel: {
-            flat: true,
-            label: this.$t("dialog.buttons.cancel"),
-            color: "negative"
-          },
-          color: "primary",
-          dark: this.theme == "dark",
-          // color: this.theme == "dark" ? "white" : "dark",
-          style: "min-width: 400px; word-wrap: break-word;"
-        })
-        .onOk(() => {
-          // put the loading spinner up
-          this.$store.commit("gateway/set_tx_status", {
-            code: DO_NOTHING,
-            message: "Getting transaction information",
-            sending: true
-          });
-          this.$gateway.send("wallet", "relay_tx", relayTxData);
-        })
-        .onCancel(() => {})
-        .onDismiss(() => {});
+
+      this.$gateway.send("wallet", "relay_tx", relayTxData);
     },
+    // helper for constructing a dialog for confirming transactions
 
     async send() {
       this.$v.newTx.$touch();
@@ -437,9 +455,32 @@ export default {
 </script>
 
 <style lang="scss">
-.confirm-tx-dialog {
+.confirm-tx-card {
+  color: "primary";
+  width: 450px;
+  max-width: 450x;
+
+  .confirm-list {
+    .q-item {
+      max-height: 100%;
+      margin-top: 0;
+      margin-bottom: 4px;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+  }
+
   .label {
     color: #cecece;
+    padding-right: 6px;
+  }
+  .address-value {
+    word-break: break-word;
+  }
+
+  .confirm-send-btn {
+    color: white;
+    background: $positive;
   }
 }
 

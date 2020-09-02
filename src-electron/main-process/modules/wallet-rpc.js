@@ -1192,39 +1192,35 @@ export class WalletRPC {
   async relayTransaction(metadataList, isBlink, addressSave, note) {
     const { address, payment_id, address_book } = addressSave;
     let failed = false;
+    let errorMessage = "";
 
     // submit each transaction individually
-    let i;
-    for (i = 0; i < metadataList.length; i++) {
-      const hex = metadataList[i];
+    for (const hex of metadataList) {
       const params = {
         hex,
         isBlink
       };
       // don't try submit more txs if a prev one failed
       if (failed) break;
-      await this.sendRPC("relay_tx", params)
-        .then(data => {
-          if (data.hasOwnProperty("error")) {
-            const errMsg = data.error.message;
-            const error = errMsg.charAt(0).toUpperCase() + errMsg.slice(1);
-            this.sendGateway("set_tx_status", {
-              code: -1,
-              message: error,
-              sending: false
-            });
-            failed = true;
-            return;
+      try {
+        const data = await this.sendRPC("relay_tx", params);
+        if (data.hasOwnProperty("error")) {
+          const errMsg = data.error.message;
+          const error = errMsg.charAt(0).toUpperCase() + errMsg.slice(1);
+          errorMessage = error;
+          failed = true;
+          return;
+        }
+        // save note to the new txid
+        if (data.hasOwnProperty("result")) {
+          const tx_hash = data.result.tx_hash;
+          if (note && note !== "") {
+            this.saveTxNotes(tx_hash, note);
           }
-          // save note to the new txid
-          if (data.hasOwnProperty("result")) {
-            const tx_hash = data.result.tx_hash;
-            if (note && note !== "") {
-              this.saveTxNotes(tx_hash, note);
-            }
-          }
-        })
-        .catch(() => {});
+        }
+      } catch {
+        failed = true;
+      }
     }
 
     if (!failed) {
@@ -1237,14 +1233,18 @@ export class WalletRPC {
       if (address_book.hasOwnProperty("save") && address_book.save) {
         this.addAddressBook(address, payment_id, address_book.description, address_book.name);
       }
+      return;
     }
 
-    //   // this uses the old tx data, so must double check this.
+    this.sendGateway("set_tx_status", {
+      code: -1,
+      message: errorMessage,
+      sending: false
+    });
   }
+
   // prepares params and provides a "confirm" popup to allow the user to check
   // send address and tx fees before sending
-
-  // TODO: we may not need to send "note" here, if we send to submit
   transfer(password, amount, address, payment_id, priority) {
     const cryptoCallback = (err, password_hash) => {
       if (err) {
@@ -1302,7 +1302,7 @@ export class WalletRPC {
         this.sendGateway("set_tx_status", {
           code: 1,
           // TODO: translate
-          message: "Awaiting confirmation",
+          i18n: "strings.awaitingConfirmation",
           sending: false,
           txData: {
             amountList: data.result.amount_list,

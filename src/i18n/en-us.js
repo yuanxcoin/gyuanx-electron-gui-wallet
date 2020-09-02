@@ -161,6 +161,11 @@ export default {
       message: "Do you want to send the transaction?",
       ok: "SEND"
     },
+    confirmTransaction: {
+      title: "Confirm transaction",
+      sendTo: "Send to",
+      priority: "Priority"
+    },
     unlockConfirm: {
       title: "Confirm unlock",
       ok: "UNLOCK"
@@ -398,6 +403,7 @@ export default {
       subAddressIndex: "Index {index}"
     },
     advancedOptions: "Advanced Options",
+    awaitingConfirmation: "Awaiting confirmation",
     bannedPeers: {
       title: "Banned peers (bans will cleared if wallet is restarted)",
       bannedUntil: "Banned until {time}"
@@ -460,6 +466,7 @@ export default {
       fastest: "Fastest",
       blink: "Blink"
     },
+
     proveTransactionDescription:
       "Generate a proof of your incoming/outgoing payment by supplying the transaction ID, the recipient address and an optional message.\nFor the case of outgoing payments, you can get a 'Spend Proof' that proves the authorship of a transaction. In this case, you don't need to specify the recipient address.",
     readingWalletList: "Reading wallet list",

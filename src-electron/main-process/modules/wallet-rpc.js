@@ -1191,10 +1191,10 @@ export class WalletRPC {
   // submits the transaction to the blockchain, irreversible from here
   async relayTransaction(metadataList, isBlink, addressSave, note) {
     const { address, payment_id, address_book } = addressSave;
-    console.log("logging the note in relay: " + note);
-    let i;
-    // submit each transaction individually
     let failed = false;
+
+    // submit each transaction individually
+    let i;
     for (i = 0; i < metadataList.length; i++) {
       const hex = metadataList[i];
       const params = {
@@ -1216,14 +1216,11 @@ export class WalletRPC {
             failed = true;
             return;
           }
-          // if successful save the note to each of the txids
+          // save note to the new txid
           if (data.hasOwnProperty("result")) {
-            const hash_list = data.result.tx_hash_list || [];
+            const tx_hash = data.result.tx_hash;
             if (note && note !== "") {
-              hash_list.forEach(txid => {
-                console.log("saving note: " + note + " on txid: " + txid);
-                this.saveTxNotes(txid, note);
-              });
+              this.saveTxNotes(tx_hash, note);
             }
           }
         })

@@ -285,12 +285,12 @@ export default {
     // helper for constructing a dialog for confirming transactions
     confirmTransactionDialog(val) {
       // the split_transfer rpc call can return several txs
-      const { feeList, amountList, destinations, metadataList, priority, note } = val.txData;
+      const { feeList, amountList, destinations, metadataList, priority } = val.txData;
       const totalFees = feeList.reduce((a, b) => a + b, 0) / 1e9;
       const totalAmount = amountList.reduce((a, b) => a + b, 0) / 1e9;
       // a tx can be split, but only sent to one address
       const destination = destinations[0].address;
-
+      const note = this.newTx.note;
       // not stored on chain, but we should only save a note to a completed tx
       const isBlink = [0, 2, 3, 4, 5].includes(priority) ? true : false;
       const blinkOrSlow = isBlink ? "Blink" : "Slow";

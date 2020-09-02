@@ -68,12 +68,13 @@
         <!-- Payment ID -->
         <div class="col q-mt-sm">
           <LokiField :label="$t('fieldLabels.paymentId')" :error="$v.newTx.payment_id.$error" optional>
+            <!-- TODO: count to be '16 or 64 after RPC fixed -->
             <q-input
               v-model.trim="newTx.payment_id"
               :dark="theme == 'dark'"
               :placeholder="
                 $t('placeholders.hexCharacters', {
-                  count: '16 or 64'
+                  count: '64'
                 })
               "
               borderless
@@ -283,23 +284,41 @@ export default {
     },
     // helper for constructing a dialog for confirming transactions
     confirmTransactionDialog(val) {
-      console.log("Txdata");
-      console.log(val.txData);
-      // 1 billion
-      const ATOMS_IN_A_LOKI = 1000000000;
-      const totalFees = val.txData.feeList.reduce((a, b) => a + b, 0) / ATOMS_IN_A_LOKI;
-      const totalAmount = val.txData.amountList.reduce((a, b) => a + b, 0) / ATOMS_IN_A_LOKI;
-      // a tx can be split, but it's only one address is sent to
-      const destination = val.txData.destinations[0].address;
-      // duplicated in wallet-rpc
-      const isBlink = [0, 2, 3, 4, 5].includes(val.txData.priority) ? true : false;
+      // the split_transfer rpc call can return several txs
+      const { feeList, amountList, destinations, metadataList, priority, note } = val.txData;
+      const totalFees = feeList.reduce((a, b) => a + b, 0) / 1e9;
+      const totalAmount = amountList.reduce((a, b) => a + b, 0) / 1e9;
+      // a tx can be split, but only sent to one address
+      const destination = destinations[0].address;
+
+      // not stored on chain, but we should only save a note to a completed tx
+      const isBlink = [0, 2, 3, 4, 5].includes(priority) ? true : false;
       const blinkOrSlow = isBlink ? "Blink" : "Slow";
+      const { name, description, save } = this.newTx.address_book;
+      const addressSave = {
+        address: this.newTx.address,
+        payment_id: this.newTx.payment_id,
+        address_book: {
+          description,
+          name,
+          save
+        }
+      };
       const message = `
-  Sending to: ${destination}<br /><br />
-  Amount: ${totalAmount}<br />
-  Total fees: ${totalFees}<br />
-  Send speed: ${blinkOrSlow}
+  <div class="confirm-tx-dialog">
+  <span class="label">Sending to:</span> ${destination}<br /><br />
+  <span class="label">Amount:</span> ${totalAmount} Loki<br />
+  <span class="label">Total fees:</span> ${totalFees} Loki<br />
+  <span class="label">Send speed:</span> ${blinkOrSlow}
+  </div>
   `;
+
+      const relayTxData = {
+        metadataList,
+        isBlink,
+        addressSave,
+        note
+      };
       this.$q
         .dialog({
           title: "Confirm transaction",
@@ -308,19 +327,27 @@ export default {
           html: true,
           ok: {
             label: "Confirm",
-            flat: true,
+            // flat: true,
             color: "primary"
           },
           cancel: {
             flat: true,
-            label: this.$t("dialog.buttons.cancel")
+            label: this.$t("dialog.buttons.cancel"),
+            color: "negative"
           },
+          color: "primary",
           dark: this.theme == "dark",
-          color: this.theme == "dark" ? "white" : "dark",
+          // color: this.theme == "dark" ? "white" : "dark",
           style: "min-width: 400px; word-wrap: break-word;"
         })
         .onOk(() => {
-          console.log("dialog says yes");
+          // put the loading spinner up
+          this.$store.commit("gateway/set_tx_status", {
+            code: DO_NOTHING,
+            message: "Getting transaction information",
+            sending: true
+          });
+          this.$gateway.send("wallet", "relay_tx", relayTxData);
         })
         .onCancel(() => {})
         .onDismiss(() => {});
@@ -400,7 +427,6 @@ export default {
             password
           });
 
-          console.log("Calling transfer on the gateway");
           this.$gateway.send("wallet", "transfer", newTx);
         })
         .onDismiss(() => {})
@@ -411,6 +437,12 @@ export default {
 </script>
 
 <style lang="scss">
+.confirm-tx-dialog {
+  .label {
+    color: #cecece;
+  }
+}
+
 .send {
   .send-btn {
     margin-top: 6px;

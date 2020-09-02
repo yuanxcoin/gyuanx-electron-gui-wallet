@@ -5,7 +5,8 @@ export const greater_than_zero = input => {
 };
 
 export const payment_id = input => {
-  return input.length === 0 || (/^[0-9A-Fa-f]+$/.test(input) && (input.length == 16 || input.length == 64));
+  // || input.length == 16 to be re-added after rpc fixed
+  return input.length === 0 || (/^[0-9A-Fa-f]+$/.test(input) && input.length == 64);
 };
 
 export const privkey = input => {

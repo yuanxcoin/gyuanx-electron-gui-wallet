@@ -16,7 +16,6 @@ export default {
     },
 
     async showPasswordConfirmation(options) {
-      console.log("showing password confirm");
       const { noPasswordMessage, ...other } = options;
       return this.hasPassword()
         .then(hasPassword => {

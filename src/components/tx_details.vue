@@ -134,7 +134,7 @@
                 </q-item-label>
 
                 <q-menu context-menu>
-                  <q-list link separator class="context-menu">
+                  <q-list separator class="context-menu">
                     <q-item v-close-popup clickable @click.native="copyAddress(in_tx_address_used.address, $event)">
                       <q-item-section>
                         {{ $t("menuItems.copyAddress") }}

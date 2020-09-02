@@ -1301,7 +1301,6 @@ export class WalletRPC {
         // update state to show a confirm popup
         this.sendGateway("set_tx_status", {
           code: 1,
-          // TODO: translate
           i18n: "strings.awaitingConfirmation",
           sending: false,
           txData: {

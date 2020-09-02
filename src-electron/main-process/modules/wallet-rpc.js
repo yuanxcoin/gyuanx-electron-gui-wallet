@@ -1218,8 +1218,9 @@ export class WalletRPC {
             this.saveTxNotes(tx_hash, note);
           }
         }
-      } catch {
+      } catch (e) {
         failed = true;
+        errorMessage = e;
       }
     }
 

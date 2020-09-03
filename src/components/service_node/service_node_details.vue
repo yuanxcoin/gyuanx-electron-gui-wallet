@@ -110,15 +110,7 @@
                   <FormatLoki :amount="contributor.amount" raw-value />
                 </q-item-label>
               </q-item-label>
-              <q-menu context-menu>
-                <q-list separator class="context-menu">
-                  <q-item v-close-popup @click.native="copyAddress(contributor.address, $event)">
-                    <q-item-section>
-                      {{ $t("menuItems.copyAddress") }}
-                    </q-item-section>
-                  </q-item>
-                </q-list>
-              </q-menu>
+              <ContextMenu :menu-items="menuItems" @copyAddress="copyAddress(contributor.address)" />
             </q-item>
           </q-list>
         </div>
@@ -136,10 +128,12 @@ const { clipboard } = require("electron");
 import { mapState } from "vuex";
 import { date } from "quasar";
 import FormatLoki from "components/format_loki";
+import ContextMenu from "components/menus/contextmenu";
 export default {
   name: "ServiceNodeDetails",
   components: {
-    FormatLoki
+    FormatLoki,
+    ContextMenu
   },
   props: {
     unlock: {
@@ -148,9 +142,12 @@ export default {
     }
   },
   data() {
+    const menuItems = [{ key: 0, action: "copyAddress", i18n: "menuItems.copyAddress" }];
+
     return {
       isVisible: false,
-      node: {}
+      node: {},
+      menuItems
     };
   },
   computed: mapState({
@@ -200,14 +197,7 @@ export default {
     formatDate(timestamp) {
       return date.formatDate(timestamp, "YYYY-MM-DD hh:mm a");
     },
-    copyAddress(address, event) {
-      event.stopPropagation();
-      for (let i = 0; i < event.path.length; i++) {
-        if (event.path[i].tagName == "BUTTON") {
-          event.path[i].blur();
-          break;
-        }
-      }
+    copyAddress(address) {
       clipboard.writeText(address);
       this.$q.notify({
         type: "positive",

@@ -73,6 +73,7 @@
               </q-item>
             </q-list>
           </q-menu>
+          <ContextMenu />
         </q-item>
         <q-separator />
       </template>
@@ -90,8 +91,12 @@
 <script>
 const { clipboard } = require("electron");
 import { mapState } from "vuex";
+import ContextMenu from "components/menus/contextmenu";
 
 export default {
+  components: {
+    ContextMenu
+  },
   computed: mapState({
     theme: state => state.gateway.app.config.appearance.theme,
     wallets: state => state.gateway.wallets,

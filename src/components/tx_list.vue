@@ -21,7 +21,7 @@
             </q-item-section>
             <q-item-label class="main">
               <q-item-label class="amount">
-                <FormatLoki :amount="tx.amount" />
+                <FormatLoki :amount="tx.amount || 0" />
               </q-item-label>
               <q-item-label caption>{{ tx.txid }}</q-item-label>
             </q-item-label>
@@ -31,28 +31,12 @@
               </q-item-label>
               <q-item-label caption>{{ formatHeight(tx) }}</q-item-label>
             </q-item-section>
-
-            <q-menu context-menu>
-              <q-list separator style="min-width: 150px; max-height: 300px;">
-                <q-item v-close-popup clickable @click.native="details(tx)">
-                  <q-item-section>
-                    {{ $t("menuItems.showDetails") }}
-                  </q-item-section>
-                </q-item>
-
-                <q-item v-close-popup clickable @click.native="copyTxid(tx.txid, $event)">
-                  <q-item-section>
-                    {{ $t("menuItems.copyTransactionId") }}
-                  </q-item-section>
-                </q-item>
-
-                <q-item v-close-popup clickable @click.native="openExplorer(tx.txid)">
-                  <q-item-section>
-                    {{ $t("menuItems.viewOnExplorer") }}
-                  </q-item-section>
-                </q-item>
-              </q-list>
-            </q-menu>
+            <ContextMenu
+              :menu-items="menuItems"
+              @copyTxId="copyTxId(tx.txid)"
+              @showDetails="details(tx)"
+              @openExplorer="openExplorer(tx.txid)"
+            />
           </q-item>
           <QSpinnerDots slot="message" :size="40"></QSpinnerDots>
         </q-list>
@@ -70,6 +54,7 @@ import { QSpinnerDots } from "quasar";
 import TxDetails from "components/tx_details";
 import FormatLoki from "components/format_loki";
 import { i18n } from "boot/i18n";
+import ContextMenu from "components/menus/contextmenu";
 
 export default {
   name: "TxList",
@@ -101,7 +86,8 @@ export default {
   components: {
     QSpinnerDots,
     TxDetails,
-    FormatLoki
+    FormatLoki,
+    ContextMenu
   },
   props: {
     limit: {
@@ -131,10 +117,16 @@ export default {
     }
   },
   data() {
+    const menuItems = [
+      { key: 0, action: "showDetails", i18n: "menuItems.showDetails" },
+      { key: 1, action: "copyTxId", i18n: "menuItems.copyTransactionId" },
+      { key: 2, action: "openExplorer", i18n: "menuItems.viewOnExplorer" }
+    ];
     return {
       page: 0,
       tx_list_filtered: [],
-      tx_list_paged: []
+      tx_list_paged: [],
+      menuItems
     };
   },
   computed: mapState({
@@ -291,14 +283,7 @@ export default {
         return this.$t("strings.blockHeight") + `: ${height} (${confirms} confirm${confirms == 1 ? "" : "s"})`;
       else return this.$t("strings.blockHeight") + `: ${height} (${this.$t("strings.transactionConfirmed")})`;
     },
-    copyTxid(txid, event) {
-      event.stopPropagation();
-      for (let i = 0; i < event.path.length; i++) {
-        if (event.path[i].tagName == "BUTTON") {
-          event.path[i].blur();
-          break;
-        }
-      }
+    copyTxId(txid) {
       clipboard.writeText(txid);
       this.$q.notify({
         type: "positive",

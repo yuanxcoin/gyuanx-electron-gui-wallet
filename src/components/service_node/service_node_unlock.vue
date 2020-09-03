@@ -31,20 +31,11 @@
               }}
             </q-item-label>
           </q-item-section>
-          <q-menu context-menu>
-            <q-list separator class="context-menu">
-              <q-item v-close-popup clickable @click.native="copyKey(node.service_node_pubkey, $event)">
-                <q-item-section>
-                  {{ $t("menuItems.copyServiceNodeKey") }}
-                </q-item-section>
-              </q-item>
-              <q-item v-close-popup clickable @click.native="openExplorer(node.service_node_pubkey)">
-                <q-item-section>
-                  {{ $t("menuItems.viewOnExplorer") }}
-                </q-item-section>
-              </q-item>
-            </q-list>
-          </q-menu>
+          <ContextMenu
+            :menu-items="menuItems"
+            @viewOnExplorer="openExplorer(node.service_node_pubkey)"
+            @copyServiceNodeKey="copyKey(node.service_node_pubkey)"
+          />
         </q-item>
       </q-list>
     </div>
@@ -65,14 +56,25 @@ import { service_node_key } from "src/validators/common";
 import WalletPassword from "src/mixins/wallet_password";
 import FormatLoki from "components/format_loki";
 import ServiceNodeDetails from "./service_node_details";
+import ContextMenu from "components/menus/contextmenu";
 
 export default {
   name: "ServiceNodeUnlock",
   components: {
     FormatLoki,
-    ServiceNodeDetails
+    ServiceNodeDetails,
+    ContextMenu
   },
   mixins: [WalletPassword],
+  data() {
+    const menuItems = [
+      { key: 0, action: "copyServiceNodeKey", i18n: "menuItems.copyServiceNodeKey" },
+      { key: 1, action: "viewOnExplorer", i18n: "menuItems.viewOnExplorer" }
+    ];
+    return {
+      menuItems
+    };
+  },
   computed: mapState({
     theme: state => state.gateway.app.config.appearance.theme,
     unlock_status: state => state.gateway.service_node_status.unlock,
@@ -226,14 +228,7 @@ export default {
         confirmed
       });
     },
-    copyKey(key, event) {
-      event.stopPropagation();
-      for (let i = 0; i < event.path.length; i++) {
-        if (event.path[i].tagName == "BUTTON") {
-          event.path[i].blur();
-          break;
-        }
-      }
+    copyKey(key) {
       clipboard.writeText(key);
       this.$q.notify({
         type: "positive",

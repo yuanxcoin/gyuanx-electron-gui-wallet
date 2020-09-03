@@ -46,27 +46,18 @@
         </q-item-section>
       </q-item>
     </template>
-    <q-menu context-menu>
-      <q-list separator class="context-menu">
-        <q-item v-close-popup clickable @click.native="details(address)">
-          <q-item-section>
-            {{ $t("menuItems.showDetails") }}
-          </q-item-section>
-        </q-item>
-
-        <q-item v-close-popup clickable @click.native="copyAddress(address.address, $event)">
-          <q-item-section>
-            {{ $t("menuItems.copyAddress") }}
-          </q-item-section>
-        </q-item>
-      </q-list>
-    </q-menu>
+    <ContextMenu :menu-items="menuItems" @showDetails="details(address)" @copyAddress="copyAddress(address.address)" />
   </q-list>
 </template>
 
 <script>
+import ContextMenu from "components/menus/contextmenu";
+
 export default {
   name: "ReceiveItem",
+  components: {
+    ContextMenu
+  },
   filters: {
     toString: function(value) {
       if (typeof value !== "number") return "N/A";
@@ -111,6 +102,15 @@ export default {
       required: false,
       default: false
     }
+  },
+  data() {
+    const menuItems = [
+      { key: 0, action: "showDetails", i18n: "menuItems.showDetails" },
+      { key: 1, action: "copyAddress", i18n: "menuItems.copyAddress" }
+    ];
+    return {
+      menuItems
+    };
   },
   computed: {
     qrImage() {

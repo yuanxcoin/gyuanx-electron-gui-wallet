@@ -132,16 +132,7 @@
                   <q-item-label class="non-selectable">{{ in_tx_address_used.address_index_text }}</q-item-label>
                   <q-item-label class="monospace ellipsis">{{ in_tx_address_used.address }}</q-item-label>
                 </q-item-label>
-
-                <q-menu context-menu>
-                  <q-list separator class="context-menu">
-                    <q-item v-close-popup clickable @click.native="copyAddress(in_tx_address_used.address, $event)">
-                      <q-item-section>
-                        {{ $t("menuItems.copyAddress") }}
-                      </q-item-section>
-                    </q-item>
-                  </q-list>
-                </q-menu>
+                <ContextMenu :menu-items="menuItems" @copyAddress="copyAddress(in_tx_address_used.address)" />
               </q-item>
             </q-list>
           </div>
@@ -162,15 +153,7 @@
                     <q-item-label class="monospace ellipsis">{{ destination.address }}</q-item-label>
                     <q-item-label><FormatLoki :amount="destination.amount"/></q-item-label>
                   </q-item-label>
-                  <q-menu context-menu>
-                    <q-list separator class="context-menu">
-                      <q-item v-close-popup clickable @click.native="copyAddress(destination.address, $event)">
-                        <q-item-section>
-                          {{ $t("menuItems.copyAddress") }}
-                        </q-item-section>
-                      </q-item>
-                    </q-list>
-                  </q-menu>
+                  <ContextMenu :menu-items="menuItems" @copyAddress="copyAddress(destination.address)" />
                 </q-item>
               </template>
               <template v-else>
@@ -212,13 +195,16 @@ import { mapState } from "vuex";
 import { date } from "quasar";
 import TxTypeIcon from "components/tx_type_icon";
 import FormatLoki from "components/format_loki";
+import ContextMenu from "components/menus/contextmenu";
 export default {
   name: "TxDetails",
   components: {
     TxTypeIcon,
-    FormatLoki
+    FormatLoki,
+    ContextMenu
   },
   data() {
+    const menuItems = [{ key: 0, action: "copyAddress", i18n: "menuItems.copyAddress" }];
     return {
       isVisible: false,
       txNotes: "",
@@ -235,7 +221,8 @@ export default {
         txid: "",
         type: "",
         unlock_time: 0
-      }
+      },
+      menuItems
     };
   },
   computed: mapState({
@@ -331,14 +318,14 @@ export default {
     formatDate(timestamp) {
       return date.formatDate(timestamp, "YYYY-MM-DD hh:mm a");
     },
-    copyAddress(address, event) {
-      event.stopPropagation();
-      for (let i = 0; i < event.path.length; i++) {
-        if (event.path[i].tagName == "BUTTON") {
-          event.path[i].blur();
-          break;
-        }
-      }
+    copyAddress(address) {
+      // event.stopPropagation();
+      // for (let i = 0; i < event.path.length; i++) {
+      //   if (event.path[i].tagName == "BUTTON") {
+      //     event.path[i].blur();
+      //     break;
+      //   }
+      // }
       clipboard.writeText(address);
       this.$q.notify({
         type: "positive",

@@ -31,7 +31,6 @@ export default {
 </script>
 
 <style>
-/* TODO: delete from app.style when done */
 .context-menu-list {
   min-width: 150px;
   max-height: 300px;

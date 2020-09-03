@@ -64,7 +64,7 @@ import { required } from "vuelidate/lib/validators";
 import { service_node_key } from "src/validators/common";
 import WalletPassword from "src/mixins/wallet_password";
 import FormatLoki from "components/format_loki";
-import ServiceNodeDetails from "components/service_node_details";
+import ServiceNodeDetails from "./service_node_details";
 
 export default {
   name: "ServiceNodeUnlock",

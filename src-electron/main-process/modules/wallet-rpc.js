@@ -1220,7 +1220,7 @@ export class WalletRPC {
         }
       } catch (e) {
         failed = true;
-        errorMessage = e;
+        errorMessage = e.toString();
       }
     }
 

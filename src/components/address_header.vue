@@ -62,10 +62,7 @@ export default {
     };
   },
   methods: {
-    copyAddress(event) {
-      if (event) {
-        event.stopPropagation();
-      }
+    copyAddress() {
       if (this.$refs.copy) {
         this.$refs.copy.$el.blur();
       }

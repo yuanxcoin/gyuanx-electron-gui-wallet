@@ -172,12 +172,4 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.create-wallet {
-  // .fields {
-  //   > * {
-  //     margin-bottom: 16px;
-  //   }
-  // }
-}
-</style>
+<style lang="scss"></style>

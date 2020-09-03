@@ -38,11 +38,12 @@
             <q-input v-model.trim="newEntry.name" :dark="theme == 'dark'" borderless dense />
           </LokiField>
           <LokiField :label="$t('fieldLabels.paymentId')" :error="$v.newEntry.payment_id.$error" optional>
+            <!-- TODO: count should be 16 or 64 after rpc updated -->
             <q-input
               v-model.trim="newEntry.payment_id"
               :placeholder="
                 $t('placeholders.hexCharacters', {
-                  count: '16 or 64'
+                  count: '64'
                 })
               "
               :dark="theme == 'dark'"

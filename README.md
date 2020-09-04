@@ -18,6 +18,7 @@ Please submit any changes as pull requests to the development branch, all change
 #### Pre-requisites
 
 - Download latest [Lokid](https://github.com/loki-project/loki/releases/latest)
+- Extract the lokid binaries to a folder
 
 #### Commands
 
@@ -26,7 +27,6 @@ nvm use 11.9.0
 npm install -g quasar-cli
 git clone https://github.com/loki-project/loki-electron-gui-wallet
 cd loki-electron-wallet
-// the binaries are what was downloaded in the prequisite step
 cp path_to_lokid_binaries/lokid bin/
 cp path_to_lokid_binaries/loki-wallet-rpc bin/
 npm install

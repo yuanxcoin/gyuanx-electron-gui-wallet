@@ -314,11 +314,7 @@ export class Backend {
       const vSizeDiff = semver.diff(version, latestVersion);
       const updateAvailable = semver.ltr(version, latestVersion);
       const majorOrMinor = vSizeDiff === "major" || vSizeDiff == "minor";
-      let updateRequired = false;
-
-      if (updateAvailable && majorOrMinor) {
-        updateRequired = true;
-      }
+      const updateRequired = updateAvailable && majorOrMinor;
       this.send("set_update_required", { required: updateRequired, latest_version: latestVersion });
     } catch (e) {
       this.send("set_updated_required", { required: false, latest_version: "Unknown" });

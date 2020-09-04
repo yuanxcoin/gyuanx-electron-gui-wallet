@@ -65,7 +65,7 @@ export default {
       const isSyncing = this.daemon.info.height_without_bootstrap < this.target_height;
       const isScanning = this.wallet.info.height < this.target_height - 1 && this.wallet.info.height != 0;
 
-      if (this.update_required.required) {
+      if (this.update_required) {
         // i18n string and class of statusbar
         return "updateRequired";
       }

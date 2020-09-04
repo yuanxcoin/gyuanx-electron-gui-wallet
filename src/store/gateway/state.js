@@ -120,7 +120,5 @@ export default {
     tx_pool_backlog: [],
     service_nodes: []
   },
-  update_required: {
-    required: false
-  }
+  update_required: false
 };

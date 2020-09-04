@@ -315,9 +315,9 @@ export class Backend {
       const updateAvailable = semver.ltr(version, latestVersion);
       const majorOrMinor = vSizeDiff === "major" || vSizeDiff == "minor";
       const updateRequired = updateAvailable && majorOrMinor;
-      this.send("set_update_required", { required: updateRequired });
+      this.send("set_update_required", updateRequired);
     } catch (e) {
-      this.send("set_updated_required", { required: false });
+      this.send("set_updated_required", false);
     }
   }
 

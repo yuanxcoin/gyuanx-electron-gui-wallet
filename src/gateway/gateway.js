@@ -260,7 +260,6 @@ export class Gateway extends EventEmitter {
         break;
 
       case "set_update_required":
-        console.log("set update required case hit");
         this.app.store.commit("gateway/set_update_required", decrypted_data.data);
         break;
     }

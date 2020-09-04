@@ -310,12 +310,10 @@ export class Backend {
       );
       // remove the 'v' from front of the version
       const latestVersion = data.tag_name.substring(1);
-      console.log("latest version: " + latestVersion);
-      console.log("current version: " + version);
-      // major, minor, patch
+      // can return "major", "minor", "patch"
       const vSizeDiff = semver.diff(version, latestVersion);
       const updateAvailable = semver.ltr(version, latestVersion);
-      const majorOrMinor = ["major", "minor"].includes(vSizeDiff);
+      const majorOrMinor = vSizeDiff === "major" || vSizeDiff == "minor";
       let updateRequired = false;
 
       if (updateAvailable && majorOrMinor) {

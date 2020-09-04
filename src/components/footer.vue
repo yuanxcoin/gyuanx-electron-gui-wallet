@@ -59,21 +59,24 @@ export default {
       else return pct;
     },
     status() {
+      const isSyncing = this.daemon.info.height_without_bootstrap < this.target_height;
+      const isScanning = this.wallet.info.height < this.target_height - 1 && this.wallet.info.height != 0;
+      const updateRequired = true;
+      if (updateRequired) {
+        return "Update required";
+      }
       if (this.config_daemon.type === "local") {
-        if (this.daemon.info.height_without_bootstrap < this.target_height) {
+        if (isSyncing) {
           return "syncing";
-        } else if (this.wallet.info.height < this.target_height - 1 && this.wallet.info.height != 0) {
+        } else if (isScanning) {
           return "scanning";
         } else {
           return "ready";
         }
       } else {
-        if (this.wallet.info.height < this.target_height - 1 && this.wallet.info.height != 0) {
+        if (isScanning) {
           return "scanning";
-        } else if (
-          this.config_daemon.type === "local_remote" &&
-          this.daemon.info.height_without_bootstrap < this.target_height
-        ) {
+        } else if (this.config_daemon.type === "local_remote" && isSyncing) {
           return "syncing";
         } else {
           return "ready";

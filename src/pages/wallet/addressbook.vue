@@ -28,28 +28,12 @@
               />
             </q-item-label>
           </q-item-section>
-
-          <q-menu context-menu>
-            <q-list class="context-menu">
-              <q-item v-close-popup clickable @click.native="details(entry)">
-                <q-item-section>
-                  {{ $t("menuItems.showDetails") }}
-                </q-item-section>
-              </q-item>
-
-              <q-item v-close-popup clickable @click.native="sendToAddress(entry, $event)">
-                <q-item-section>
-                  {{ $t("menuItems.sendToThisAddress") }}
-                </q-item-section>
-              </q-item>
-
-              <q-item v-close-popup clickable @click.native="copyAddress(entry, $event)">
-                <q-item-section>
-                  {{ $t("menuItems.copyAddress") }}
-                </q-item-section>
-              </q-item>
-            </q-list>
-          </q-menu>
+          <ContextMenu
+            :menu-items="menuItems"
+            @showDetails="details(entry)"
+            @sendToAddress="sendToAddress(entry)"
+            @copyAddress="copyAddress(entry)"
+          />
         </q-item>
       </q-list>
     </template>
@@ -68,9 +52,21 @@
 const { clipboard } = require("electron");
 import { mapState } from "vuex";
 import AddressBookDetails from "components/address_book_details";
+import ContextMenu from "components/menus/contextmenu";
 export default {
   components: {
-    AddressBookDetails
+    AddressBookDetails,
+    ContextMenu
+  },
+  data() {
+    const menuItems = [
+      { action: "showDetails", i18n: "menuItems.showDetails" },
+      { action: "sendToAddress", i18n: "menuItems.sendToThisAddress" },
+      { action: "copyAddress", i18n: "menuItems.copyAddress" }
+    ];
+    return {
+      menuItems
+    };
   },
   computed: mapState({
     theme: state => state.gateway.app.config.appearance.theme,
@@ -99,14 +95,7 @@ export default {
       this.$refs.addressBookDetails.mode = "new";
       this.$refs.addressBookDetails.isVisible = true;
     },
-    sendToAddress(address, event) {
-      event.stopPropagation();
-      for (let i = 0; i < event.path.length; i++) {
-        if (event.path[i].tagName == "BUTTON") {
-          event.path[i].blur();
-          break;
-        }
-      }
+    sendToAddress(address) {
       this.$router.replace({
         path: "send",
         query: {
@@ -115,14 +104,7 @@ export default {
         }
       });
     },
-    copyAddress(entry, event) {
-      event.stopPropagation();
-      for (let i = 0; i < event.path.length; i++) {
-        if (event.path[i].tagName == "BUTTON") {
-          event.path[i].blur();
-          break;
-        }
-      }
+    copyAddress(entry) {
       clipboard.writeText(entry.address);
       if (entry.payment_id) {
         this.$q

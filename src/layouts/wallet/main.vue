@@ -59,7 +59,7 @@ import { openURL } from "quasar";
 import { mapState } from "vuex";
 import WalletDetails from "components/wallet_details";
 import StatusFooter from "components/footer";
-import MainMenu from "components/mainmenu";
+import MainMenu from "components/menus/mainmenu";
 export default {
   name: "LayoutDefault",
   components: {

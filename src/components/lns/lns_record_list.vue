@@ -40,49 +40,13 @@
         <q-item-section v-if="!isLocked(record)" side>
           {{ record.register_height | blockHeight }}
         </q-item-section>
-
-        <q-menu context-menu>
-          <q-list separator class="context-menu">
-            <template v-if="!isLocked(record)">
-              <q-item
-                v-close-popup
-                clickable
-                @click.native="copy(record.name, $event, $t('notification.positive.nameCopied'))"
-              >
-                <q-item-section>
-                  {{ $t("menuItems.copyName") }}
-                </q-item-section>
-              </q-item>
-
-              <q-item v-close-popup clickable @click.native="copyValue(record, $event)">
-                <q-item-section>
-                  {{ record | copyValue }}
-                </q-item-section>
-              </q-item>
-            </template>
-
-            <q-item
-              v-close-popup
-              clickable
-              @click.native="copy(record.owner, $event, $t('notification.positive.ownerCopied'))"
-            >
-              <q-item-section>
-                {{ $t("menuItems.copyOwner") }}
-              </q-item-section>
-            </q-item>
-
-            <q-item
-              v-if="record.backup_owner !== ''"
-              v-close-popup
-              clickable
-              @click.native="copy(record.backup_owner, $event, $t('notification.positive.backupOwnerCopied'))"
-            >
-              <q-item-section>
-                {{ $t("menuItems.copyBackupOwner") }}
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </q-menu>
+        <ContextMenu
+          :menu-items="validMenuItems(record)"
+          @ownerCopy="copy(record.owner, $t('notification.positive.ownerCopied'))"
+          @nameCopy="copy(record.name, $t('notification.positive.nameCopied'))"
+          @copyValue="copyValue(record)"
+          @backupOwnerCopy="copy(record.backup_owner, $t('notification.positive.backupOwnerCopied'))"
+        />
       </q-item>
     </q-list>
   </div>
@@ -94,11 +58,13 @@ import { mapState } from "vuex";
 import { i18n } from "boot/i18n";
 import LokiField from "components/loki_field";
 import { lns_name } from "src/validators/common";
+import ContextMenu from "components/menus/contextmenu";
 
 export default {
   name: "LNSRecordList",
   components: {
-    LokiField
+    LokiField,
+    ContextMenu
   },
   filters: {
     blockHeight(value) {
@@ -150,6 +116,22 @@ export default {
     }
   }),
   methods: {
+    validMenuItems(record) {
+      const lockedItems = [
+        { action: "nameCopy", i18n: "menuItems.copyName" },
+        { action: "copyValue", i18n: record | this.copyValue }
+      ];
+      let menuItems = [{ action: "ownerCopy", i18n: "menuItems.copyOwner" }];
+      const backupOwnerItem = [{ action: "backupOwnerCopy", i18n: "menuItems.copyBackupOwner" }];
+
+      if (!this.isLocked(record)) {
+        menuItems = [...lockedItems, ...menuItems];
+      }
+      if (record.backup_owner !== "") {
+        menuItems = [...menuItems, ...backupOwnerItem];
+      }
+      return menuItems;
+    },
     isLocked(record) {
       return !record.name || !record.value;
     },
@@ -220,9 +202,7 @@ export default {
       }
       this.copy(record.value, event, message);
     },
-    copy(value, event, message) {
-      event.stopPropagation();
-      this.blurEventButton(event);
+    copy(value, message) {
       if (!value) return;
       clipboard.writeText(value.trim());
       this.$q.notify({

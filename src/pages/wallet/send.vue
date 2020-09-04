@@ -338,7 +338,6 @@ export default {
       };
     },
     onConfirmTransaction() {
-      console.log("Confirming transaction");
       // put the loading spinner up
       this.$store.commit("gateway/set_tx_status", {
         code: DO_NOTHING,

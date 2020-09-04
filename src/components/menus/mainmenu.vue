@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import { version } from "../../package.json";
+import { version } from "../../../package.json";
 import { mapState } from "vuex";
 import SettingsModal from "components/settings";
 export default {

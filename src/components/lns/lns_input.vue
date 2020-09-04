@@ -22,7 +22,7 @@
 
 <script>
 import { mapState } from "vuex";
-import LNSInputForm from "components/lns_input_form";
+import LNSInputForm from "./lns_input_form";
 import WalletPassword from "src/mixins/wallet_password";
 const objectAssignDeep = require("object-assign-deep");
 

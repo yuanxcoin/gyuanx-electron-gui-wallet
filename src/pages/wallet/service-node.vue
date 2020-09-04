@@ -23,8 +23,8 @@
 </template>
 
 <script>
-import ServiceNodeStaking from "components/service_node_staking";
-import ServiceNodeRegistration from "components/service_node_registration";
+import ServiceNodeStaking from "components/service_node/service_node_staking";
+import ServiceNodeRegistration from "components/service_node/service_node_registration";
 export default {
   components: {
     ServiceNodeStaking,

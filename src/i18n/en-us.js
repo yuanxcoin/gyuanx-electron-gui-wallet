@@ -249,7 +249,8 @@ export default {
     status: "Status",
     syncing: "SYNCING",
     remote: "Remote",
-    wallet: "Wallet"
+    wallet: "Wallet",
+    updateRequired: "UPDATE REQUIRED"
   },
   menuItems: {
     about: "About",

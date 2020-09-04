@@ -119,5 +119,6 @@ export default {
     bans: [],
     tx_pool_backlog: [],
     service_nodes: []
-  }
+  },
+  update_required: false
 };

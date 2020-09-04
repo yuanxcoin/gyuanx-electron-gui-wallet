@@ -218,16 +218,6 @@ footer,
     word-break: break-word;
 }
 
-.identicon {
-    image-rendering: crisp-edges;
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-color: #cb8fe1;
-    box-shadow: inset rgba(0, 0, 0, 0.1) 0 2px 2px, inset rgba(0, 0, 0, 0.3) 0 -2px 6px;
-    border-radius: 2px;
-}
-
 .q-footer.status-footer {
     background: #000000;
     color: rgba(255, 255, 255, 0.51);
@@ -256,6 +246,10 @@ footer,
 
             .scanning, .syncing {
                 color: goldenrod;
+            }
+
+            .updateRequired {
+                color: $negative;
             }
         }
 
@@ -286,7 +280,7 @@ footer,
 
     .status-bars.syncing, .status-bars.scanning {
         div:first-child {
-            background-color: #bc8f1c;
+            background-color: goldenrod;
         }
 
         div:last-child {
@@ -294,8 +288,19 @@ footer,
         }
     }
 
-}
+    .status-bars.updateRequired {
+        div:first-child {
+            color: $negative;
+            background-color: $negative;
+        }
 
+        div:last-child {
+            color: $negative;
+            background-color: $negative;
+        }
+    }
+
+}
 
 .tx-list {
 

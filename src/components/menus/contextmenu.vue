@@ -1,7 +1,7 @@
 <template>
   <q-menu context-menu>
     <q-list separator class="context-menu-list">
-      <div v-for="item in menuItems" :key="item.key">
+      <div v-for="(item, index) in menuItems" :key="index">
         <ContextMenuItem :action="item.action" :i18n="item.i18n" @clicked="clickedMenu(item)" />
       </div>
     </q-list>

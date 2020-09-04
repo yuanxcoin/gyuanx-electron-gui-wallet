@@ -68,8 +68,8 @@ export default {
   mixins: [WalletPassword],
   data() {
     const menuItems = [
-      { key: 0, action: "copyServiceNodeKey", i18n: "menuItems.copyServiceNodeKey" },
-      { key: 1, action: "viewOnExplorer", i18n: "menuItems.viewOnExplorer" }
+      { action: "copyServiceNodeKey", i18n: "menuItems.copyServiceNodeKey" },
+      { action: "viewOnExplorer", i18n: "menuItems.viewOnExplorer" }
     ];
     return {
       menuItems

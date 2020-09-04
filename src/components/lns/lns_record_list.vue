@@ -118,11 +118,11 @@ export default {
   methods: {
     validMenuItems(record) {
       const lockedItems = [
-        { key: 0, action: "nameCopy", i18n: "menuItems.copyName" },
-        { key: 1, action: "copyValue", i18n: record | this.copyValue }
+        { action: "nameCopy", i18n: "menuItems.copyName" },
+        { action: "copyValue", i18n: record | this.copyValue }
       ];
-      let menuItems = [{ key: 2, action: "ownerCopy", i18n: "menuItems.copyOwner" }];
-      const backupOwnerItem = [{ key: 3, action: "backupOwnerCopy", i18n: "menuItems.copyBackupOwner" }];
+      let menuItems = [{ action: "ownerCopy", i18n: "menuItems.copyOwner" }];
+      const backupOwnerItem = [{ action: "backupOwnerCopy", i18n: "menuItems.copyBackupOwner" }];
 
       if (!this.isLocked(record)) {
         menuItems = [...lockedItems, ...menuItems];

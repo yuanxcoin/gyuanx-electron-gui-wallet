@@ -97,8 +97,8 @@ export default {
   },
   data() {
     const menuItems = [
-      { key: 0, action: "copyQR", i18n: "menuItems.copyQR" },
-      { key: 1, action: "saveQR", i18n: "menuItems.saveQR" }
+      { action: "copyQR", i18n: "menuItems.copyQR" },
+      { action: "saveQR", i18n: "menuItems.saveQR" }
     ];
     return {
       QR: {

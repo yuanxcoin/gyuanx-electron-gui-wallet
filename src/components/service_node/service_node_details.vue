@@ -142,7 +142,7 @@ export default {
     }
   },
   data() {
-    const menuItems = [{ key: 0, action: "copyAddress", i18n: "menuItems.copyAddress" }];
+    const menuItems = [{ action: "copyAddress", i18n: "menuItems.copyAddress" }];
 
     return {
       isVisible: false,

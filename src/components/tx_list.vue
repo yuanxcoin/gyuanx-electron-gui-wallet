@@ -118,9 +118,9 @@ export default {
   },
   data() {
     const menuItems = [
-      { key: 0, action: "showDetails", i18n: "menuItems.showDetails" },
-      { key: 1, action: "copyTxId", i18n: "menuItems.copyTransactionId" },
-      { key: 2, action: "openExplorer", i18n: "menuItems.viewOnExplorer" }
+      { action: "showDetails", i18n: "menuItems.showDetails" },
+      { action: "copyTxId", i18n: "menuItems.copyTransactionId" },
+      { action: "openExplorer", i18n: "menuItems.viewOnExplorer" }
     ];
     return {
       page: 0,

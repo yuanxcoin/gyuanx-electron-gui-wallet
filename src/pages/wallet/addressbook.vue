@@ -60,9 +60,9 @@ export default {
   },
   data() {
     const menuItems = [
-      { key: 0, action: "showDetails", i18n: "menuItems.showDetails" },
-      { key: 1, action: "sendToAddress", i18n: "menuItems.sendToThisAddress" },
-      { key: 2, action: "copyAddress", i18n: "menuItems.copyAddress" }
+      { action: "showDetails", i18n: "menuItems.showDetails" },
+      { action: "sendToAddress", i18n: "menuItems.sendToThisAddress" },
+      { action: "copyAddress", i18n: "menuItems.copyAddress" }
     ];
     return {
       menuItems

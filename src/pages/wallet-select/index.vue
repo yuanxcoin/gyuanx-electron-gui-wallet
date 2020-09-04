@@ -88,8 +88,8 @@ export default {
   },
   data() {
     const menuItems = [
-      { key: 0, action: "openWallet", i18n: "menuItems.openWallet" },
-      { key: 1, action: "copyAddress", i18n: "menuItems.copyAddress" }
+      { action: "openWallet", i18n: "menuItems.openWallet" },
+      { action: "copyAddress", i18n: "menuItems.copyAddress" }
     ];
     return {
       menuItems

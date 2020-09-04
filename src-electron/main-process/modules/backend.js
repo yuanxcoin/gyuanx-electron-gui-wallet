@@ -2,6 +2,9 @@ import { Daemon } from "./daemon";
 import { WalletRPC } from "./wallet-rpc";
 import { SCEE } from "./SCEE-Node";
 import { dialog } from "electron";
+import semver from "semver";
+import axios from "axios";
+import { version } from "../../../package.json";
 
 const WebSocket = require("ws");
 const os = require("os");
@@ -298,12 +301,40 @@ export class Backend {
         break;
     }
   }
+  // if the version is a whole minor version out of date (hardfork out of date)
+  // set update required to true
+  async checkVersion() {
+    try {
+      const { data } = await axios.get(
+        "https://api.github.com/repos/loki-project/loki-electron-gui-wallet/releases/latest"
+      );
+      // remove the 'v' from front of the version
+      const latestVersion = data.tag_name.substring(1);
+      console.log("latest version: " + latestVersion);
+      console.log("current version: " + version);
+      // major, minor, patch
+      const vSizeDiff = semver.diff(version, latestVersion);
+      const updateAvailable = semver.ltr(version, latestVersion);
+      const majorOrMinor = ["major", "minor"].includes(vSizeDiff);
+      let updateRequired = false;
+
+      if (updateAvailable && majorOrMinor) {
+        updateRequired = true;
+      }
+      this.send("set_update_required", { required: updateRequired, latest_version: latestVersion });
+    } catch (e) {
+      this.send("set_updated_required", { required: false, latest_version: "Unknown" });
+    }
+  }
 
   startup() {
     this.send("set_app_data", {
       remotes: this.remotes,
       defaults: this.defaults
     });
+
+    // check for latest version
+    this.checkVersion();
 
     fs.readFile(this.config_file, "utf8", (err, data) => {
       if (err) {

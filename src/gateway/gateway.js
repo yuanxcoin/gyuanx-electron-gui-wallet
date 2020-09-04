@@ -258,6 +258,11 @@ export class Gateway extends EventEmitter {
           this.app.store.dispatch("gateway/resetWalletData");
         }, 250);
         break;
+
+      case "set_update_required":
+        console.log("set update required case hit");
+        this.app.store.commit("gateway/set_update_required", decrypted_data.data);
+        break;
     }
   }
 

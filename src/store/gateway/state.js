@@ -119,5 +119,9 @@ export default {
     bans: [],
     tx_pool_backlog: [],
     service_nodes: []
+  },
+  update_required: {
+    required: false,
+    latest_version: "Unknown"
   }
 };

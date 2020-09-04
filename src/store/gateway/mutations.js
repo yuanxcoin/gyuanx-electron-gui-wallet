@@ -36,3 +36,7 @@ export const set_check_transaction_status = (state, data) => {
 export const set_lns_status = (state, data) => {
   state.lns_status = data;
 };
+
+export const set_update_required = (state, data) => {
+  state.update_required = data;
+};

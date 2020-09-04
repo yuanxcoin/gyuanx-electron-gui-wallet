@@ -26,6 +26,7 @@
 
 <script>
 import { mapState } from "vuex";
+
 export default {
   name: "StatusFooter",
   data() {
@@ -35,6 +36,7 @@ export default {
     config: state => state.gateway.app.config,
     daemon: state => state.gateway.daemon,
     wallet: state => state.gateway.wallet,
+    update_required: state => state.gateway.update_required,
 
     config_daemon() {
       return this.config.daemons[this.config.app.net_type];
@@ -61,10 +63,18 @@ export default {
     status() {
       const isSyncing = this.daemon.info.height_without_bootstrap < this.target_height;
       const isScanning = this.wallet.info.height < this.target_height - 1 && this.wallet.info.height != 0;
-      const updateRequired = true;
-      if (updateRequired) {
-        return "Update required";
+
+      console.log("here's the current update_required");
+      console.log(this.update_required);
+      if (this.update_required.required) {
+        // i18n string and class of statusbar
+        return "updateRequired";
       }
+
+      // console.log("Calling status");
+      // console.log("semver diff: " + semver.diff(version, latestVersion));
+      // console.log("semver ltr: " + semver.ltr(version, latestVersion));
+
       if (this.config_daemon.type === "local") {
         if (isSyncing) {
           return "syncing";

@@ -421,7 +421,7 @@ export class Daemon {
 
   updateServiceNodes() {
     // Get the latest service node data
-    this.getRPC("service_nodes").then(data => {
+    this.getRPC("all_service_nodes").then(data => {
       if (!data.hasOwnProperty("result")) return;
 
       const service_nodes = data.result.service_node_states;

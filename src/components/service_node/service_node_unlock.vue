@@ -85,6 +85,7 @@ export default {
     is_ready() {
       return this.$store.getters["gateway/isReady"];
     },
+    // just users's SNs
     service_nodes(state) {
       const nodes = state.gateway.daemon.service_nodes;
       const getContribution = node => node.contributors.find(c => c.address === this.our_address);
@@ -96,6 +97,13 @@ export default {
           ourContributionAmount: ourContribution.amount
         };
       });
+    },
+    available_service_nodes(state) {
+      const nodes = state.gateway.daemon.service_nodes;
+      console.log(nodes);
+      // return nodes;
+      const getAvailable = node => node.active;
+      return nodes.map(getAvailable);
     }
   }),
   validations: {
@@ -163,6 +171,8 @@ export default {
   },
   methods: {
     details(node) {
+      console.log("here are the service nodes from state");
+      console.log(this.available_service_nodes);
       this.$refs.serviceNodeDetails.isVisible = true;
       this.$refs.serviceNodeDetails.node = node;
     },

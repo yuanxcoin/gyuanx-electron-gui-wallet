@@ -17,23 +17,19 @@
       <q-item-label v-if="paymentId" header>{{ $t("fieldLabels.paymentId") }}: {{ paymentId }}</q-item-label>
       <q-item-label v-if="extra" header class="extra non-selectable">{{ extra }}</q-item-label>
     </q-item-section>
-
-    <q-menu context-menu>
-      <q-list separator class="context-menu">
-        <q-item v-close-popup clickable @click.native="copyAddress($event)">
-          <q-item-section>
-            {{ $t("menuItems.copyAddress") }}
-          </q-item-section>
-        </q-item>
-      </q-list>
-    </q-menu>
+    <ContextMenu :menu-items="menuItems" @copyAddress="copyAddress" />
   </div>
 </template>
 
 <script>
 const { clipboard } = require("electron");
+import ContextMenu from "components/menus/contextmenu";
+
 export default {
   name: "AddressHeader",
+  components: {
+    ContextMenu
+  },
   props: {
     title: {
       type: String,
@@ -60,13 +56,13 @@ export default {
     }
   },
   data() {
-    return {};
+    const menuItems = [{ action: "copyAddress", i18n: "menuItems.copyAddress" }];
+    return {
+      menuItems
+    };
   },
   methods: {
-    copyAddress(event) {
-      if (event) {
-        event.stopPropagation();
-      }
+    copyAddress() {
       if (this.$refs.copy) {
         this.$refs.copy.$el.blur();
       }

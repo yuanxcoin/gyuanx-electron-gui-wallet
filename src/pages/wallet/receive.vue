@@ -57,21 +57,7 @@
         <q-card class="qr-code-card">
           <div class="text-center q-mb-sm q-pa-md" style="background: white;">
             <QrcodeVue ref="qr" :value="QR.address" size="240"> </QrcodeVue>
-            <!-- This menu appears on right click of QR code -->
-            <q-menu context-menu>
-              <q-list class="context-menu">
-                <q-item v-close-popup clickable @click.native="copyQR()">
-                  <q-item-section>
-                    {{ $t("menuItems.copyQR") }}
-                  </q-item-section>
-                </q-item>
-                <q-item v-close-popup clickable @click.native="saveQR()">
-                  <q-item-section>
-                    {{ $t("menuItems.saveQR") }}
-                  </q-item-section>
-                </q-item>
-              </q-list>
-            </q-menu>
+            <ContextMenu :menu-items="menuItems" @copyQR="copyQR()" @saveQR="saveQR()" />
           </div>
           <q-card-actions>
             <q-btn color="primary" :label="$t('buttons.close')" @click="QR.visible = false" />
@@ -88,6 +74,7 @@ import { mapState } from "vuex";
 import QrcodeVue from "qrcode.vue";
 import AddressDetails from "components/address_details";
 import ReceiveItem from "components/receive_item";
+import ContextMenu from "components/menus/contextmenu";
 
 export default {
   filters: {
@@ -105,14 +92,20 @@ export default {
   components: {
     AddressDetails,
     QrcodeVue,
-    ReceiveItem
+    ReceiveItem,
+    ContextMenu
   },
   data() {
+    const menuItems = [
+      { action: "copyQR", i18n: "menuItems.copyQR" },
+      { action: "saveQR", i18n: "menuItems.saveQR" }
+    ];
     return {
       QR: {
         visible: false,
         address: null
-      }
+      },
+      menuItems
     };
   },
   computed: mapState({
@@ -143,15 +136,7 @@ export default {
       let img = this.$refs.qr.$el.childNodes[0].toDataURL();
       this.$gateway.send("core", "save_png", { img, type: "QR Code" });
     },
-    copyAddress(address, event) {
-      event.stopPropagation();
-
-      for (let i = 0; i < event.path.length; i++) {
-        if (event.path[i].tagName == "BUTTON") {
-          event.path[i].blur();
-          break;
-        }
-      }
+    copyAddress(address) {
       clipboard.writeText(address);
       this.$q.notify({
         type: "positive",

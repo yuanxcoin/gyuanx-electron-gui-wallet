@@ -31,7 +31,7 @@
 <script>
 import { mapState } from "vuex";
 import FormatLoki from "components/format_loki";
-import WalletSettings from "components/wallet_settings";
+import WalletSettings from "components/menus/wallet_settings";
 import CopyIcon from "components/icons/copy_icon";
 export default {
   name: "WalletDetails",

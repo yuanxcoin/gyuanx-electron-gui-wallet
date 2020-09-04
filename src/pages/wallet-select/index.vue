@@ -58,21 +58,11 @@
             <q-item-label class="wallet-name" caption>{{ wallet.name }}</q-item-label>
             <q-item-label class="monospace ellipsis" caption>{{ wallet.address }}</q-item-label>
           </q-item-section>
-          <q-menu context-menu>
-            <q-list separator class="context-menu">
-              <q-item v-close-popup clickable @click.native="openWallet(wallet)">
-                <q-item-section>
-                  {{ $t("menuItems.openWallet") }}
-                </q-item-section>
-              </q-item>
-
-              <q-item v-close-popup clickable @click.native="copyAddress(wallet.address, $event)">
-                <q-item-section>
-                  {{ $t("menuItems.copyAddress") }}
-                </q-item-section>
-              </q-item>
-            </q-list>
-          </q-menu>
+          <ContextMenu
+            :menu-items="menuItems"
+            @openWallet="openWallet(wallet)"
+            @copyAddress="copyAddress(wallet.address)"
+          />
         </q-item>
         <q-separator />
       </template>
@@ -90,8 +80,21 @@
 <script>
 const { clipboard } = require("electron");
 import { mapState } from "vuex";
+import ContextMenu from "components/menus/contextmenu";
 
 export default {
+  components: {
+    ContextMenu
+  },
+  data() {
+    const menuItems = [
+      { action: "openWallet", i18n: "menuItems.openWallet" },
+      { action: "copyAddress", i18n: "menuItems.copyAddress" }
+    ];
+    return {
+      menuItems
+    };
+  },
   computed: mapState({
     theme: state => state.gateway.app.config.appearance.theme,
     wallets: state => state.gateway.wallets,
@@ -220,14 +223,7 @@ export default {
     importLegacyWallet() {
       this.$router.replace({ path: "wallet-select/import-legacy" });
     },
-    copyAddress(address, event) {
-      event.stopPropagation();
-      for (let i = 0; i < event.path.length; i++) {
-        if (event.path[i].tagName == "BUTTON") {
-          event.path[i].blur();
-          break;
-        }
-      }
+    copyAddress(address) {
       clipboard.writeText(address);
       this.$q.notify({
         type: "positive",

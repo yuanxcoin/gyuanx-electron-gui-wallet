@@ -25,7 +25,7 @@
 
 <script>
 import StatusFooter from "components/footer";
-import MainMenu from "components/mainmenu";
+import MainMenu from "components/menus/mainmenu";
 
 export default {
   components: {

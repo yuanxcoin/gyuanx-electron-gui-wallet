@@ -58,7 +58,7 @@ import { required, decimal } from "vuelidate/lib/validators";
 import { service_node_key, greater_than_zero } from "src/validators/common";
 import LokiField from "components/loki_field";
 import WalletPassword from "src/mixins/wallet_password";
-import ServiceNodeUnlock from "components/service_node_unlock";
+import ServiceNodeUnlock from "./service_node_unlock";
 
 export default {
   name: "ServiceNodeStaking",

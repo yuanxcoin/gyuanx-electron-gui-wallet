@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import LNSInput from "components/lns_input";
-import LNSRecordList from "components/lns_record_list";
+import LNSInput from "components/lns/lns_input";
+import LNSRecordList from "components/lns/lns_record_list";
 
 export default {
   components: {

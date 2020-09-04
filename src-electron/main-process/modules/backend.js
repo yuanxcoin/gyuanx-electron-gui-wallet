@@ -331,7 +331,6 @@ export class Backend {
       defaults: this.defaults
     });
 
-    // check for latest version
     this.checkVersion();
 
     fs.readFile(this.config_file, "utf8", (err, data) => {

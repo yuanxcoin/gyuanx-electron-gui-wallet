@@ -121,7 +121,6 @@ export default {
     service_nodes: []
   },
   update_required: {
-    required: false,
-    latest_version: "Unknown"
+    required: false
   }
 };

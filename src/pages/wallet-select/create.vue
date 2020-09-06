@@ -14,7 +14,15 @@
       </LokiField>
 
       <LokiField :label="$t('fieldLabels.seedLanguage')">
-        <q-select v-model="wallet.language" :options="languageOptions" :dark="theme == 'dark'" borderless dense />
+        <q-select
+          v-model="wallet.language"
+          :options="languageOptions"
+          :dark="theme == 'dark'"
+          borderless
+          dense
+          emit-value
+          map-options
+        />
       </LokiField>
 
       <LokiField :label="$t('fieldLabels.password')" optional>
@@ -54,28 +62,28 @@ export default {
     LokiField
   },
   data() {
+    const languageOptions = [
+      { label: "English", value: "English" },
+      { label: "Deutsch", value: "Deutsch" },
+      { label: "Español", value: "Español" },
+      { label: "Français", value: "Français" },
+      { label: "Italiano", value: "Italiano" },
+      { label: "Nederlands", value: "Nederlands" },
+      { label: "Português", value: "Português" },
+      { label: "Русский", value: "Русский" },
+      { label: "日本語", value: "日本語" },
+      { label: "简体中文 (中国)", value: "简体中文 (中国)" },
+      { label: "Esperanto", value: "Esperanto" },
+      { label: "Lojban", value: "Lojban" }
+    ];
     return {
       wallet: {
         name: "",
-        language: "English",
+        language: languageOptions[0],
         password: "",
         password_confirm: ""
       },
-
-      languageOptions: [
-        { label: "English", value: "English" },
-        { label: "Deutsch", value: "Deutsch" },
-        { label: "Español", value: "Español" },
-        { label: "Français", value: "Français" },
-        { label: "Italiano", value: "Italiano" },
-        { label: "Nederlands", value: "Nederlands" },
-        { label: "Português", value: "Português" },
-        { label: "Русский", value: "Русский" },
-        { label: "日本語", value: "日本語" },
-        { label: "简体中文 (中国)", value: "简体中文 (中国)" },
-        { label: "Esperanto", value: "Esperanto" },
-        { label: "Lojban", value: "Lojban" }
-      ]
+      languageOptions
     };
   },
   computed: mapState({

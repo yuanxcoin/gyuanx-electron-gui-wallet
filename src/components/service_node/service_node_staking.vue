@@ -259,7 +259,7 @@ export default {
         noPasswordMessage: this.$t("dialog.stake.message"),
         ok: {
           label: this.$t("dialog.stake.ok"),
-          color: "primary"
+          color: this.theme == "dark" ? "white" : "dark"
         },
         dark: this.theme == "dark",
         color: this.theme == "dark" ? "white" : "dark"

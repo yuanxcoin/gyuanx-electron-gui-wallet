@@ -17,7 +17,8 @@
               • {{ getNumContributors(node) }}
               <span v-if="getNumContributors(node) > 1">Contributors</span>
               <span v-else>Contributor</span>
-              • Min contribution: {{ getMinContribution(node) }} Loki
+              • {{ openForContributionLoki(node) }} Loki left to contribute • Min contribution:
+              {{ getMinContribution(node) }} Loki
             </span>
           </q-item-label>
         </q-item-section>
@@ -94,6 +95,14 @@ export default {
       const nodeWithMinContribution = { ...node, minContribution: this.getMinContribution(node) };
       return nodeWithMinContribution;
     },
+    openForContribution(node) {
+      const openContributionRemaining =
+        node.staking_requirement > node.total_reserved ? node.staking_requirement - node.total_reserved : 0;
+      return openContributionRemaining;
+    },
+    openForContributionLoki(node) {
+      return (this.openForContribution(node) / 1e9).toFixed(4);
+    },
     is_ready() {
       return this.$store.getters["gateway/isReady"];
     },
@@ -113,8 +122,7 @@ export default {
     },
     getMinContribution(node) {
       // This is calculated in the same way it is calculated on the LokiBlocks site
-      const openContributionRemaining =
-        node.staking_requirement > node.total_reserved ? node.staking_requirement - node.total_reserved : 0;
+      const openContributionRemaining = this.openForContribution(node);
       const minContributionAtomicUnits =
         !node.funded && node.contributors.length < MAX_NUMBER_OF_CONTRIBUTORS
           ? openContributionRemaining / (MAX_NUMBER_OF_CONTRIBUTORS - node.contributors.length)

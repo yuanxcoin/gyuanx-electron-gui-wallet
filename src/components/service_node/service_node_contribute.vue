@@ -4,7 +4,6 @@
       <div class="q-pb-sm header">
         {{ $t("titles.availableForContribution") }}
       </div>
-      <!-- <q-list class="service-node-list" no-border /> -->
       <!-- use placeholder i18n here -->
       <p>There is a maximum of 4 contributors per service node.</p>
       <ServiceNodeList
@@ -27,9 +26,6 @@ export default {
   components: {
     ServiceNodeList,
     ServiceNodeDetails
-  },
-  data() {
-    return {};
   },
   computed: mapState({
     awaiting_service_nodes(state) {

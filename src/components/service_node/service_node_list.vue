@@ -92,8 +92,6 @@ export default {
   methods: {
     nodeWithMinContribution(node) {
       const nodeWithMinContribution = { ...node, minContribution: this.getMinContribution(node) };
-      console.log("node with min contribution");
-      console.log(nodeWithMinContribution);
       return nodeWithMinContribution;
     },
     is_ready() {
@@ -114,8 +112,6 @@ export default {
       return node.contributors.length;
     },
     getMinContribution(node) {
-      console.log("here's the node in min contribution");
-      console.log(node);
       // This is calculated in the same way it is calculated on the LokiBlocks site
       const openContributionRemaining =
         node.staking_requirement > node.total_reserved ? node.staking_requirement - node.total_reserved : 0;

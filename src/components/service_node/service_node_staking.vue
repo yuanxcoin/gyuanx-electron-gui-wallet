@@ -203,8 +203,7 @@ export default {
           dark: this.theme === "dark"
         })
         .onOk(() => {
-          console.log(this.available_service_nodes);
-          // this.sweepAll();
+          this.sweepAll();
         })
         .onDismiss(() => {})
         .onCancel(() => {});

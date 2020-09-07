@@ -129,7 +129,6 @@ export default {
   },
   methods: {
     details(node) {
-      console.log("Details unlock being called");
       this.$refs.serviceNodeDetailsUnlock.isVisible = true;
       this.$refs.serviceNodeDetailsUnlock.node = node;
     },
@@ -137,7 +136,6 @@ export default {
       const key = node.service_node_pubkey;
       // stop detail page from popping up
       event.stopPropagation();
-      console.log("Unlock warning called with key: " + key);
       this.$q
         .dialog({
           title: this.$t("dialog.unlockServiceNodeWarning.title"),

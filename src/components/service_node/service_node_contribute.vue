@@ -34,17 +34,15 @@ export default {
   computed: mapState({
     awaiting_service_nodes(state) {
       const nodes = state.gateway.daemon.service_nodes;
-      console.log(nodes);
-      const isAwaitingContriubtion = node => !node.active && !node.funded;
+      const isAwaitingContribution = node => !node.active && !node.funded && node.requested_unlock_height === 0;
       const compareFee = (n1, n2) => (this.getFeeDecimal(n1) > this.getFeeDecimal(n2) ? 1 : -1);
-      const awaitingContributionNodes = nodes.filter(isAwaitingContriubtion).map(n => {
+      const awaitingContributionNodes = nodes.filter(isAwaitingContribution).map(n => {
         return {
           ...n,
           awaitingContribution: true
         };
       });
       awaitingContributionNodes.sort(compareFee);
-      console.log("here are the service nodes from state");
       return awaitingContributionNodes;
     }
   }),
@@ -58,19 +56,17 @@ export default {
     },
     contributeToNode(node, event) {
       // stop detail page from popping up
+      console.log("Contribute to node");
+      console.log(this.awaiting_service_nodes);
       event.stopPropagation();
       this.scrollToTop();
-      console.log("calling contribute to node with key");
       const key = node.service_node_pubkey;
       const minContribution = node.minContribution;
-      console.log(key);
-      console.log(minContribution);
       // close the popup if it's open
       this.$refs.serviceNodeDetailsContribute.isVisible = false;
       this.$emit("contribute", key, minContribution);
     },
     details(node) {
-      console.log("Details contribute being called");
       this.$refs.serviceNodeDetailsContribute.isVisible = true;
       this.$refs.serviceNodeDetailsContribute.node = node;
     }

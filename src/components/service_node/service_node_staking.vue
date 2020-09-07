@@ -43,7 +43,13 @@
       </div>
     </div>
 
-    <ServiceNodeUnlock />
+    <q-option-group v-model="unlockOrContribute" :options="unlockOrContributeOpts" color="red" inline />
+    <div v-if="unlockOrContribute === 'unlock'">
+      <ServiceNodeUnlock />
+    </div>
+    <div v-else>
+      <ServiceNodeContribute @contribute="fillPubKey" />
+    </div>
 
     <q-inner-loading :showing="stake_status.sending || tx_status.sending" :dark="theme == 'dark'">
       <q-spinner color="primary" size="30" />
@@ -59,16 +65,30 @@ import { service_node_key, greater_than_zero } from "src/validators/common";
 import LokiField from "components/loki_field";
 import WalletPassword from "src/mixins/wallet_password";
 import ServiceNodeUnlock from "./service_node_unlock";
+import ServiceNodeContribute from "./service_node_contribute";
 
 export default {
   name: "ServiceNodeStaking",
   components: {
     LokiField,
-    ServiceNodeUnlock
+    ServiceNodeUnlock,
+    ServiceNodeContribute
   },
   mixins: [WalletPassword],
   data() {
+    const unlockOrContributeOpts = [
+      {
+        label: "My stakes",
+        value: "unlock"
+      },
+      {
+        label: "Available for contribution",
+        value: "contribute"
+      }
+    ];
     return {
+      unlockOrContribute: "contribute",
+      unlockOrContributeOpts: unlockOrContributeOpts,
       service_node: {
         key: "",
         amount: 0
@@ -157,6 +177,9 @@ export default {
     }
   },
   methods: {
+    fillPubKey(key) {
+      this.service_node.key = key;
+    },
     sweepAllWarning() {
       this.$q
         .dialog({
@@ -174,7 +197,8 @@ export default {
           dark: this.theme === "dark"
         })
         .onOk(() => {
-          this.sweepAll();
+          console.log(this.available_service_nodes);
+          // this.sweepAll();
         })
         .onDismiss(() => {})
         .onCancel(() => {});
@@ -294,6 +318,16 @@ export default {
     .q-btn:not(:first-child) {
       margin-left: 8px;
     }
+  }
+}
+.service-node-stake-tab {
+  user-select: none;
+  .header {
+    font-weight: 450;
+  }
+  .q-item-sublabel,
+  .q-list-header {
+    font-size: 14px;
   }
 }
 </style>

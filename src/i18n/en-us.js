@@ -536,6 +536,7 @@ export default {
       checkTransaction: "CHECK TRANSACTION",
       prove: "PROVE"
     },
+    availableForContribution: "Service nodes available for contribution",
     changePassword: "Change password",
     configure: "Configure",
     currentlyStakedNodes: "Currently staked nodes",

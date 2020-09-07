@@ -12,8 +12,8 @@
             class="q-mr-sm"
             color="primary"
             :disabled="!is_ready || unlock_status.sending"
-            :label="$t('buttons.unlock')"
-            @click="unlock(node.service_node_pubkey, $event)"
+            :label="$t(actionI18n)"
+            @click="action(node, $event)"
           />
           <q-btn v-if="can_open" color="primary" :label="$t('buttons.viewOnExplorer')" @click="openExplorer" />
         </q-toolbar>
@@ -136,8 +136,12 @@ export default {
     ContextMenu
   },
   props: {
-    unlock: {
+    action: {
       type: Function,
+      required: true
+    },
+    actionI18n: {
+      type: String,
       required: true
     }
   },

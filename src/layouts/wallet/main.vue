@@ -10,7 +10,6 @@
     </q-header>
 
     <q-page-container>
-      <!-- <AddressHeader :address="info.address" :title="info.name" /> -->
       <WalletDetails />
 
       <div class="app-content">

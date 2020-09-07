@@ -48,15 +48,15 @@
         />
       </div>
     </div>
-
-    <q-option-group v-model="unlockOrContribute" :options="unlockOrContributeOpts" color="red" inline />
-    <div v-if="unlockOrContribute === 'unlock'">
-      <ServiceNodeUnlock />
+    <div class="unlockOrContribute">
+      <q-option-group v-model="unlockOrContribute" :options="unlockOrContributeOpts" color="red" inline />
+      <div v-if="unlockOrContribute === 'unlock'">
+        <ServiceNodeUnlock />
+      </div>
+      <div v-else>
+        <ServiceNodeContribute @contribute="fillStakingFields" />
+      </div>
     </div>
-    <div v-else>
-      <ServiceNodeContribute @contribute="fillStakingFields" />
-    </div>
-
     <q-inner-loading :showing="stake_status.sending || tx_status.sending" :dark="theme == 'dark'">
       <q-spinner color="primary" size="30" />
     </q-inner-loading>
@@ -332,7 +332,12 @@ export default {
     }
   }
 }
+.unlockOrContribute {
+  margin-top: 16px;
+  padding-left: 8px;
+}
 .service-node-stake-tab {
+  margin-top: 4px;
   user-select: none;
   .header {
     font-weight: 450;

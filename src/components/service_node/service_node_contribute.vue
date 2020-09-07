@@ -4,11 +4,11 @@
       <div class="q-pb-sm header">
         {{ $t("titles.availableForContribution") }}
       </div>
-      <!-- use placeholder i18n here -->
+      <!-- use placeholder with the i18n here -->
       <p>There is a limit of 4 contributors per service node.</p>
       <ServiceNodeList
         :service-nodes="awaiting_service_nodes"
-        :button-i18n="'STAKE'"
+        button-i18n="buttons.stake"
         :details="details"
         :action="contributeToNode"
       />
@@ -63,7 +63,7 @@ export default {
         type: "positive",
         timeout: 1000,
         // translate
-        message: "Public key and amount filled"
+        message: "Service node key and min amount filled"
       });
     },
     details(node) {

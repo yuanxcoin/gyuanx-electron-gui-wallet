@@ -287,6 +287,11 @@ export class WalletRPC {
         this.registerSnode(params.password, params.string);
         break;
 
+      case "update_service_node_list":
+        console.log("update sn list case hit");
+        this.updateServiceNodeList();
+        break;
+
       case "unlock_stake":
         this.unlockStake(params.password, params.service_node_key, params.confirmed || false);
         break;
@@ -1110,6 +1115,11 @@ export class WalletRPC {
         });
       });
     });
+  }
+
+  async updateServiceNodeList() {
+    this.backend.daemon.updateServiceNodesManual();
+    console.log("update service nodes was called");
   }
 
   unlockStake(password, service_node_key, confirmed = false) {

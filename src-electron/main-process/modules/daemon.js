@@ -419,11 +419,26 @@ export class Daemon {
     });
   }
 
-  updateServiceNodes() {
-    // Get the latest service node data
+  // done on click, so user feedback (loading spinner) required
+  updateServiceNodesManual() {
+    this.sendGateway("show_loading", {
+      message: "Fetching updated list of available service nodes"
+    });
     this.getRPC("service_nodes").then(data => {
       if (!data.hasOwnProperty("result")) return;
+      console.log("got a result from the update manually");
+      const service_nodes = data.result.service_node_states;
+      this.sendGateway("set_daemon_data", { service_nodes });
+      this.sendGateway("hide_loading");
+    });
+  }
 
+  // Get the latest service node data, used to do it in background
+  // so no user feedback required
+  updateServiceNodes() {
+    this.getRPC("service_nodes").then(data => {
+      if (!data.hasOwnProperty("result")) return;
+      console.log("got a sn result from the update, in background");
       const service_nodes = data.result.service_node_states;
       this.sendGateway("set_daemon_data", { service_nodes });
     });

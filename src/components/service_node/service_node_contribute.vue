@@ -5,7 +5,14 @@
         {{ $t("titles.availableForContribution") }}
       </div>
       <!-- use placeholder with the i18n here -->
-      <p>There is a limit of 4 contributors per service node.</p>
+      <div class="row align-items full-width">
+        <!-- <div class="col-md-8"> -->
+        <p>There is a limit of 4 contributors per service node.</p>
+        <!-- </div> -->
+        <!-- <div class="col-md-4"> -->
+        <q-btn class="right float-right" color="primary" label="REFRESH" @click="update_service_node_list" />
+        <!-- </div> -->
+      </div>
       <ServiceNodeList
         :service-nodes="awaiting_service_nodes"
         button-i18n="buttons.stake"
@@ -69,6 +76,10 @@ export default {
     details(node) {
       this.$refs.serviceNodeDetailsContribute.isVisible = true;
       this.$refs.serviceNodeDetailsContribute.node = node;
+    },
+    update_service_node_list() {
+      console.log("update service node list button clicked");
+      this.$gateway.send("wallet", "update_service_node_list");
     }
   }
 };

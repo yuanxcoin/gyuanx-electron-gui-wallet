@@ -5,7 +5,7 @@
         {{ $t("titles.availableForContribution") }}
       </div>
       <!-- use placeholder i18n here -->
-      <p>There is a maximum of 4 contributors per service node.</p>
+      <p>There is a limit of 4 contributors per service node.</p>
       <ServiceNodeList
         :service-nodes="awaiting_service_nodes"
         :button-i18n="'STAKE'"
@@ -59,6 +59,12 @@ export default {
       // close the popup if it's open
       this.$refs.serviceNodeDetailsContribute.isVisible = false;
       this.$emit("contribute", key, minContribution);
+      this.$q.notify({
+        type: "positive",
+        timeout: 1000,
+        // translate
+        message: "Public key and amount filled"
+      });
     },
     details(node) {
       this.$refs.serviceNodeDetailsContribute.isVisible = true;

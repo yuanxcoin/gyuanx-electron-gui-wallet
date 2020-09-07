@@ -1,6 +1,11 @@
 <template>
   <div class="service-node-staking">
     <div class="q-px-md q-pt-md">
+      <p>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam praesentium neque ducimus molestiae quod atque.
+        Saepe quasi deserunt rerum, similique tempora temporibus earum vitae voluptate. Aspernatur cum accusantium
+        libero temporibus?
+      </p>
       <LokiField :label="$t('fieldLabels.serviceNodeKey')" :error="$v.service_node.key.$error">
         <q-input
           v-model.trim="service_node.key"
@@ -48,7 +53,7 @@
       <ServiceNodeUnlock />
     </div>
     <div v-else>
-      <ServiceNodeContribute @contribute="fillPubKey" />
+      <ServiceNodeContribute @contribute="fillStakingFields" />
     </div>
 
     <q-inner-loading :showing="stake_status.sending || tx_status.sending" :dark="theme == 'dark'">
@@ -177,8 +182,9 @@ export default {
     }
   },
   methods: {
-    fillPubKey(key) {
+    fillStakingFields(key, minContribution) {
       this.service_node.key = key;
+      this.service_node.amount = minContribution;
     },
     sweepAllWarning() {
       this.$q

@@ -41,9 +41,8 @@
       <ServiceNodeList
         :service-nodes="service_nodes"
         button-i18n="buttons.unlock"
-        button-action="unlockAction"
         :details="details"
-        @unlockAction="unlockWarning"
+        :action="unlockWarning"
       />
     </div>
 
@@ -175,9 +174,10 @@ export default {
       this.$refs.serviceNodeDetailsUnlock.isVisible = true;
       this.$refs.serviceNodeDetailsUnlock.node = node;
     },
-    unlockWarning(node) {
+    unlockWarning(node, event) {
       const key = node.service_node_pubkey;
-      // event.stopPropagation();
+      // stop detail page from popping up
+      event.stopPropagation();
       console.log("Unlock warning called with key: " + key);
       // this.$q
       //   .dialog({

@@ -1,7 +1,11 @@
 <template>
   <div>
     <q-list class="service-node-list" no-border>
-      <q-item v-for="node in serviceNodes" :key="node.service_node_pubkey" @click.native="details(node)">
+      <q-item
+        v-for="node in serviceNodes"
+        :key="node.service_node_pubkey"
+        @click.native="details(nodeWithMinContribution(node))"
+      >
         <q-item-section>
           <q-item-label class="ellipsis">{{ node.service_node_pubkey }}</q-item-label>
           <q-item-label class="non-selectable">
@@ -9,6 +13,12 @@
             <span v-if="node.ourContributionAmount">
               • {{ $t("strings.contribution") }}: <FormatLoki :amount="node.ourContributionAmount"
             /></span>
+            <span v-if="node.awaitingContribution">
+              • {{ getNumContributors(node) }}
+              <span v-if="getNumContributors(node) > 1">Contributors</span>
+              <span v-else>Contributor</span>
+              • Min contribution: {{ getMinContribution(node) }} Loki
+            </span>
           </q-item-label>
         </q-item-section>
         <q-item-section side>
@@ -19,7 +29,7 @@
             :label="$t(buttonI18n)"
             :disabled="!is_ready"
             side
-            @click="actionButtonClicked(node, $event)"
+            @click="action(nodeWithMinContribution(node), $event)"
           />
           <q-item-label v-if="node.requested_unlock_height > 0" header>
             {{
@@ -43,6 +53,9 @@
 import { clipboard } from "electron";
 import ContextMenu from "components/menus/contextmenu";
 import FormatLoki from "components/format_loki";
+
+const MAX_NUMBER_OF_CONTRIBUTORS = 4;
+
 export default {
   name: "ServiceNodeList",
   components: {
@@ -62,8 +75,8 @@ export default {
       type: String,
       required: true
     },
-    buttonAction: {
-      type: String,
+    action: {
+      type: Function,
       required: true
     }
   },
@@ -77,10 +90,17 @@ export default {
     };
   },
   methods: {
+    nodeWithMinContribution(node) {
+      const nodeWithMinContribution = { ...node, minContribution: this.getMinContribution(node) };
+      console.log("node with min contribution");
+      console.log(nodeWithMinContribution);
+      return nodeWithMinContribution;
+    },
     is_ready() {
       return this.$store.getters["gateway/isReady"];
     },
     getRole(node) {
+      // don't show a role if the user is not an operator or contributor
       let role = "";
       const opAddress = node.operator_address;
       if (node.operator_address === this.our_address) {
@@ -88,8 +108,24 @@ export default {
       } else if (node.ourContributionAmount && opAddress !== this.our_address) {
         role = "strings.contributor";
       }
-      // const role = node.operator_address === this.our_address ?  : "strings.contributor";
       return this.$t(role);
+    },
+    getNumContributors(node) {
+      return node.contributors.length;
+    },
+    getMinContribution(node) {
+      console.log("here's the node in min contribution");
+      console.log(node);
+      // This is calculated in the same way it is calculated on the LokiBlocks site
+      const openContributionRemaining =
+        node.staking_requirement > node.total_reserved ? node.staking_requirement - node.total_reserved : 0;
+      const minContributionAtomicUnits =
+        !node.funded && node.contributors.length < MAX_NUMBER_OF_CONTRIBUTORS
+          ? openContributionRemaining / (MAX_NUMBER_OF_CONTRIBUTORS - node.contributors.length)
+          : 0;
+      const minContributionLoki = minContributionAtomicUnits / 1e9;
+      // ceiling to 4 decimal places
+      return minContributionLoki.toFixed(4);
     },
     getFee(node) {
       const operatorPortion = node.portions_for_operator;
@@ -105,11 +141,6 @@ export default {
           item: "Service node key"
         })
       });
-    },
-    actionButtonClicked(node, event) {
-      event.stopPropagation();
-      console.log("the action button has been clicked");
-      this.$emit(this.buttonAction, node);
     },
     openExplorer(key) {
       this.$gateway.send("core", "open_explorer", {

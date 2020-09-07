@@ -99,7 +99,13 @@
           </div>
           <q-list no-border :dark="theme == 'dark'" class="loki-list">
             <q-item-label class="contributors-title">{{ $t("strings.serviceNodeDetails.contributors") }}:</q-item-label>
-            <q-item v-for="contributor in contributors" :key="contributor.address" class="loki-list-item">
+            <q-item
+              v-for="contributor in contributors"
+              :key="contributor.address"
+              class="loki-list-item"
+              clickable
+              @click="openUserWalletInfo(contributor.address)"
+            >
               <q-item-label>
                 <q-item-label v-if="isMe(contributor)" class="name non-selectable">{{ $t("strings.me") }}</q-item-label>
                 <q-item-label v-else class="name non-selectable">{{ contributor.name }}</q-item-label>
@@ -192,6 +198,12 @@ export default {
     }
   }),
   methods: {
+    openUserWalletInfo(contributorAddress) {
+      const url = `https://www.lokisn.com/user/${contributorAddress}`;
+      this.$gateway.send("core", "open_url", {
+        url
+      });
+    },
     openExplorer() {
       this.$gateway.send("core", "open_explorer", {
         type: "service_node",

@@ -52,8 +52,6 @@ export default {
     },
     contributeToNode(node, event) {
       // stop detail page from popping up
-      console.log("Contribute to node");
-      console.log(this.awaiting_service_nodes);
       event.stopPropagation();
       this.scrollToTop();
       const key = node.service_node_pubkey;

@@ -2,9 +2,10 @@
   <div class="service-node-staking">
     <div class="q-px-md q-pt-md">
       <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam praesentium neque ducimus molestiae quod atque.
-        Saepe quasi deserunt rerum, similique tempora temporibus earum vitae voluptate. Aspernatur cum accusantium
-        libero temporibus?
+        Staking contributes to the safety of the Loki network. For your contribution, you earn Loki. The downside of
+        staking is that once staked, you will have to wait either 15 or 30 days to have your Loki unlocked, depending on
+        if a stake was unlocked by a contributor or the node was deregistered. To learn more about staking, please visit
+        the <span style="cursor: pointer; text-decoration: underline;" @click="lokiWebsite">Loki website.</span>
       </p>
       <LokiField :label="$t('fieldLabels.serviceNodeKey')" :error="$v.service_node.key.$error">
         <q-input
@@ -182,6 +183,12 @@ export default {
     }
   },
   methods: {
+    lokiWebsite() {
+      const url = "https://docs.loki.network/ServiceNodes/StakingRequirement/";
+      this.$gateway.send("core", "open_url", {
+        url
+      });
+    },
     fillStakingFields(key, minContribution) {
       this.service_node.key = key;
       this.service_node.amount = minContribution;

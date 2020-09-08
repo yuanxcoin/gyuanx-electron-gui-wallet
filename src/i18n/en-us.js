@@ -484,6 +484,7 @@ export default {
     serviceNodeRegistrationDescription:
       'Enter the {registerCommand} command produced by the daemon that is registering to become a Service Node using the "{prepareCommand}" command',
     serviceNodeStartStakingDescription: "To start staking, please visit the Staking tab",
+    noServiceNodesCurrentlyAvailable: "There are currently no service nodes available for contribution",
     serviceNodeDetails: {
       contributors: "Contributors",
       lastRewardBlockHeight: "Last reward block height",

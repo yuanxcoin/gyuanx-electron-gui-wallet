@@ -9,12 +9,16 @@
           <q-btn class="float-right vertical-top" icon="refresh" flat @click="updateServiceNodeList" />
         </div>
       </div>
-      <ServiceNodeList
-        :service-nodes="awaiting_service_nodes"
-        button-i18n="buttons.stake"
-        :details="details"
-        :action="contributeToNode"
-      />
+      <div v-if="awaiting_service_nodes.length > 0">
+        <ServiceNodeList
+          v-if="awaiting_service_nodes"
+          :service-nodes="awaiting_service_nodes"
+          button-i18n="buttons.stake"
+          :details="details"
+          :action="contributeToNode"
+        />
+      </div>
+      <div v-else>{{ $t("strings.noServiceNodesCurrentlyAvailable") }}</div>
     </div>
     <ServiceNodeDetails ref="serviceNodeDetailsContribute" :action="contributeToNode" action-i18n="buttons.stake" />
     <q-inner-loading :showing="fetching" :dark="theme == 'dark'">

@@ -19,6 +19,9 @@
       />
     </div>
     <ServiceNodeDetails ref="serviceNodeDetailsContribute" :action="contributeToNode" action-i18n="buttons.stake" />
+    <q-inner-loading :showing="fetching" :dark="theme == 'dark'">
+      <q-spinner color="primary" size="30" />
+    </q-inner-loading>
   </div>
 </template>
 
@@ -34,7 +37,7 @@ export default {
   },
   computed: mapState({
     awaiting_service_nodes(state) {
-      const nodes = state.gateway.daemon.service_nodes;
+      const nodes = state.gateway.daemon.service_nodes.nodes;
       const isAwaitingContribution = node => !node.active && !node.funded && node.requested_unlock_height === 0;
       const compareFee = (n1, n2) => (this.getFeeDecimal(n1) > this.getFeeDecimal(n2) ? 1 : -1);
       const awaitingContributionNodes = nodes.filter(isAwaitingContribution).map(n => {
@@ -45,7 +48,9 @@ export default {
       });
       awaitingContributionNodes.sort(compareFee);
       return awaitingContributionNodes;
-    }
+    },
+    theme: state => state.gateway.app.config.appearance.theme,
+    fetching: state => state.gateway.daemon.service_nodes.fetching
   }),
   methods: {
     getFeeDecimal(node) {
@@ -68,7 +73,7 @@ export default {
         type: "positive",
         timeout: 1000,
         // translate
-        message: "Service node key and min amount filled"
+        message: this.$t("notification.serviceNodeInfoFilled")
       });
     },
     details(node) {
@@ -76,7 +81,6 @@ export default {
       this.$refs.serviceNodeDetailsContribute.node = node;
     },
     update_service_node_list() {
-      console.log("update service node list button clicked");
       this.$gateway.send("wallet", "update_service_node_list");
     }
   }

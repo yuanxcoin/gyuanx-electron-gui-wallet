@@ -1118,8 +1118,8 @@ export class WalletRPC {
   }
 
   async updateServiceNodeList() {
-    this.backend.daemon.updateServiceNodesManual();
-    console.log("update service nodes was called");
+    this.backend.daemon.updateServiceNodes();
+    console.log("update service nodes manual was called");
   }
 
   unlockStake(password, service_node_key, confirmed = false) {

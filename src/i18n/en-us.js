@@ -304,6 +304,7 @@ export default {
       qrCopied: "QR code copied to clipboard",
       registerServiceNodeSuccess: "Successfully registered service node",
       sendSuccess: "Transaction successfully sent",
+      serviceNodeInfoFilled: "Service node key and min amount filled",
       sessionIdCopied: "Session ID copied to clipboard",
       signatureCopied: "Signature copied to clipboard",
       stakeSuccess: "Successfully staked",

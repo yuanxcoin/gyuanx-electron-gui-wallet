@@ -12,7 +12,7 @@
       />
     </div>
     <ServiceNodeDetails ref="serviceNodeDetailsUnlock" :action="unlockWarning" action-i18n="buttons.unlock" />
-    <q-inner-loading :showing="unlock_status.sending" :dark="theme == 'dark'">
+    <q-inner-loading :showing="unlock_status.sending || fetching" :dark="theme == 'dark'">
       <q-spinner color="primary" size="30" />
     </q-inner-loading>
   </div>
@@ -52,7 +52,7 @@ export default {
     },
     // just users's SNs
     service_nodes(state) {
-      const nodes = state.gateway.daemon.service_nodes;
+      const nodes = state.gateway.daemon.service_nodes.nodes;
       const getOurContribution = node => node.contributors.find(c => c.address === this.our_address);
       // Only show nodes that we contributed to
       return nodes.filter(getOurContribution).map(n => {
@@ -62,7 +62,8 @@ export default {
           ourContributionAmount: ourContribution.amount
         };
       });
-    }
+    },
+    fetching: state => state.gateway.daemon.service_nodes.fetching
   }),
   validations: {
     node_key: { required, service_node_key }

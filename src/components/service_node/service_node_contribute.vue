@@ -8,7 +8,7 @@
           <div class="header">{{ $t("titles.availableForContribution") }}</div>
         </div>
         <div class="col-md-4">
-          <q-btn class="float-right vertical-top" icon="refresh" flat @click="update_service_node_list" />
+          <q-btn class="float-right vertical-top" icon="refresh" flat @click="updateServiceNodeList" />
         </div>
       </div>
       <ServiceNodeList
@@ -80,7 +80,7 @@ export default {
       this.$refs.serviceNodeDetailsContribute.isVisible = true;
       this.$refs.serviceNodeDetailsContribute.node = node;
     },
-    update_service_node_list() {
+    updateServiceNodeList() {
       this.$gateway.send("wallet", "update_service_node_list");
     }
   }

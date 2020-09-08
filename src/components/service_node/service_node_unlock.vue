@@ -1,20 +1,25 @@
 <template>
-  <div v-if="service_nodes.length > 0" class="service-node-stake-tab">
+  <div class="service-node-stake-tab">
     <div class="q-pa-md">
       <div class="q-pb-sm header">
-        {{ $t("titles.currentlyStakedNodes") }}
+        <span v-if="service_nodes">
+          {{ $t("titles.currentlyStakedNodes") }}
+        </span>
+        <span v-else>{{ $t("strings.serviceNodeStartStakingDescription") }}</span>
       </div>
-      <ServiceNodeList
-        :service-nodes="service_nodes"
-        button-i18n="buttons.unlock"
-        :details="details"
-        :action="unlockWarning"
-      />
+      <div v-if="service_nodes">
+        <ServiceNodeList
+          :service-nodes="service_nodes"
+          button-i18n="buttons.unlock"
+          :details="details"
+          :action="unlockWarning"
+        />
+      </div>
+      <q-inner-loading :showing="unlock_status.sending || fetching" :dark="theme == 'dark'">
+        <q-spinner color="primary" size="30" />
+      </q-inner-loading>
+      <ServiceNodeDetails ref="serviceNodeDetailsUnlock" :action="unlockWarning" action-i18n="buttons.unlock" />
     </div>
-    <ServiceNodeDetails ref="serviceNodeDetailsUnlock" :action="unlockWarning" action-i18n="buttons.unlock" />
-    <q-inner-loading :showing="unlock_status.sending || fetching" :dark="theme == 'dark'">
-      <q-spinner color="primary" size="30" />
-    </q-inner-loading>
   </div>
 </template>
 
@@ -42,6 +47,10 @@ export default {
     return {
       menuItems
     };
+  },
+  created() {
+    const showing = this.unlock_status.sending || this.fetching;
+    console.log("is the fetching bar showing?" + showing);
   },
   computed: mapState({
     theme: state => state.gateway.app.config.appearance.theme,
@@ -136,6 +145,7 @@ export default {
     unlockWarning(node, event) {
       const key = node.service_node_pubkey;
       // stop detail page from popping up
+      this.$gateway.send("wallet", "update_service_node_list");
       event.stopPropagation();
       this.$q
         .dialog({

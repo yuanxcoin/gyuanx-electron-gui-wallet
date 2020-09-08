@@ -480,7 +480,7 @@ export default {
     seedWords: "Seed words",
     selectLanguage: "Select language",
     serviceNodeContributionDescription:
-      "Staking contributes to the safety of the Loki network. For your contribution, you earn Loki. The downside of staking is that once staked, you will have to wait either 15 or 30 days to have your Loki unlocked, depending on if a stake was unlocked by a contributor or the node was deregistered. To learn more about staking, please visit the",
+      "Staking contributes to the safety of the Loki network. For your contribution, you earn LOKI. Once staked, you will have to wait either 15 or 30 days to have your Loki unlocked, depending on if a stake was unlocked by a contributor or the node was deregistered. To learn more about staking, please visit the",
     serviceNodeRegistrationDescription:
       'Enter the {registerCommand} command produced by the daemon that is registering to become a Service Node using the "{prepareCommand}" command',
     serviceNodeStartStakingDescription: "To start staking, please visit the Staking tab",

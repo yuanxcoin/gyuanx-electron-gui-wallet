@@ -304,6 +304,7 @@ export default {
       qrCopied: "QR code copied to clipboard",
       registerServiceNodeSuccess: "Successfully registered service node",
       sendSuccess: "Transaction successfully sent",
+      serviceNodeInfoFilled: "Service node key and min amount filled",
       sessionIdCopied: "Session ID copied to clipboard",
       signatureCopied: "Signature copied to clipboard",
       stakeSuccess: "Successfully staked",
@@ -478,12 +479,18 @@ export default {
     saveToAddressBook: "Save to address book",
     seedWords: "Seed words",
     selectLanguage: "Select language",
+    serviceNodeContributionDescription:
+      "Staking contributes to the safety of the Loki network. For your contribution, you earn Loki. The downside of staking is that once staked, you will have to wait either 15 or 30 days to have your Loki unlocked, depending onif a stake was unlocked by a contributor or the node was deregistered. To learn more about staking, please visit the",
     serviceNodeRegistrationDescription:
       'Enter the {registerCommand} command produced by the daemon that is registering to become a Service Node using the "{prepareCommand}" command',
+    serviceNodeStartStakingDescription: "To start staking, please visit the Staking tab",
+    noServiceNodesCurrentlyAvailable: "There are currently no service nodes available for contribution",
     serviceNodeDetails: {
       contributors: "Contributors",
       lastRewardBlockHeight: "Last reward block height",
       lastUptimeProof: "Last uptime proof",
+      maxContribution: "Max contribution",
+      minContribution: "Min contribution",
       operatorFee: "Operator Fee",
       registrationHeight: "Registration height",
       unlockHeight: "Unlock height",
@@ -527,7 +534,8 @@ export default {
     userNotUsedAddress: "You have not used this address",
     userUsedAddress: "You have used this address",
     viewKey: "View key",
-    viewOnlyMode: "View only mode. Please load full wallet in order to send coins."
+    viewOnlyMode: "View only mode. Please load full wallet in order to send coins.",
+    website: "website"
   },
   titles: {
     addressBook: "Address book",
@@ -536,6 +544,7 @@ export default {
       checkTransaction: "CHECK TRANSACTION",
       prove: "PROVE"
     },
+    availableForContribution: "Service nodes available for contribution",
     changePassword: "Change password",
     configure: "Configure",
     currentlyStakedNodes: "Currently staked nodes",
@@ -544,7 +553,8 @@ export default {
     rescanWallet: "Rescan wallet",
     serviceNode: {
       registration: "REGISTRATION",
-      staking: "STAKING"
+      staking: "STAKING",
+      myStakes: "MY STAKES"
     },
     serviceNodeDetails: "Service node details",
     settings: {

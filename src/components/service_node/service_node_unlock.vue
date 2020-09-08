@@ -1,50 +1,25 @@
 <template>
-  <div v-if="service_nodes.length > 0" class="service-node-unlock">
+  <div class="service-node-stake-tab">
     <div class="q-pa-md">
       <div class="q-pb-sm header">
-        {{ $t("titles.currentlyStakedNodes") }}
+        <span v-if="service_nodes">
+          {{ $t("titles.currentlyStakedNodes") }}
+        </span>
+        <span v-else>{{ $t("strings.serviceNodeStartStakingDescription") }}</span>
       </div>
-      <q-list class="service-node-list" no-border>
-        <q-item v-for="node in service_nodes" :key="node.service_node_pubkey" @click.native="details(node)">
-          <q-item-section>
-            <q-item-label class="ellipsis">{{ node.service_node_pubkey }}</q-item-label>
-            <q-item-label class="non-selectable"
-              >{{ getRole(node) }} • {{ getFee(node) }} • {{ $t("strings.contribution") }}:
-              <FormatLoki :amount="node.ourContributionAmount"
-            /></q-item-label>
-          </q-item-section>
-          <q-item-section side>
-            <q-btn
-              v-if="node.requested_unlock_height === 0"
-              color="primary"
-              size="md"
-              :label="$t('buttons.unlock')"
-              :disabled="!is_ready || unlock_status.sending"
-              side
-              @click.native="unlockWarning(node.service_node_pubkey, $event)"
-            />
-            <q-item-label v-if="node.requested_unlock_height > 0" header>
-              {{
-                $t("strings.unlockingAtHeight", {
-                  number: node.requested_unlock_height
-                })
-              }}
-            </q-item-label>
-          </q-item-section>
-          <ContextMenu
-            :menu-items="menuItems"
-            @viewOnExplorer="openExplorer(node.service_node_pubkey)"
-            @copyServiceNodeKey="copyKey(node.service_node_pubkey)"
-          />
-        </q-item>
-      </q-list>
+      <div v-if="service_nodes">
+        <ServiceNodeList
+          :service-nodes="service_nodes"
+          button-i18n="buttons.unlock"
+          :details="details"
+          :action="unlockWarning"
+        />
+      </div>
+      <q-inner-loading :showing="unlock_status.sending || fetching" :dark="theme == 'dark'">
+        <q-spinner color="primary" size="30" />
+      </q-inner-loading>
+      <ServiceNodeDetails ref="serviceNodeDetailsUnlock" :action="unlockWarning" action-i18n="buttons.unlock" />
     </div>
-
-    <ServiceNodeDetails ref="serviceNodeDetails" :unlock="unlockWarning" />
-
-    <q-inner-loading :showing="unlock_status.sending" :dark="theme == 'dark'">
-      <q-spinner color="primary" size="30" />
-    </q-inner-loading>
   </div>
 </template>
 
@@ -54,16 +29,14 @@ import { mapState } from "vuex";
 import { required } from "vuelidate/lib/validators";
 import { service_node_key } from "src/validators/common";
 import WalletPassword from "src/mixins/wallet_password";
-import FormatLoki from "components/format_loki";
 import ServiceNodeDetails from "./service_node_details";
-import ContextMenu from "components/menus/contextmenu";
+import ServiceNodeList from "./service_node_list";
 
 export default {
   name: "ServiceNodeUnlock",
   components: {
-    FormatLoki,
     ServiceNodeDetails,
-    ContextMenu
+    ServiceNodeList
   },
   mixins: [WalletPassword],
   data() {
@@ -82,21 +55,19 @@ export default {
       const primary = state.gateway.wallet.address_list.primary[0];
       return (primary && primary.address) || null;
     },
-    is_ready() {
-      return this.$store.getters["gateway/isReady"];
-    },
+    // just SNs the user has contributed to
     service_nodes(state) {
-      const nodes = state.gateway.daemon.service_nodes;
-      const getContribution = node => node.contributors.find(c => c.address === this.our_address);
-      // Only show nodes that we contributed to
-      return nodes.filter(getContribution).map(n => {
-        const ourContribution = getContribution(n);
+      const nodes = state.gateway.daemon.service_nodes.nodes;
+      const getOurContribution = node => node.contributors.find(c => c.address === this.our_address);
+      return nodes.filter(getOurContribution).map(n => {
+        const ourContribution = getOurContribution(n);
         return {
           ...n,
           ourContributionAmount: ourContribution.amount
         };
       });
-    }
+    },
+    fetching: state => state.gateway.daemon.service_nodes.fetching
   }),
   validations: {
     node_key: { required, service_node_key }
@@ -163,10 +134,13 @@ export default {
   },
   methods: {
     details(node) {
-      this.$refs.serviceNodeDetails.isVisible = true;
-      this.$refs.serviceNodeDetails.node = node;
+      this.$refs.serviceNodeDetailsUnlock.isVisible = true;
+      this.$refs.serviceNodeDetailsUnlock.node = node;
     },
-    unlockWarning(key, event) {
+    unlockWarning(node, event) {
+      const key = node.service_node_pubkey;
+      // stop detail page from popping up
+      this.$gateway.send("wallet", "update_service_node_list");
       event.stopPropagation();
       this.$q
         .dialog({
@@ -257,15 +231,4 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.service-node-unlock {
-  user-select: none;
-  .header {
-    font-weight: 450;
-  }
-  .q-item-sublabel,
-  .q-list-header {
-    font-size: 14px;
-  }
-}
-</style>
+<style lang="scss"></style>

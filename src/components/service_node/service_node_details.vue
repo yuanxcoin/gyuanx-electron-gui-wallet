@@ -12,8 +12,8 @@
             class="q-mr-sm"
             color="primary"
             :disabled="!is_ready || unlock_status.sending"
-            :label="$t('buttons.unlock')"
-            @click="unlock(node.service_node_pubkey, $event)"
+            :label="$t(actionI18n)"
+            @click="action(node, $event)"
           />
           <q-btn v-if="can_open" color="primary" :label="$t('buttons.viewOnExplorer')" @click="openExplorer" />
         </q-toolbar>
@@ -99,7 +99,13 @@
           </div>
           <q-list no-border :dark="theme == 'dark'" class="loki-list">
             <q-item-label class="contributors-title">{{ $t("strings.serviceNodeDetails.contributors") }}:</q-item-label>
-            <q-item v-for="contributor in contributors" :key="contributor.address" class="loki-list-item">
+            <q-item
+              v-for="contributor in contributors"
+              :key="contributor.address"
+              class="loki-list-item"
+              clickable
+              @click="openUserWalletInfo(contributor.address)"
+            >
               <q-item-label>
                 <q-item-label v-if="isMe(contributor)" class="name non-selectable">{{ $t("strings.me") }}</q-item-label>
                 <q-item-label v-else class="name non-selectable">{{ contributor.name }}</q-item-label>
@@ -114,7 +120,6 @@
             </q-item>
           </q-list>
         </div>
-
         <q-inner-loading :showing="unlock_status.sending" :dark="theme == 'dark'">
           <q-spinner color="primary" size="30" />
         </q-inner-loading>
@@ -136,8 +141,12 @@ export default {
     ContextMenu
   },
   props: {
-    unlock: {
+    action: {
       type: Function,
+      required: true
+    },
+    actionI18n: {
+      type: String,
       required: true
     }
   },
@@ -188,6 +197,12 @@ export default {
     }
   }),
   methods: {
+    openUserWalletInfo(contributorAddress) {
+      const url = `https://www.lokisn.com/user/${contributorAddress}`;
+      this.$gateway.send("core", "open_url", {
+        url
+      });
+    },
     openExplorer() {
       this.$gateway.send("core", "open_explorer", {
         type: "service_node",

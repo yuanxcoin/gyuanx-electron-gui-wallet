@@ -524,36 +524,38 @@ export default {
           },
           dark: this.theme == "dark"
         })
-        .onOk(() => {
-          return this.hasPassword();
-        })
-        .onOk(hasPassword => {
+        .onOk(async () => {
+          const hasPassword = await this.hasPassword();
           if (!hasPassword) return "";
-          return this.$q.dialog({
-            title: this.$t("dialog.deleteWallet.title"),
-            message: this.$t("dialog.password.message"),
-            prompt: {
-              model: "",
-              type: "password"
-            },
-            ok: {
-              label: this.$t("dialog.deleteWallet.ok"),
-              color: "negative"
-            },
-            cancel: {
-              flat: true,
-              label: this.$t("dialog.buttons.cancel"),
+          return this.$q
+            .dialog({
+              title: this.$t("dialog.deleteWallet.title"),
+              message: this.$t("dialog.password.message"),
+              prompt: {
+                model: "",
+                type: "password"
+              },
+              ok: {
+                label: this.$t("dialog.deleteWallet.ok"),
+                color: "negative"
+              },
+              cancel: {
+                flat: true,
+                label: this.$t("dialog.buttons.cancel"),
+                color: this.theme == "dark" ? "white" : "dark"
+              },
+              dark: this.theme == "dark",
               color: this.theme == "dark" ? "white" : "dark"
-            },
-            dark: this.theme == "dark",
-            color: "positive"
-          });
+            })
+            .onOk(password => {
+              password = password || "";
+              this.$gateway.send("wallet", "delete_wallet", { password });
+            })
+            .onDismiss(() => {})
+            .onCancel(() => {});
         })
-        .onOk(password => {
-          this.$gateway.send("wallet", "delete_wallet", { password });
-        })
-        .onDismiss(() => {})
-        .onCancel(() => {});
+        .onCancel(() => {})
+        .onDismiss(() => {});
     }
   }
 };

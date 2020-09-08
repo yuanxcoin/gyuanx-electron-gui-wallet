@@ -7,6 +7,10 @@
         color="secondary"
         :options="[
           {
+            label: $t('titles.serviceNode.myStakes'),
+            value: 'myStakes'
+          },
+          {
             label: $t('titles.serviceNode.staking'),
             value: 'staking'
           },
@@ -17,6 +21,7 @@
         ]"
       />
     </div>
+    <ServiceNodeUnlock v-if="screen === 'myStakes'" />
     <ServiceNodeStaking v-if="screen === 'staking'" />
     <ServiceNodeRegistration v-if="screen === 'registration'" />
   </q-page>
@@ -25,14 +30,16 @@
 <script>
 import ServiceNodeStaking from "components/service_node/service_node_staking";
 import ServiceNodeRegistration from "components/service_node/service_node_registration";
+import ServiceNodeUnlock from "components/service_node/service_node_unlock";
 export default {
   components: {
     ServiceNodeStaking,
-    ServiceNodeRegistration
+    ServiceNodeRegistration,
+    ServiceNodeUnlock
   },
   data() {
     return {
-      screen: "staking"
+      screen: "myStakes"
     };
   }
 };

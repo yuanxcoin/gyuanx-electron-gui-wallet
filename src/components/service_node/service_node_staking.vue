@@ -1,6 +1,12 @@
 <template>
   <div class="service-node-staking">
     <div class="q-px-md q-pt-md">
+      <p>
+        {{ $t("strings.serviceNodeContributionDescription") }}
+        <span style="cursor: pointer; text-decoration: underline;" @click="lokiWebsite"
+          >Loki {{ $t("strings.website") }}.</span
+        >
+      </p>
       <LokiField :label="$t('fieldLabels.serviceNodeKey')" :error="$v.service_node.key.$error">
         <q-input
           v-model.trim="service_node.key"
@@ -28,9 +34,8 @@
           color="secondary"
           :text-color="theme == 'dark' ? 'white' : 'dark'"
           @click="service_node.amount = unlocked_balance / 1e9"
+          >{{ $t("buttons.all") }}</q-btn
         >
-          {{ $t("buttons.all") }}
-        </q-btn>
       </LokiField>
       <div class="submit-button">
         <q-btn :disable="!is_able_to_send" color="primary" :label="$t('buttons.stake')" @click="stake()" />
@@ -42,9 +47,7 @@
         />
       </div>
     </div>
-
-    <ServiceNodeUnlock />
-
+    <ServiceNodeContribute class="contribute" @contribute="fillStakingFields" />
     <q-inner-loading :showing="stake_status.sending || tx_status.sending" :dark="theme == 'dark'">
       <q-spinner color="primary" size="30" />
     </q-inner-loading>
@@ -58,13 +61,13 @@ import { required, decimal } from "vuelidate/lib/validators";
 import { service_node_key, greater_than_zero } from "src/validators/common";
 import LokiField from "components/loki_field";
 import WalletPassword from "src/mixins/wallet_password";
-import ServiceNodeUnlock from "./service_node_unlock";
+import ServiceNodeContribute from "./service_node_contribute";
 
 export default {
   name: "ServiceNodeStaking",
   components: {
     LokiField,
-    ServiceNodeUnlock
+    ServiceNodeContribute
   },
   mixins: [WalletPassword],
   data() {
@@ -157,6 +160,16 @@ export default {
     }
   },
   methods: {
+    lokiWebsite() {
+      const url = "https://docs.loki.network/ServiceNodes/StakingRequirement/";
+      this.$gateway.send("core", "open_url", {
+        url
+      });
+    },
+    fillStakingFields(key, minContribution) {
+      this.service_node.key = key;
+      this.service_node.amount = minContribution;
+    },
     sweepAllWarning() {
       this.$q
         .dialog({
@@ -259,7 +272,7 @@ export default {
         noPasswordMessage: this.$t("dialog.stake.message"),
         ok: {
           label: this.$t("dialog.stake.ok"),
-          color: "primary"
+          color: this.theme == "dark" ? "white" : "dark"
         },
         dark: this.theme == "dark",
         color: this.theme == "dark" ? "white" : "dark"
@@ -294,6 +307,21 @@ export default {
     .q-btn:not(:first-child) {
       margin-left: 8px;
     }
+  }
+}
+.contribute {
+  margin-top: 16px;
+  padding-left: 8px;
+}
+.service-node-stake-tab {
+  margin-top: 4px;
+  user-select: none;
+  .header {
+    font-weight: 450;
+  }
+  .q-item-sublabel,
+  .q-list-header {
+    font-size: 14px;
   }
 }
 </style>

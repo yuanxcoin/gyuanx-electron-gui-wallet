@@ -15,7 +15,15 @@
           </q-item-section>
 
           <q-item-section side>
-            <q-select v-model="state.type" hide-underline dark class="q-ma-none full-width" :options="selectOptions" />
+            <q-select
+              v-model="state.type"
+              hide-underline
+              dark
+              class="q-ma-none full-width"
+              :options="selectOptions"
+              emit-value
+              map-options
+            />
           </q-item-section>
         </q-item>
       </q-list>

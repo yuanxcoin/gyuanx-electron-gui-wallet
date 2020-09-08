@@ -16,7 +16,15 @@
       </LokiField>
 
       <LokiField class="col-2" :label="$t('fieldLabels.filterTransactionType')">
-        <q-select v-model="tx_type" :dark="theme == 'dark'" :options="tx_type_options" borderless dense />
+        <q-select
+          v-model="tx_type"
+          :dark="theme == 'dark'"
+          :options="tx_type_options"
+          borderless
+          dense
+          emit-value
+          map-options
+        />
       </LokiField>
     </div>
     <TxList :type="tx_type" :filter="tx_filter" />

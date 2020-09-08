@@ -420,11 +420,17 @@ export class Daemon {
   }
 
   updateServiceNodes() {
-    // Get the latest service node data
+    const service_nodes = {
+      fetching: true
+    };
+    this.sendGateway("set_daemon_data", { service_nodes });
     this.getRPC("service_nodes").then(data => {
       if (!data.hasOwnProperty("result")) return;
-
-      const service_nodes = data.result.service_node_states;
+      const nodes = data.result.service_node_states;
+      const service_nodes = {
+        nodes,
+        fetching: false
+      };
       this.sendGateway("set_daemon_data", { service_nodes });
     });
   }

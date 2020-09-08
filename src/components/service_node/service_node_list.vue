@@ -14,11 +14,8 @@
               • {{ $t("strings.contribution") }}: <FormatLoki :amount="node.ourContributionAmount"
             /></span>
             <span v-if="node.awaitingContribution">
-              • {{ getNumContributors(node) }}
-              <span v-if="getNumContributors(node) > 1">Contributors</span>
-              <span v-else>Contributor</span>
-              • {{ openForContributionLoki(node) }} Loki left to contribute • Min contribution:
-              {{ getMinContribution(node) }} Loki
+              • Min contribution:
+              {{ getMinContribution(node) }} Loki • Max contribution: {{ openForContributionLoki(node) }} Loki
             </span>
           </q-item-label>
         </q-item-section>

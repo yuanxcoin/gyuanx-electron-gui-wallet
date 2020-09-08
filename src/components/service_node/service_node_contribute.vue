@@ -1,17 +1,15 @@
 <template>
   <div class="service-node-stake-tab">
     <div class="q-pa-md">
-      <div class="q-pb-sm header">
-        {{ $t("titles.availableForContribution") }}
-      </div>
       <!-- use placeholder with the i18n here -->
-      <div class="row align-items full-width">
-        <!-- <div class="col-md-8"> -->
-        <p>There is a limit of 4 contributors per service node.</p>
-        <!-- </div> -->
-        <!-- <div class="col-md-4"> -->
-        <q-btn class="right float-right" color="primary" label="REFRESH" @click="update_service_node_list" />
-        <!-- </div> -->
+
+      <div class="row align-items sn-contribution-info">
+        <div class="col-md-8">
+          <div class="header">{{ $t("titles.availableForContribution") }}</div>
+        </div>
+        <div class="col-md-4">
+          <q-btn class="float-right vertical-top" icon="refresh" flat @click="update_service_node_list" />
+        </div>
       </div>
       <ServiceNodeList
         :service-nodes="awaiting_service_nodes"
@@ -85,4 +83,12 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="scss">
+.sn-contribution-info {
+  > * {
+    line-height: 30px;
+    margin: 20 400;
+  }
+  margin-bottom: 6px;
+}
+</style>

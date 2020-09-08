@@ -48,14 +48,8 @@
         />
       </div>
     </div>
-    <div class="unlockOrContribute">
-      <q-option-group v-model="unlockOrContribute" :options="unlockOrContributeOpts" color="red" inline />
-      <div v-if="unlockOrContribute === 'unlock'">
-        <ServiceNodeUnlock />
-      </div>
-      <div v-else>
-        <ServiceNodeContribute @contribute="fillStakingFields" />
-      </div>
+    <div class="contribute">
+      <ServiceNodeContribute @contribute="fillStakingFields" />
     </div>
     <q-inner-loading :showing="stake_status.sending || tx_status.sending" :dark="theme == 'dark'">
       <q-spinner color="primary" size="30" />
@@ -70,31 +64,17 @@ import { required, decimal } from "vuelidate/lib/validators";
 import { service_node_key, greater_than_zero } from "src/validators/common";
 import LokiField from "components/loki_field";
 import WalletPassword from "src/mixins/wallet_password";
-import ServiceNodeUnlock from "./service_node_unlock";
 import ServiceNodeContribute from "./service_node_contribute";
 
 export default {
   name: "ServiceNodeStaking",
   components: {
     LokiField,
-    ServiceNodeUnlock,
     ServiceNodeContribute
   },
   mixins: [WalletPassword],
   data() {
-    const unlockOrContributeOpts = [
-      {
-        label: "My stakes",
-        value: "unlock"
-      },
-      {
-        label: "Available for contribution",
-        value: "contribute"
-      }
-    ];
     return {
-      unlockOrContribute: "contribute",
-      unlockOrContributeOpts: unlockOrContributeOpts,
       service_node: {
         key: "",
         amount: 0
@@ -332,7 +312,7 @@ export default {
     }
   }
 }
-.unlockOrContribute {
+.contribute {
   margin-top: 16px;
   padding-left: 8px;
 }

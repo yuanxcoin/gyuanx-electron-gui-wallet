@@ -545,7 +545,8 @@ export default {
     rescanWallet: "Rescan wallet",
     serviceNode: {
       registration: "REGISTRATION",
-      staking: "STAKING"
+      staking: "STAKING",
+      myStakes: "MY STAKES"
     },
     serviceNodeDetails: "Service node details",
     settings: {

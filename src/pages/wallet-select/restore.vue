@@ -244,7 +244,7 @@ export default {
     dateRangeOptions(dateSelected) {
       const now = Date.now();
       const formattedNow = date.formatDate(now, qDateFormat);
-      return dateSelected > timeStampFirstBlock && dateSelected <= formattedNow;
+      return dateSelected >= dateFirstBlock && dateSelected < formattedNow;
     },
     cancel() {
       this.$router.replace({ path: "/wallet-select" });

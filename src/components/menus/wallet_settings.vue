@@ -45,7 +45,7 @@
                   icon="file_copy"
                   @click="copyPrivateKey('mnemonic', $event)"
                 >
-                  <q-tooltip anchor="center left" self="center right" :offset="[5, 10]">
+                  <q-tooltip dark anchor="center left" self="center right" :offset="[5, 10]">
                     {{ $t("menuItems.copySeedWords") }}
                   </q-tooltip>
                 </q-btn>
@@ -353,8 +353,10 @@ export default {
           }),
           message: this.$t("dialog.copyPrivateKeys.message"),
           ok: {
-            label: this.$t("dialog.buttons.ok")
-          }
+            label: this.$t("dialog.buttons.ok"),
+            color: "primary"
+          },
+          dark: this.theme === "dark"
         })
         .onDismiss(() => null)
         .onCancel(() => null)

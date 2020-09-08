@@ -2,10 +2,10 @@
   <div class="service-node-staking">
     <div class="q-px-md q-pt-md">
       <p>
-        Staking contributes to the safety of the Loki network. For your contribution, you earn Loki. The downside of
-        staking is that once staked, you will have to wait either 15 or 30 days to have your Loki unlocked, depending on
-        if a stake was unlocked by a contributor or the node was deregistered. To learn more about staking, please visit
-        the <span style="cursor: pointer; text-decoration: underline;" @click="lokiWebsite">Loki website.</span>
+        {{ $t("strings.serviceNodeContributionDescription") }}
+        <span style="cursor: pointer; text-decoration: underline;" @click="lokiWebsite"
+          >Loki {{ $t("strings.website") }}.</span
+        >
       </p>
       <LokiField :label="$t('fieldLabels.serviceNodeKey')" :error="$v.service_node.key.$error">
         <q-input
@@ -34,9 +34,8 @@
           color="secondary"
           :text-color="theme == 'dark' ? 'white' : 'dark'"
           @click="service_node.amount = unlocked_balance / 1e9"
+          >{{ $t("buttons.all") }}</q-btn
         >
-          {{ $t("buttons.all") }}
-        </q-btn>
       </LokiField>
       <div class="submit-button">
         <q-btn :disable="!is_able_to_send" color="primary" :label="$t('buttons.stake')" @click="stake()" />

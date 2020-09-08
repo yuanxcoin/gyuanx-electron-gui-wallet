@@ -120,7 +120,6 @@
             </q-item>
           </q-list>
         </div>
-
         <q-inner-loading :showing="unlock_status.sending" :dark="theme == 'dark'">
           <q-spinner color="primary" size="30" />
         </q-inner-loading>

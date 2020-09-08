@@ -479,12 +479,16 @@ export default {
     saveToAddressBook: "Save to address book",
     seedWords: "Seed words",
     selectLanguage: "Select language",
+    serviceNodeContributionDescription:
+      "Staking contributes to the safety of the Loki network. For your contribution, you earn Loki. The downside of staking is that once staked, you will have to wait either 15 or 30 days to have your Loki unlocked, depending onif a stake was unlocked by a contributor or the node was deregistered. To learn more about staking, please visit the",
     serviceNodeRegistrationDescription:
       'Enter the {registerCommand} command produced by the daemon that is registering to become a Service Node using the "{prepareCommand}" command',
     serviceNodeDetails: {
       contributors: "Contributors",
       lastRewardBlockHeight: "Last reward block height",
       lastUptimeProof: "Last uptime proof",
+      maxContribution: "Max contribution",
+      minContribution: "Min contribution",
       operatorFee: "Operator Fee",
       registrationHeight: "Registration height",
       unlockHeight: "Unlock height",
@@ -528,7 +532,8 @@ export default {
     userNotUsedAddress: "You have not used this address",
     userUsedAddress: "You have used this address",
     viewKey: "View key",
-    viewOnlyMode: "View only mode. Please load full wallet in order to send coins."
+    viewOnlyMode: "View only mode. Please load full wallet in order to send coins.",
+    website: "website"
   },
   titles: {
     addressBook: "Address book",

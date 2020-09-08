@@ -423,7 +423,6 @@ export class Daemon {
   // so no user feedback required
   updateServiceNodes() {
     const service_nodes = {
-      nodes: [],
       fetching: true
     };
     this.sendGateway("set_daemon_data", { service_nodes });

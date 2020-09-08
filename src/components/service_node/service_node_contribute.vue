@@ -73,7 +73,7 @@ export default {
         type: "positive",
         timeout: 1000,
         // translate
-        message: this.$t("notification.serviceNodeInfoFilled")
+        message: this.$t("notification.positive.serviceNodeInfoFilled")
       });
     },
     details(node) {

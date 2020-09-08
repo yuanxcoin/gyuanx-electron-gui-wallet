@@ -288,7 +288,6 @@ export class WalletRPC {
         break;
 
       case "update_service_node_list":
-        console.log("update sn list case hit");
         this.updateServiceNodeList();
         break;
 
@@ -1119,7 +1118,6 @@ export class WalletRPC {
 
   async updateServiceNodeList() {
     this.backend.daemon.updateServiceNodes();
-    console.log("update service nodes manual was called");
   }
 
   unlockStake(password, service_node_key, confirmed = false) {

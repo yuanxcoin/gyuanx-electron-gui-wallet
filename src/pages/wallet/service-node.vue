@@ -39,7 +39,7 @@ export default {
   },
   data() {
     return {
-      screen: "myStakes"
+      screen: "staking"
     };
   }
 };

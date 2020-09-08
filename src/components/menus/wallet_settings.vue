@@ -353,8 +353,10 @@ export default {
           }),
           message: this.$t("dialog.copyPrivateKeys.message"),
           ok: {
-            label: this.$t("dialog.buttons.ok")
-          }
+            label: this.$t("dialog.buttons.ok"),
+            color: "primary"
+          },
+          dark: this.theme === "dark"
         })
         .onDismiss(() => null)
         .onCancel(() => null)

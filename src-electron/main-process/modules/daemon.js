@@ -419,8 +419,6 @@ export class Daemon {
     });
   }
 
-  // Get the latest service node data, used to do it in background
-  // so no user feedback required
   updateServiceNodes() {
     const service_nodes = {
       fetching: true

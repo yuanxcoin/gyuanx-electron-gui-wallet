@@ -48,10 +48,6 @@ export default {
       menuItems
     };
   },
-  created() {
-    const showing = this.unlock_status.sending || this.fetching;
-    console.log("is the fetching bar showing?" + showing);
-  },
   computed: mapState({
     theme: state => state.gateway.app.config.appearance.theme,
     unlock_status: state => state.gateway.service_node_status.unlock,

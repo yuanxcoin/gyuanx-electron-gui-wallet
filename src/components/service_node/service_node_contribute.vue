@@ -1,8 +1,6 @@
 <template>
   <div class="service-node-stake-tab">
     <div class="q-pa-md">
-      <!-- use placeholder with the i18n here -->
-
       <div class="row align-items sn-contribution-info">
         <div class="col-md-8">
           <div class="header">{{ $t("titles.availableForContribution") }}</div>
@@ -66,13 +64,12 @@ export default {
       this.scrollToTop();
       const key = node.service_node_pubkey;
       const minContribution = node.minContribution;
-      // close the popup if it's open
+      // close the detail popup if it's open
       this.$refs.serviceNodeDetailsContribute.isVisible = false;
       this.$emit("contribute", key, minContribution);
       this.$q.notify({
         type: "positive",
         timeout: 1000,
-        // translate
         message: this.$t("notification.positive.serviceNodeInfoFilled")
       });
     },

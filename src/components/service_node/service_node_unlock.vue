@@ -55,11 +55,10 @@ export default {
       const primary = state.gateway.wallet.address_list.primary[0];
       return (primary && primary.address) || null;
     },
-    // just users's SNs
+    // just SNs the user has contributed to
     service_nodes(state) {
       const nodes = state.gateway.daemon.service_nodes.nodes;
       const getOurContribution = node => node.contributors.find(c => c.address === this.our_address);
-      // Only show nodes that we contributed to
       return nodes.filter(getOurContribution).map(n => {
         const ourContribution = getOurContribution(n);
         return {

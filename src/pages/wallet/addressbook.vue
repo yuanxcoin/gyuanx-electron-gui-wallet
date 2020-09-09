@@ -42,7 +42,7 @@
     </template>
 
     <q-page-sticky position="bottom-right" :offset="[18, 18]">
-      <q-btn :disable="!is_ready" round color="primary" icon="add" @click="addEntry" />
+      <q-btn round color="primary" icon="add" @click="addEntry" />
     </q-page-sticky>
     <AddressBookDetails ref="addressBookDetails" />
   </q-page>
@@ -73,9 +73,6 @@ export default {
     view_only: state => state.gateway.wallet.info.view_only,
     address_book: state => state.gateway.wallet.address_list.address_book,
     address_book_starred: state => state.gateway.wallet.address_list.address_book_starred,
-    is_ready() {
-      return this.$store.getters["gateway/isReady"];
-    },
     address_book_combined() {
       const starred = this.address_book_starred.map(a => ({
         ...a,
@@ -95,7 +92,8 @@ export default {
       this.$refs.addressBookDetails.mode = "new";
       this.$refs.addressBookDetails.isVisible = true;
     },
-    sendToAddress(address) {
+    sendToAddress(address, event) {
+      event.stopPropagation();
       this.$router.replace({
         path: "send",
         query: {

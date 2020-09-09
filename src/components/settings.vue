@@ -22,24 +22,23 @@
 
         <div v-if="page == 'peers'">
           <q-list :dark="theme == 'dark'" no-border>
-            <q-list-header>{{ $t("strings.peerList") }}</q-list-header>
-
+            <q-item-label header>{{ $t("strings.peerList") }}</q-item-label>
             <q-item
               v-for="entry in daemon.connections"
               :key="entry.address"
-              link
+              clickable
               @click.native="showPeerDetails(entry)"
             >
               <q-item-label>
-                <q-item-label header>{{ entry.address }}</q-item-label>
-                <q-item-label caption>{{ $t("strings.blockHeight") }}: {{ entry.height }}</q-item-label>
+                <q-item-label>{{ entry.address }}</q-item-label>
+                <q-item-label>{{ $t("strings.blockHeight") }}: {{ entry.height }}</q-item-label>
               </q-item-label>
             </q-item>
 
             <template v-if="daemon.bans.length">
-              <q-list-header>{{ $t("strings.bannedPeers.title") }}</q-list-header>
+              <q-item-label header>{{ $t("strings.bannedPeers.title") }}</q-item-label>
               <q-item v-for="entry in daemon.bans" :key="entry.host">
-                <q-item-label>
+                <q-item-section>
                   <q-item-label header>{{ entry.host }}</q-item-label>
                   <q-item-label caption>
                     {{
@@ -48,7 +47,7 @@
                       })
                     }}
                   </q-item-label>
-                </q-item-label>
+                </q-item-section>
               </q-item>
             </template>
           </q-list>
@@ -133,7 +132,8 @@ export default {
             flat: true,
             label: "Close",
             color: this.theme == "dark" ? "white" : "dark"
-          }
+          },
+          dark: this.theme === "dark"
         })
         .onOk(() => {
           this.$q
@@ -152,7 +152,9 @@ export default {
                 flat: true,
                 label: this.$t("dialog.buttons.cancel"),
                 color: this.theme == "dark" ? "white" : "dark"
-              }
+              },
+              dark: this.theme === "dark",
+              color: this.theme === "dark" ? "white" : "dark"
             })
             .onOk(seconds => {
               this.$gateway.send("daemon", "ban_peer", {

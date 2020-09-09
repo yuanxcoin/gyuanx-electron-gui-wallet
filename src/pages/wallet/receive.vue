@@ -136,7 +136,8 @@ export default {
       let img = this.$refs.qr.$el.childNodes[0].toDataURL();
       this.$gateway.send("core", "save_png", { img, type: "QR Code" });
     },
-    copyAddress(address) {
+    copyAddress(address, event) {
+      event.stopPropagation();
       clipboard.writeText(address);
       this.$q.notify({
         type: "positive",

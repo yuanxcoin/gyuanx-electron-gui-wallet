@@ -66,11 +66,6 @@ export default {
     MainMenu,
     WalletDetails
   },
-  data() {
-    return {
-      selectedTab: "tab-1"
-    };
-  },
   computed: mapState({
     theme: state => state.gateway.app.config.appearance.theme,
     info: state => state.gateway.wallet.info

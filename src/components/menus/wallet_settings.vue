@@ -273,7 +273,7 @@ export default {
       return this.$store.getters["gateway/isReady"];
     },
     locale() {
-      return this.$q.i18n.getLocale();
+      return this.$q.lang.getLocale();
     }
   }),
   watch: {

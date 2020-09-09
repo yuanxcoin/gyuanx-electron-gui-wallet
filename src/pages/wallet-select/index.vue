@@ -1,6 +1,6 @@
 <template>
   <q-page>
-    <q-list class="wallet-list" link no-border :dark="theme == 'dark'">
+    <q-list class="wallet-list" no-border :dark="theme == 'dark'">
       <template v-if="wallets.list.length">
         <div class="header row justify-between items-center">
           <div class="header-title">
@@ -164,7 +164,6 @@ export default {
   methods: {
     openWallet(wallet) {
       if (wallet.password_protected !== false) {
-        // TODO: Password box into one component, it's duplicated
         this.$q
           .dialog({
             title: this.$t("dialog.password.title"),
@@ -243,7 +242,7 @@ export default {
 
   .header {
     margin: 0 16px;
-    margin-bottom: 8px;
+    padding: 6px;
     min-height: 36px;
 
     .header-title {

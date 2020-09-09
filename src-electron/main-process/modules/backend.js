@@ -107,10 +107,6 @@ export class Backend {
 
     this.remotes = [
       {
-        host: "doopool.xyz",
-        port: "22020"
-      },
-      {
         host: "imaginary.stream",
         port: "22023"
       },

@@ -2,7 +2,7 @@
   <div class="service-node-stake-tab">
     <div class="q-pa-md">
       <div class="q-pb-sm header">
-        <span v-if="service_nodes">
+        <span v-if="service_nodes.length">
           {{ $t("titles.currentlyStakedNodes") }}
         </span>
         <span v-else>{{ $t("strings.serviceNodeStartStakingDescription") }}</span>

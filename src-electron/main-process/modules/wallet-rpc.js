@@ -549,7 +549,7 @@ export class WalletRPC {
     });
   }
 
-  importWallet(filename, password, import_path) {
+  importWallet(wallet_name, password, import_path) {
     // Reset the status error
     this.sendGateway("reset_wallet_error");
 
@@ -567,9 +567,9 @@ export class WalletRPC {
           i18n: "notification.errors.invalidWalletPath"
         }
       });
+      return;
     } else {
-      let destination = path.join(this.wallet_dir, filename);
-
+      let destination = path.join(this.wallet_dir, wallet_name);
       if (fs.existsSync(destination) || fs.existsSync(destination + ".keys")) {
         this.sendGateway("set_wallet_error", {
           status: {
@@ -581,10 +581,9 @@ export class WalletRPC {
       }
 
       try {
-        fs.copySync(import_path, destination, fs.constants.COPYFILE_EXCL);
-
+        fs.copySync(import_path, destination, { errorOnExist: true });
         if (fs.existsSync(import_path + ".keys")) {
-          fs.copySync(import_path + ".keys", destination + ".keys", fs.constants.COPYFILE_EXCL);
+          fs.copySync(import_path + ".keys", destination + ".keys", { errorOnExist: true });
         }
       } catch (e) {
         this.sendGateway("set_wallet_error", {
@@ -595,30 +594,26 @@ export class WalletRPC {
         });
         return;
       }
-
       this.sendRPC("open_wallet", {
-        filename,
+        filename: wallet_name,
         password
       })
         .then(data => {
           if (data.hasOwnProperty("error")) {
             if (fs.existsSync(destination)) fs.unlinkSync(destination);
             if (fs.existsSync(destination + ".keys")) fs.unlinkSync(destination + ".keys");
-
             this.sendGateway("set_wallet_error", {
               status: data.error
             });
             return;
           }
-
           // store hash of the password so we can check against it later when requesting private keys, or for sending txs
           this.wallet_state.password_hash = crypto
             .pbkdf2Sync(password, this.auth[2], 1000, 64, "sha512")
             .toString("hex");
-          this.wallet_state.name = filename;
+          this.wallet_state.name = wallet_name;
           this.wallet_state.open = true;
-
-          this.finalizeNewWallet(filename);
+          this.finalizeNewWallet(wallet_name);
         })
         .catch(() => {
           this.sendGateway("set_wallet_error", {

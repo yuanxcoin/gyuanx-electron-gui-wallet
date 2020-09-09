@@ -70,12 +70,6 @@ export default {
     blockHeight(value) {
       const heightString = i18n.t("strings.blockHeight");
       return `${heightString}: ${value}`;
-    },
-    copyValue(record) {
-      if (record.type === "session") {
-        return i18n.t("menuItems.copySessionId");
-      }
-      return i18n.t("menuItems.copyAddress");
     }
   },
   data() {
@@ -119,7 +113,7 @@ export default {
     validMenuItems(record) {
       const lockedItems = [
         { action: "nameCopy", i18n: "menuItems.copyName" },
-        { action: "copyValue", i18n: record | this.copyValue }
+        { action: "copyValue", i18n: this.copyValueI18nLabel(record) }
       ];
       let menuItems = [{ action: "ownerCopy", i18n: "menuItems.copyOwner" }];
       const backupOwnerItem = [{ action: "backupOwnerCopy", i18n: "menuItems.copyBackupOwner" }];
@@ -134,6 +128,12 @@ export default {
     },
     isLocked(record) {
       return !record.name || !record.value;
+    },
+    copyValueI18nLabel(record) {
+      if (record.type === "session") {
+        return "menuItems.copySessionId";
+      }
+      return "menuItems.copyAddress";
     },
     decrypt() {
       this.$v.name.$touch();
@@ -181,26 +181,18 @@ export default {
       });
       this.decrypting = true;
     },
-    blurEventButton(event) {
-      for (let i = 0; i < event.path.length; i++) {
-        if (event.path[i].tagName == "BUTTON") {
-          event.path[i].blur();
-          break;
-        }
-      }
-    },
     bindClass(record) {
       return [this.isLocked(record) ? "locked" : "unlocked"];
     },
     onUpdate(record) {
       this.$emit("onUpdate", record);
     },
-    copyValue(record, event) {
+    copyValue(record) {
       let message = this.$t("notification.positive.addressCopied");
       if (record.type === "session") {
         message = this.$t("notification.positive.sessionIdCopied");
       }
-      this.copy(record.value, event, message);
+      this.copy(record.value, message);
     },
     copy(value, message) {
       if (!value) return;

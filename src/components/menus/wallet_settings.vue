@@ -528,33 +528,39 @@ export default {
         })
         .onOk(async () => {
           const hasPassword = await this.hasPassword();
-          if (!hasPassword) return "";
-          return this.$q
-            .dialog({
-              title: this.$t("dialog.deleteWallet.title"),
-              message: this.$t("dialog.password.message"),
-              prompt: {
-                model: "",
-                type: "password"
-              },
-              ok: {
-                label: this.$t("dialog.deleteWallet.ok"),
-                color: "negative"
-              },
-              cancel: {
-                flat: true,
-                label: this.$t("dialog.buttons.cancel"),
+          if (hasPassword) {
+            this.$q
+              .dialog({
+                title: this.$t("dialog.deleteWallet.title"),
+                message: this.$t("dialog.password.message"),
+                prompt: {
+                  model: "",
+                  type: "password"
+                },
+                ok: {
+                  label: this.$t("dialog.deleteWallet.ok"),
+                  color: "negative"
+                },
+                cancel: {
+                  flat: true,
+                  label: this.$t("dialog.buttons.cancel"),
+                  color: this.theme == "dark" ? "white" : "dark"
+                },
+                dark: this.theme == "dark",
                 color: this.theme == "dark" ? "white" : "dark"
-              },
-              dark: this.theme == "dark",
-              color: this.theme == "dark" ? "white" : "dark"
-            })
-            .onOk(password => {
-              password = password || "";
-              this.$gateway.send("wallet", "delete_wallet", { password });
-            })
-            .onDismiss(() => {})
-            .onCancel(() => {});
+              })
+              .onOk(password => {
+                password = password || "";
+                this.$gateway.send("wallet", "delete_wallet", { password });
+              })
+              .onDismiss(() => {})
+              .onCancel(() => {});
+          } else {
+            // no password
+            let password = "";
+            // if there's no password (password is empty string)
+            this.$gateway.send("wallet", "delete_wallet", { password });
+          }
         })
         .onCancel(() => {})
         .onDismiss(() => {});

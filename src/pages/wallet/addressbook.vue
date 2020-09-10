@@ -31,7 +31,7 @@
           <ContextMenu
             :menu-items="menuItems"
             @showDetails="details(entry)"
-            @sendToAddress="sendToAddress(entry)"
+            @sendToAddress="sendToAddress(entry, $event)"
             @copyAddress="copyAddress(entry)"
           />
         </q-item>

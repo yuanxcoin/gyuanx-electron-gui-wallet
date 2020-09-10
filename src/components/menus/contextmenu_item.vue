@@ -1,5 +1,5 @@
 <template>
-  <q-item v-close-popup clickable @click.native="clickedItem">
+  <q-item v-close-popup clickable @click.native="clickedItem($event)">
     <q-item-section>
       {{ $t(i18n) }}
     </q-item-section>
@@ -20,8 +20,8 @@ export default {
     }
   },
   methods: {
-    clickedItem() {
-      this.$emit("clicked");
+    clickedItem(event) {
+      this.$emit("clicked", event);
     }
   }
 };

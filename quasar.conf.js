@@ -5,7 +5,7 @@ module.exports = function() {
   return {
     // app boot (/src/boot)
     boot: ["i18n", "axios", "vuelidate", "gateway", "timeago"],
-    css: ["app.styl", "~flag-icon-css/css/flag-icon.min.css"],
+    css: ["app.styl"],
     extras: [
       // ctx.theme.mat ? "roboto-font" : null,
       "material-icons" // optional, you are not bound to it
@@ -30,15 +30,6 @@ module.exports = function() {
                     exclude: /(node_modules|quasar)/
                 })
                 */
-      },
-      chainWebpack(chain) {
-        chain.module
-          .rule("images")
-          .use("url-loader")
-          .tap(options => {
-            options.name = "img/[path][name].[ext]";
-            return options;
-          });
       }
     },
     devServer: {

@@ -22,13 +22,10 @@
     "ready": "npm run lint && npm run format"
   },
   "dependencies": {
-    "@quasar/app": "^2.0.8",
-    "@quasar/extras": "^1.9.4",
     "axios": "^0.18.1",
     "electron-is-dev": "^1.0.1",
     "electron-updater": "^4.2.0",
     "electron-window-state": "^5.0.3",
-    "flag-icon-css": "^3.3.0",
     "fs-extra": "^8.1.0",
     "object-assign-deep": "^0.4.0",
     "portscanner": "^2.2.0",
@@ -44,6 +41,8 @@
     "vuelidate": "^0.7.4"
   },
   "devDependencies": {
+    "@quasar/app": "^2.0.8",
+    "@quasar/extras": "^1.9.4",
     "babel-eslint": "^10.1.0",
     "devtron": "^1.4.0",
     "dotenv": "^8.1.0",

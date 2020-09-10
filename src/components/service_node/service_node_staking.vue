@@ -1,7 +1,7 @@
 <template>
   <div class="service-node-staking">
     <div class="q-px-md q-pt-md">
-      <p>
+      <p style="color: #cecece">
         {{ $t("strings.serviceNodeContributionDescription") }}
         <span style="cursor: pointer; text-decoration: underline;" @click="lokiWebsite"
           >Loki {{ $t("strings.website") }}.</span
@@ -161,7 +161,7 @@ export default {
   },
   methods: {
     lokiWebsite() {
-      const url = "https://docs.loki.network/ServiceNodes/StakingRequirement/";
+      const url = "https://loki.network/service-nodes/";
       this.$gateway.send("core", "open_url", {
         url
       });

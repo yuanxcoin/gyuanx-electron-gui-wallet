@@ -71,10 +71,10 @@ jobs:
       - name: Remove un-needed artifacts
         run: rm -r -- ./*/
         shell: bash
-        working-directory: ./dist/electron-mat/Packaged
+        working-directory: ./dist/electron/Packaged
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v1
         with:
           name: ${{ runner.OS }}
-          path: dist/electron-mat/Packaged
+          path: dist/electron/Packaged

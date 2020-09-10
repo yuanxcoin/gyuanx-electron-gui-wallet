@@ -46,7 +46,11 @@
         </q-item-section>
       </q-item>
     </template>
-    <ContextMenu :menu-items="menuItems" @showDetails="details(address)" @copyAddress="copyAddress(address.address)" />
+    <ContextMenu
+      :menu-items="menuItems"
+      @showDetails="details(address)"
+      @copyAddress="copyAddress(address.address, $event)"
+    />
   </q-list>
 </template>
 

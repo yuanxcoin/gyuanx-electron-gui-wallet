@@ -2,7 +2,7 @@
   <q-menu context-menu>
     <q-list separator class="context-menu-list">
       <div v-for="(item, index) in menuItems" :key="index">
-        <ContextMenuItem :action="item.action" :i18n="item.i18n" @clicked="clickedMenu(item)" />
+        <ContextMenuItem :action="item.action" :i18n="item.i18n" @clicked="clickedMenu(item, $event)" />
       </div>
     </q-list>
   </q-menu>
@@ -23,8 +23,8 @@ export default {
     }
   },
   methods: {
-    clickedMenu(item) {
-      this.$emit(item.action);
+    clickedMenu(item, event) {
+      this.$emit(item.action, event);
     }
   }
 };

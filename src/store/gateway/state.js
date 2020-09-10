@@ -118,6 +118,10 @@ export default {
     connections: [],
     bans: [],
     tx_pool_backlog: [],
-    service_nodes: []
-  }
+    service_nodes: {
+      nodes: [],
+      fetching: true
+    }
+  },
+  update_required: false
 };

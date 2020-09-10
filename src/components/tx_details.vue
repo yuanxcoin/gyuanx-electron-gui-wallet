@@ -1,203 +1,192 @@
 <template>
-  <q-modal v-model="isVisible" maximized>
-    <q-modal-layout>
-      <q-toolbar slot="header" color="dark" inverted>
-        <q-btn flat round dense icon="reply" @click="isVisible = false" />
-        <q-toolbar-title>
-          {{ $t("titles.transactionDetails") }}
-        </q-toolbar-title>
-        <q-btn flat class="q-mr-sm" :label="$t('buttons.showTxDetails')" @click="showTxDetails" />
-        <q-btn v-if="can_open" color="primary" :label="$t('buttons.viewOnExplorer')" @click="openExplorer" />
-      </q-toolbar>
-
-      <div class="layout-padding">
-        <div class="row items-center non-selectable">
-          <div class="q-mr-sm">
-            <TxTypeIcon :type="tx.type" :tooltip="false" />
-          </div>
-
-          <div v-if="tx.type == 'in'" :class="'tx-' + tx.type">
-            {{
-              $t("strings.transactions.description", {
-                type: $t("strings.transactions.types.incoming")
-              })
-            }}
-          </div>
-          <div v-else-if="tx.type == 'out'" :class="'tx-' + tx.type">
-            {{
-              $t("strings.transactions.description", {
-                type: $t("strings.transactions.types.outgoing")
-              })
-            }}
-          </div>
-          <div v-else-if="tx.type == 'pool'" :class="'tx-' + tx.type">
-            {{
-              $t("strings.transactions.description", {
-                type: $t("strings.transactions.types.pendingIncoming")
-              })
-            }}
-          </div>
-          <div v-else-if="tx.type == 'pending'" :class="'tx-' + tx.type">
-            {{
-              $t("strings.transactions.description", {
-                type: $t("strings.transactions.types.pendingOutgoing")
-              })
-            }}
-          </div>
-          <div v-else-if="tx.type == 'failed'" :class="'tx-' + tx.type">
-            {{
-              $t("strings.transactions.description", {
-                type: $t("strings.transactions.types.failed")
-              })
-            }}
-          </div>
-        </div>
-
-        <div class="row justify-between" style="max-width: 768px">
-          <div class="infoBox">
-            <div class="infoBoxContent">
-              <div class="text">
-                <span>{{ $t("strings.transactions.amount") }}</span>
-              </div>
-              <div class="value">
-                <span><FormatLoki :amount="tx.amount" raw-value/></span>
-              </div>
+  <q-dialog v-model="isVisible" maximized>
+    <q-layout>
+      <q-header>
+        <q-toolbar color="dark" inverted>
+          <q-btn flat round dense icon="reply" @click="isVisible = false" />
+          <q-toolbar-title>
+            {{ $t("titles.transactionDetails") }}
+          </q-toolbar-title>
+          <q-btn flat class="q-mr-sm" :label="$t('buttons.showTxDetails')" @click="showTxDetails" />
+          <q-btn v-if="can_open" color="primary" :label="$t('buttons.viewOnExplorer')" @click="openExplorer" />
+        </q-toolbar>
+      </q-header>
+      <q-page-container>
+        <div class="layout-padding">
+          <div class="row items-center non-selectable">
+            <div class="q-mr-sm">
+              <TxTypeIcon :type="tx.type" :tooltip="false" />
             </div>
-          </div>
 
-          <div class="infoBox">
-            <div class="infoBoxContent">
-              <div class="text">
-                <span>
-                  {{ $t("strings.transactions.fee") }}
-                  <template v-if="tx.type == 'in' || tx.type == 'pool'">
-                    ({{ $t("strings.transactions.paidBySender") }})
-                  </template>
-                </span>
-              </div>
-              <div class="value">
-                <span><FormatLoki :amount="tx.fee" raw-value/></span>
-              </div>
-            </div>
-          </div>
-
-          <div class="infoBox">
-            <div class="infoBoxContent">
-              <div class="text">
-                <span>{{ $t("strings.blockHeight") }}</span>
-              </div>
-              <div class="value">
-                <span>{{ tx.height }}</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="infoBox">
-            <div class="infoBoxContent">
-              <div class="text">
-                <span>{{ $t("strings.transactions.timestamp") }}</span>
-              </div>
-              <div class="value">
-                <span>{{ formatDate(tx.timestamp * 1000) }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <h6 class="q-mt-xs q-mb-none text-weight-light">
-          {{ $t("strings.transactionID") }}
-        </h6>
-        <p class="monospace break-all">{{ tx.txid }}</p>
-
-        <h6 class="q-mt-xs q-mb-none text-weight-light">
-          {{ $t("strings.paymentID") }}
-        </h6>
-        <p class="monospace break-all">
-          {{ tx.payment_id ? tx.payment_id : "N/A" }}
-        </p>
-
-        <div v-if="tx.type == 'in' || tx.type == 'pool'">
-          <q-list no-border>
-            <q-list-header class="q-px-none">
+            <div v-if="tx.type == 'in'" :class="'tx-' + tx.type">
               {{
-                $t("strings.transactions.sentTo", {
+                $t("strings.transactions.description", {
                   type: $t("strings.transactions.types.incoming")
                 })
-              }}:
-            </q-list-header>
-            <q-item class="q-px-none">
-              <q-item-main>
-                <q-item-tile label class="non-selectable">{{ in_tx_address_used.address_index_text }}</q-item-tile>
-                <q-item-tile class="monospace ellipsis" sublabel>{{ in_tx_address_used.address }}</q-item-tile>
-              </q-item-main>
-
-              <q-context-menu>
-                <q-list link separator style="min-width: 150px; max-height: 300px;">
-                  <q-item v-close-overlay @click.native="copyAddress(in_tx_address_used.address, $event)">
-                    <q-item-main :label="$t('menuItems.copyAddress')" />
-                  </q-item>
-                </q-list>
-              </q-context-menu>
-            </q-item>
-          </q-list>
-        </div>
-
-        <div v-else-if="tx.type == 'out' || tx.type == 'pending'">
-          <q-list no-border>
-            <q-list-header class="q-px-none">
+              }}
+            </div>
+            <div v-else-if="tx.type == 'out'" :class="'tx-' + tx.type">
               {{
-                $t("strings.transactions.sentTo", {
+                $t("strings.transactions.description", {
                   type: $t("strings.transactions.types.outgoing")
                 })
-              }}:
-            </q-list-header>
-            <template v-if="out_destinations">
-              <q-item v-for="destination in out_destinations" :key="destination.address" class="q-px-none">
-                <q-item-main>
-                  <q-item-tile label>{{ destination.name }}</q-item-tile>
-                  <q-item-tile class="monospace ellipsis" sublabel>{{ destination.address }}</q-item-tile>
-                  <q-item-tile sublabel><FormatLoki :amount="destination.amount"/></q-item-tile>
-                </q-item-main>
-                <q-context-menu>
-                  <q-list link separator style="min-width: 150px; max-height: 300px;">
-                    <q-item v-close-overlay @click.native="copyAddress(destination.address, $event)">
-                      <q-item-main :label="$t('menuItems.copyAddress')" />
-                    </q-item>
-                  </q-list>
-                </q-context-menu>
-              </q-item>
-            </template>
-            <template v-else>
-              <q-item class="q-px-none">
-                <q-item-main>
-                  <q-item-tile label>{{ $t("strings.destinationUnknown") }}</q-item-tile>
-                </q-item-main>
-              </q-item>
-            </template>
-          </q-list>
-        </div>
+              }}
+            </div>
+            <div v-else-if="tx.type == 'pool'" :class="'tx-' + tx.type">
+              {{
+                $t("strings.transactions.description", {
+                  type: $t("strings.transactions.types.pendingIncoming")
+                })
+              }}
+            </div>
+            <div v-else-if="tx.type == 'pending'" :class="'tx-' + tx.type">
+              {{
+                $t("strings.transactions.description", {
+                  type: $t("strings.transactions.types.pendingOutgoing")
+                })
+              }}
+            </div>
+            <div v-else-if="tx.type == 'failed'" :class="'tx-' + tx.type">
+              {{
+                $t("strings.transactions.description", {
+                  type: $t("strings.transactions.types.failed")
+                })
+              }}
+            </div>
+          </div>
 
-        <q-field class="q-mt-md">
+          <div class="row justify-between" style="max-width: 768px">
+            <div class="infoBox">
+              <div class="infoBoxContent">
+                <div class="text">
+                  <span>{{ $t("strings.transactions.amount") }}</span>
+                </div>
+                <div class="value">
+                  <span><FormatLoki :amount="tx.amount" raw-value/></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="infoBox">
+              <div class="infoBoxContent">
+                <div class="text">
+                  <span>
+                    {{ $t("strings.transactions.fee") }}
+                    <template v-if="tx.type == 'in' || tx.type == 'pool'">
+                      ({{ $t("strings.transactions.paidBySender") }})
+                    </template>
+                  </span>
+                </div>
+                <div class="value">
+                  <span><FormatLoki :amount="tx.fee" raw-value/></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="infoBox">
+              <div class="infoBoxContent">
+                <div class="text">
+                  <span>{{ $t("strings.blockHeight") }}</span>
+                </div>
+                <div class="value">
+                  <span>{{ tx.height }}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="infoBox">
+              <div class="infoBoxContent">
+                <div class="text">
+                  <span>{{ $t("strings.transactions.timestamp") }}</span>
+                </div>
+                <div class="value">
+                  <span>{{ formatDate(tx.timestamp * 1000) }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <h6 class="q-mt-xs q-mb-none text-weight-light">
+            {{ $t("strings.transactionID") }}
+          </h6>
+          <p class="monospace break-all">{{ tx.txid }}</p>
+
+          <h6 class="q-mt-xs q-mb-none text-weight-light">
+            {{ $t("strings.paymentID") }}
+          </h6>
+          <p class="monospace break-all">
+            {{ tx.payment_id ? tx.payment_id : "N/A" }}
+          </p>
+
+          <div v-if="tx.type == 'in' || tx.type == 'pool'">
+            <q-list no-border>
+              <q-item header class="q-px-none">
+                {{
+                  $t("strings.transactions.sentTo", {
+                    type: $t("strings.transactions.types.incoming")
+                  })
+                }}:
+              </q-item>
+              <q-item class="q-px-none">
+                <q-item-label>
+                  <q-item-label class="non-selectable">{{ in_tx_address_used.address_index_text }}</q-item-label>
+                  <q-item-label class="monospace ellipsis">{{ in_tx_address_used.address }}</q-item-label>
+                </q-item-label>
+                <ContextMenu :menu-items="menuItems" @copyAddress="copyAddress(in_tx_address_used.address)" />
+              </q-item>
+            </q-list>
+          </div>
+
+          <div v-else-if="tx.type == 'out' || tx.type == 'pending'">
+            <q-list no-border>
+              <q-item header class="q-px-none">
+                {{
+                  $t("strings.transactions.sentTo", {
+                    type: $t("strings.transactions.types.outgoing")
+                  })
+                }}:
+              </q-item>
+              <template v-if="out_destinations">
+                <q-item v-for="destination in out_destinations" :key="destination.address" class="q-px-none">
+                  <q-item-label>
+                    <q-item-label>{{ destination.name }}</q-item-label>
+                    <q-item-label class="monospace ellipsis">{{ destination.address }}</q-item-label>
+                    <q-item-label><FormatLoki :amount="destination.amount"/></q-item-label>
+                  </q-item-label>
+                  <ContextMenu :menu-items="menuItems" @copyAddress="copyAddress(destination.address)" />
+                </q-item>
+              </template>
+              <template v-else>
+                <q-item class="q-px-none">
+                  <q-item-label>
+                    <q-item-label header>{{ $t("strings.destinationUnknown") }}</q-item-label>
+                  </q-item-label>
+                </q-item>
+              </template>
+            </q-list>
+          </div>
+
           <q-input
             v-model="txNotes"
-            :float-label="$t('fieldLabels.transactionNotes')"
+            :label="$t('fieldLabels.transactionNotes')"
             :dark="theme == 'dark'"
+            :text-color="theme == 'dark' ? 'white' : 'dark'"
             type="textarea"
             rows="2"
+            dense
           />
-        </q-field>
 
-        <q-field class="q-mt-sm">
           <q-btn
             :disable="!is_ready"
             :text-color="theme == 'dark' ? 'white' : 'dark'"
             :label="$t('buttons.saveTxNotes')"
+            color="primary"
             @click="saveTxNotes"
           />
-        </q-field>
-      </div>
-    </q-modal-layout>
-  </q-modal>
+        </div>
+      </q-page-container>
+    </q-layout>
+  </q-dialog>
 </template>
 
 <script>
@@ -206,13 +195,16 @@ import { mapState } from "vuex";
 import { date } from "quasar";
 import TxTypeIcon from "components/tx_type_icon";
 import FormatLoki from "components/format_loki";
+import ContextMenu from "components/menus/contextmenu";
 export default {
   name: "TxDetails",
   components: {
     TxTypeIcon,
-    FormatLoki
+    FormatLoki,
+    ContextMenu
   },
   data() {
+    const menuItems = [{ action: "copyAddress", i18n: "menuItems.copyAddress" }];
     return {
       isVisible: false,
       txNotes: "",
@@ -229,7 +221,8 @@ export default {
         txid: "",
         type: "",
         unlock_time: 0
-      }
+      },
+      menuItems
     };
   },
   computed: mapState({
@@ -297,10 +290,13 @@ export default {
           ok: {
             label: this.$t("dialog.transactionDetails.ok"),
             color: "primary"
-          }
+          },
+          dark: this.theme == "dark",
+          style: "min-width: 500px; overflow-wrap: break-word;"
         })
-        .then(() => {})
-        .catch(() => {});
+        .onOk(() => {})
+        .onCancel(() => {})
+        .onDismiss(() => {});
     },
     openExplorer() {
       this.$gateway.send("core", "open_explorer", {
@@ -322,14 +318,7 @@ export default {
     formatDate(timestamp) {
       return date.formatDate(timestamp, "YYYY-MM-DD hh:mm a");
     },
-    copyAddress(address, event) {
-      event.stopPropagation();
-      for (let i = 0; i < event.path.length; i++) {
-        if (event.path[i].tagName == "BUTTON") {
-          event.path[i].blur();
-          break;
-        }
-      }
+    copyAddress(address) {
       clipboard.writeText(address);
       this.$q.notify({
         type: "positive",

@@ -1,33 +1,35 @@
 <template>
-  <q-item class="address-header">
-    <q-item-main class="self-start">
-      <q-item-tile sublabel class="title non-selectable">{{ title }}</q-item-tile>
-      <q-item-tile class="break-all" label>{{ address }}</q-item-tile>
-      <q-item-tile v-if="paymentId" sublabel>{{ $t("fieldLabels.paymentId") }}: {{ paymentId }}</q-item-tile>
-      <q-item-tile v-if="extra" sublabel class="extra non-selectable">{{ extra }}</q-item-tile>
-    </q-item-main>
-    <q-item-side v-if="showCopy">
-      <q-btn ref="copy" color="primary" style="width:25px;" size="sm" icon="file_copy" @click="copyAddress">
-        <q-tooltip anchor="center left" self="center right" :offset="[5, 10]">
-          {{ $t("menuItems.copyAddress") }}
-        </q-tooltip>
-      </q-btn>
-    </q-item-side>
-
-    <q-context-menu>
-      <q-list link separator style="min-width: 150px; max-height: 300px;">
-        <q-item v-close-overlay @click.native="copyAddress($event)">
-          <q-item-main :label="$t('menuItems.copyAddress')" />
-        </q-item>
-      </q-list>
-    </q-context-menu>
-  </q-item>
+  <div>
+    <q-item-section class="self-start">
+      <q-item-label class="title non-selectable">{{ title }}</q-item-label>
+      <q-item-label class="row">
+        <q-item-section class="break-all" style="font-size: 18px">
+          {{ address }}
+        </q-item-section>
+        <q-item-section v-if="showCopy" side>
+          <q-btn ref="copy" color="primary" padding="xs" size="sm" icon="file_copy" @click="copyAddress">
+            <q-tooltip anchor="center left" self="center right" :offset="[5, 10]">
+              {{ $t("menuItems.copyAddress") }}
+            </q-tooltip>
+          </q-btn>
+        </q-item-section>
+      </q-item-label>
+      <q-item-label v-if="paymentId" header>{{ $t("fieldLabels.paymentId") }}: {{ paymentId }}</q-item-label>
+      <q-item-label v-if="extra" header class="extra non-selectable">{{ extra }}</q-item-label>
+    </q-item-section>
+    <ContextMenu :menu-items="menuItems" @copyAddress="copyAddress" />
+  </div>
 </template>
 
 <script>
 const { clipboard } = require("electron");
+import ContextMenu from "components/menus/contextmenu";
+
 export default {
   name: "AddressHeader",
+  components: {
+    ContextMenu
+  },
   props: {
     title: {
       type: String,
@@ -54,13 +56,13 @@ export default {
     }
   },
   data() {
-    return {};
+    const menuItems = [{ action: "copyAddress", i18n: "menuItems.copyAddress" }];
+    return {
+      menuItems
+    };
   },
   methods: {
-    copyAddress(event) {
-      if (event) {
-        event.stopPropagation();
-      }
+    copyAddress() {
       if (this.$refs.copy) {
         this.$refs.copy.$el.blur();
       }
@@ -74,8 +76,9 @@ export default {
               label: this.$t(`dialog.copyAddress.ok`)
             }
           })
-          .catch(() => null)
-          .then(() => {
+          .onDismiss(() => null)
+          .onCancel(() => null)
+          .onOk(() => {
             this.$q.notify({
               type: "positive",
               timeout: 1000,
@@ -95,6 +98,17 @@ export default {
 </script>
 
 <style lang="scss">
+.title {
+  font-size: 18px;
+  margin-bottom: 4px;
+  color: white;
+}
+
+.extra {
+  margin-top: 8px;
+  color: white;
+}
+
 .address-header {
   padding: 0;
   img {
@@ -107,29 +121,16 @@ export default {
   p {
     word-break: break-all;
   }
+
   &::after {
     content: "";
     clear: both;
     display: table;
   }
 
-  .q-item-main {
+  .q-item-label {
     .q-item-label {
       font-weight: 400;
-    }
-
-    .q-item-sublabel,
-    .q-list-header {
-      font-size: 13px;
-    }
-
-    .title {
-      font-size: 14px;
-      margin-bottom: 2px;
-    }
-
-    .extra {
-      margin-top: 8px;
     }
   }
 }

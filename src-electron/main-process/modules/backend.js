@@ -2,6 +2,9 @@ import { Daemon } from "./daemon";
 import { WalletRPC } from "./wallet-rpc";
 import { SCEE } from "./SCEE-Node";
 import { dialog } from "electron";
+import semver from "semver";
+import axios from "axios";
+import { version } from "../../../package.json";
 
 const WebSocket = require("ws");
 const os = require("os");
@@ -103,10 +106,6 @@ export class Backend {
     };
 
     this.remotes = [
-      {
-        host: "doopool.xyz",
-        port: "22020"
-      },
       {
         host: "imaginary.stream",
         port: "22023"
@@ -220,7 +219,7 @@ export class Backend {
             return map;
           }, {});
 
-        // Validate deamon data
+        // Validate daemon data
         this.config_data = {
           ...this.config_data,
           ...validated
@@ -298,12 +297,33 @@ export class Backend {
         break;
     }
   }
+  // if the version is a whole minor version out of date (hardfork out of date)
+  // set update required to true
+  async checkVersion() {
+    try {
+      const { data } = await axios.get(
+        "https://api.github.com/repos/loki-project/loki-electron-gui-wallet/releases/latest"
+      );
+      // remove the 'v' from front of the version
+      const latestVersion = data.tag_name.substring(1);
+      // can return "major", "minor", "patch"
+      const vSizeDiff = semver.diff(version, latestVersion);
+      const updateAvailable = semver.ltr(version, latestVersion);
+      const majorOrMinor = vSizeDiff === "major" || vSizeDiff == "minor";
+      const updateRequired = updateAvailable && majorOrMinor;
+      this.send("set_update_required", updateRequired);
+    } catch (e) {
+      this.send("set_updated_required", false);
+    }
+  }
 
   startup() {
     this.send("set_app_data", {
       remotes: this.remotes,
       defaults: this.defaults
     });
+
+    this.checkVersion();
 
     fs.readFile(this.config_file, "utf8", (err, data) => {
       if (err) {

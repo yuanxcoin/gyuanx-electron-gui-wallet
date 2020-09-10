@@ -287,22 +287,20 @@ export class WalletRPC {
         this.registerSnode(params.password, params.string);
         break;
 
+      case "update_service_node_list":
+        this.updateServiceNodeList();
+        break;
+
       case "unlock_stake":
         this.unlockStake(params.password, params.service_node_key, params.confirmed || false);
         break;
 
       case "transfer":
-        this.transfer(
-          params.password,
-          params.amount,
-          params.address,
-          params.payment_id,
-          params.priority,
-          params.note || "",
-          params.address_book
-        );
+        this.transfer(params.password, params.amount, params.address, params.payment_id, params.priority);
         break;
-
+      case "relay_tx":
+        this.relayTransaction(params.metadataList, params.isBlink, params.addressSave, params.note);
+        break;
       case "purchase_lns":
         this.purchaseLNS(
           params.password,
@@ -551,7 +549,7 @@ export class WalletRPC {
     });
   }
 
-  importWallet(filename, password, import_path) {
+  importWallet(wallet_name, password, import_path) {
     // Reset the status error
     this.sendGateway("reset_wallet_error");
 
@@ -569,9 +567,9 @@ export class WalletRPC {
           i18n: "notification.errors.invalidWalletPath"
         }
       });
+      return;
     } else {
-      let destination = path.join(this.wallet_dir, filename);
-
+      let destination = path.join(this.wallet_dir, wallet_name);
       if (fs.existsSync(destination) || fs.existsSync(destination + ".keys")) {
         this.sendGateway("set_wallet_error", {
           status: {
@@ -583,10 +581,9 @@ export class WalletRPC {
       }
 
       try {
-        fs.copySync(import_path, destination, fs.constants.COPYFILE_EXCL);
-
+        fs.copySync(import_path, destination, { errorOnExist: true });
         if (fs.existsSync(import_path + ".keys")) {
-          fs.copySync(import_path + ".keys", destination + ".keys", fs.constants.COPYFILE_EXCL);
+          fs.copySync(import_path + ".keys", destination + ".keys", { errorOnExist: true });
         }
       } catch (e) {
         this.sendGateway("set_wallet_error", {
@@ -597,30 +594,26 @@ export class WalletRPC {
         });
         return;
       }
-
       this.sendRPC("open_wallet", {
-        filename,
+        filename: wallet_name,
         password
       })
         .then(data => {
           if (data.hasOwnProperty("error")) {
             if (fs.existsSync(destination)) fs.unlinkSync(destination);
             if (fs.existsSync(destination + ".keys")) fs.unlinkSync(destination + ".keys");
-
             this.sendGateway("set_wallet_error", {
               status: data.error
             });
             return;
           }
-
           // store hash of the password so we can check against it later when requesting private keys, or for sending txs
           this.wallet_state.password_hash = crypto
             .pbkdf2Sync(password, this.auth[2], 1000, 64, "sha512")
             .toString("hex");
-          this.wallet_state.name = filename;
+          this.wallet_state.name = wallet_name;
           this.wallet_state.open = true;
-
-          this.finalizeNewWallet(filename);
+          this.finalizeNewWallet(wallet_name);
         })
         .catch(() => {
           this.sendGateway("set_wallet_error", {
@@ -1118,6 +1111,10 @@ export class WalletRPC {
     });
   }
 
+  async updateServiceNodeList() {
+    this.backend.daemon.updateServiceNodes();
+  }
+
   unlockStake(password, service_node_key, confirmed = false) {
     const sendError = (message, i18n = true) => {
       const key = i18n ? "i18n" : "message";
@@ -1194,8 +1191,66 @@ export class WalletRPC {
     });
   }
 
-  transfer(password, amount, address, payment_id, priority, note, address_book = {}) {
-    crypto.pbkdf2(password, this.auth[2], 1000, 64, "sha512", (err, password_hash) => {
+  // submits the transaction to the blockchain, irreversible from here
+  async relayTransaction(metadataList, isBlink, addressSave, note) {
+    const { address, payment_id, address_book } = addressSave;
+    let failed = false;
+    let errorMessage = "";
+
+    // submit each transaction individually
+    for (const hex of metadataList) {
+      const params = {
+        hex,
+        isBlink
+      };
+      // don't try submit more txs if a prev one failed
+      if (failed) break;
+      try {
+        const data = await this.sendRPC("relay_tx", params);
+        if (data.hasOwnProperty("error")) {
+          const errMsg = data.error.message;
+          const error = errMsg.charAt(0).toUpperCase() + errMsg.slice(1);
+          errorMessage = error;
+          failed = true;
+          return;
+        }
+        // save note to the new txid
+        if (data.hasOwnProperty("result")) {
+          const tx_hash = data.result.tx_hash;
+          if (note && note !== "") {
+            this.saveTxNotes(tx_hash, note);
+          }
+        }
+      } catch (e) {
+        failed = true;
+        errorMessage = e.toString();
+      }
+    }
+
+    if (!failed) {
+      this.sendGateway("set_tx_status", {
+        code: 0,
+        i18n: "notification.positive.sendSuccess",
+        sending: false
+      });
+
+      if (address_book.hasOwnProperty("save") && address_book.save) {
+        this.addAddressBook(address, payment_id, address_book.description, address_book.name);
+      }
+      return;
+    }
+
+    this.sendGateway("set_tx_status", {
+      code: -1,
+      message: errorMessage,
+      sending: false
+    });
+  }
+
+  // prepares params and provides a "confirm" popup to allow the user to check
+  // send address and tx fees before sending
+  transfer(password, amount, address, payment_id, priority) {
+    const cryptoCallback = (err, password_hash) => {
       if (err) {
         this.sendGateway("set_tx_status", {
           code: -1,
@@ -1218,16 +1273,20 @@ export class WalletRPC {
       let sweep_all = amount == this.wallet_state.unlocked_balance;
 
       const rpc_endpoint = sweep_all ? "sweep_all" : "transfer_split";
-      const params = sweep_all
+      const rpcSpecificParams = sweep_all
         ? {
             address: address,
-            account_index: 0,
-            priority
+            account_index: 0
           }
         : {
-            destinations: [{ amount: amount, address: address }],
-            priority
+            destinations: [{ amount: amount, address: address }]
           };
+      const params = {
+        ...rpcSpecificParams,
+        priority,
+        do_not_relay: true,
+        get_tx_metadata: true
+      };
 
       if (payment_id) {
         params.payment_id = payment_id;
@@ -1243,26 +1302,23 @@ export class WalletRPC {
           });
           return;
         }
-
+        // update state to show a confirm popup
         this.sendGateway("set_tx_status", {
-          code: 0,
-          i18n: "notification.positive.sendSuccess",
-          sending: false
-        });
-
-        if (data.result) {
-          const hash_list = data.result.tx_hash_list || [];
-          // Save notes
-          if (note && note !== "") {
-            hash_list.forEach(txid => this.saveTxNotes(txid, note));
+          code: 1,
+          i18n: "strings.awaitingConfirmation",
+          sending: false,
+          txData: {
+            amountList: data.result.amount_list,
+            metadataList: data.result.tx_metadata_list,
+            feeList: data.result.fee_list,
+            priority: data.params.priority,
+            destinations: data.params.destinations
           }
-        }
+        });
       });
+    };
 
-      if (address_book.hasOwnProperty("save") && address_book.save) {
-        this.addAddressBook(address, payment_id, address_book.description, address_book.name);
-      }
-    });
+    crypto.pbkdf2(password, this.auth[2], 1000, 64, "sha512", cryptoCallback);
   }
 
   purchaseLNS(password, type, name, value, owner, backupOwner) {

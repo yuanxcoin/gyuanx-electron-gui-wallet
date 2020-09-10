@@ -12,36 +12,28 @@
           class="loki-list-item"
           @click.native="details(entry)"
         >
-          <q-item-main>
-            <q-item-tile class="ellipsis" label>{{ entry.address }}</q-item-tile>
-            <q-item-tile sublabel class="non-selectable">{{ entry.name }}</q-item-tile>
-          </q-item-main>
-          <q-item-side>
-            <q-icon size="24px" :name="entry.starred ? 'star' : 'star_border'" />
-            <q-btn
-              color="secondary"
-              style="margin-left: 10px;"
-              :label="$t('buttons.send')"
-              :disabled="view_only"
-              @click="sendToAddress(entry, $event)"
-            />
-          </q-item-side>
-
-          <q-context-menu>
-            <q-list link separator style="min-width: 150px; max-height: 300px;">
-              <q-item v-close-overlay @click.native="details(entry)">
-                <q-item-main :label="$t('menuItems.showDetails')" />
-              </q-item>
-
-              <q-item v-close-overlay @click.native="sendToAddress(entry, $event)">
-                <q-item-main :label="$t('menuItems.sendToThisAddress')" />
-              </q-item>
-
-              <q-item v-close-overlay @click.native="copyAddress(entry, $event)">
-                <q-item-main :label="$t('menuItems.copyAddress')" />
-              </q-item>
-            </q-list>
-          </q-context-menu>
+          <q-item-section>
+            <q-item-label class="ellipsis">{{ entry.address }}</q-item-label>
+            <q-item-label class="non-selectable" caption>{{ entry.name }}</q-item-label>
+          </q-item-section>
+          <q-item-section side>
+            <q-item-label>
+              <q-icon size="24px" :name="entry.starred ? 'star' : 'star_border'" />
+              <q-btn
+                color="secondary"
+                style="margin-left: 10px;"
+                :label="$t('buttons.send')"
+                :disabled="view_only"
+                @click="sendToAddress(entry, $event)"
+              />
+            </q-item-label>
+          </q-item-section>
+          <ContextMenu
+            :menu-items="menuItems"
+            @showDetails="details(entry)"
+            @sendToAddress="sendToAddress(entry)"
+            @copyAddress="copyAddress(entry)"
+          />
         </q-item>
       </q-list>
     </template>
@@ -50,7 +42,7 @@
     </template>
 
     <q-page-sticky position="bottom-right" :offset="[18, 18]">
-      <q-btn :disable="!is_ready" round color="primary" icon="add" @click="addEntry" />
+      <q-btn round color="primary" icon="add" @click="addEntry" />
     </q-page-sticky>
     <AddressBookDetails ref="addressBookDetails" />
   </q-page>
@@ -60,18 +52,27 @@
 const { clipboard } = require("electron");
 import { mapState } from "vuex";
 import AddressBookDetails from "components/address_book_details";
+import ContextMenu from "components/menus/contextmenu";
 export default {
   components: {
-    AddressBookDetails
+    AddressBookDetails,
+    ContextMenu
+  },
+  data() {
+    const menuItems = [
+      { action: "showDetails", i18n: "menuItems.showDetails" },
+      { action: "sendToAddress", i18n: "menuItems.sendToThisAddress" },
+      { action: "copyAddress", i18n: "menuItems.copyAddress" }
+    ];
+    return {
+      menuItems
+    };
   },
   computed: mapState({
     theme: state => state.gateway.app.config.appearance.theme,
     view_only: state => state.gateway.wallet.info.view_only,
     address_book: state => state.gateway.wallet.address_list.address_book,
     address_book_starred: state => state.gateway.wallet.address_list.address_book_starred,
-    is_ready() {
-      return this.$store.getters["gateway/isReady"];
-    },
     address_book_combined() {
       const starred = this.address_book_starred.map(a => ({
         ...a,
@@ -93,12 +94,6 @@ export default {
     },
     sendToAddress(address, event) {
       event.stopPropagation();
-      for (let i = 0; i < event.path.length; i++) {
-        if (event.path[i].tagName == "BUTTON") {
-          event.path[i].blur();
-          break;
-        }
-      }
       this.$router.replace({
         path: "send",
         query: {
@@ -107,14 +102,7 @@ export default {
         }
       });
     },
-    copyAddress(entry, event) {
-      event.stopPropagation();
-      for (let i = 0; i < event.path.length; i++) {
-        if (event.path[i].tagName == "BUTTON") {
-          event.path[i].blur();
-          break;
-        }
-      }
+    copyAddress(entry) {
       clipboard.writeText(entry.address);
       if (entry.payment_id) {
         this.$q
@@ -125,8 +113,9 @@ export default {
               label: this.$t("dialog.buttons.ok")
             }
           })
-          .catch(() => null)
-          .then(() => {
+          .onDismiss(() => null)
+          .onCancel(() => null)
+          .onOk(() => {
             this.$q.notify({
               type: "positive",
               timeout: 1000,
@@ -165,7 +154,7 @@ export default {
       font-weight: 400;
     }
 
-    .q-item-side {
+    .q-item-section {
       display: flex;
       justify-content: center;
       align-items: center;

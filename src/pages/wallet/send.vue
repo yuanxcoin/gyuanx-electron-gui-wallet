@@ -9,7 +9,7 @@
       <div class="q-pa-md">
         <div class="row gutter-md">
           <!-- Amount -->
-          <div class="col-6">
+          <div class="col-6 amount">
             <LokiField :label="$t('fieldLabels.amount')" :error="$v.newTx.amount.$error">
               <q-input
                 v-model="newTx.amount"
@@ -18,7 +18,8 @@
                 min="0"
                 :max="unlocked_balance / 1e9"
                 placeholder="0"
-                hide-underline
+                borderless
+                dense
                 @blur="$v.newTx.amount.$touch"
               />
               <q-btn
@@ -32,9 +33,17 @@
           </div>
 
           <!-- Priority -->
-          <div class="col-6">
+          <div class="col-6 priority">
             <LokiField :label="$t('fieldLabels.priority')">
-              <q-select v-model="newTx.priority" :dark="theme == 'dark'" :options="priorityOptions" hide-underline />
+              <q-select
+                v-model="newTx.priority"
+                emit-value
+                map-options
+                :dark="theme == 'dark'"
+                :options="priorityOptions"
+                borderless
+                dense
+              />
             </LokiField>
           </div>
         </div>
@@ -46,7 +55,8 @@
               v-model.trim="newTx.address"
               :dark="theme == 'dark'"
               :placeholder="address_placeholder"
-              hide-underline
+              borderless
+              dense
               @blur="$v.newTx.address.$touch"
             />
             <q-btn color="secondary" :text-color="theme == 'dark' ? 'white' : 'dark'" to="addressbook">
@@ -58,15 +68,17 @@
         <!-- Payment ID -->
         <div class="col q-mt-sm">
           <LokiField :label="$t('fieldLabels.paymentId')" :error="$v.newTx.payment_id.$error" optional>
+            <!-- TODO: count to be '16 or 64 after RPC fixed -->
             <q-input
               v-model.trim="newTx.payment_id"
               :dark="theme == 'dark'"
               :placeholder="
                 $t('placeholders.hexCharacters', {
-                  count: '16 or 64'
+                  count: '64'
                 })
               "
-              hide-underline
+              borderless
+              dense
               @blur="$v.newTx.payment_id.$touch"
             />
           </LokiField>
@@ -77,45 +89,47 @@
           <LokiField :label="$t('fieldLabels.notes')" optional>
             <q-input
               v-model="newTx.note"
+              class="full-width text-area-loki"
               type="textarea"
               :dark="theme == 'dark'"
               :placeholder="$t('placeholders.transactionNotes')"
-              hide-underline
+              borderless
+              dense
             />
           </LokiField>
         </div>
 
-        <!-- Save to address book -->
-        <q-field>
-          <q-checkbox
-            v-model="newTx.address_book.save"
-            :label="$t('strings.saveToAddressBook')"
-            :dark="theme == 'dark'"
-          />
-        </q-field>
-
+        <q-checkbox
+          v-model="newTx.address_book.save"
+          :label="$t('strings.saveToAddressBook')"
+          :dark="theme == 'dark'"
+          color="dark"
+        />
         <div v-if="newTx.address_book.save">
           <LokiField :label="$t('fieldLabels.name')" optional>
             <q-input
               v-model="newTx.address_book.name"
               :dark="theme == 'dark'"
               :placeholder="$t('placeholders.addressBookName')"
-              hide-underline
+              borderless
+              dense
             />
           </LokiField>
           <LokiField class="q-mt-sm" :label="$t('fieldLabels.notes')" optional>
             <q-input
               v-model="newTx.address_book.description"
               type="textarea"
+              class="full-width text-area-loki"
               rows="2"
               :dark="theme == 'dark'"
               :placeholder="$t('placeholders.additionalNotes')"
-              hide-underline
+              borderless
+              dense
             />
           </LokiField>
         </div>
-
-        <q-field class="q-pt-sm">
+        <!-- div required so button below checkbox -->
+        <div>
           <q-btn
             class="send-btn"
             :disable="!is_able_to_send"
@@ -123,11 +137,44 @@
             :label="$t('buttons.send')"
             @click="send()"
           />
-        </q-field>
+        </div>
       </div>
-
-      <q-inner-loading :visible="tx_status.sending" :dark="theme == 'dark'">
-        <q-spinner color="primary" :size="30" />
+      <q-dialog v-model="confirmTransaction" persistent>
+        <q-card class="confirm-tx-card" dark>
+          <q-card-section>
+            <div class="text-h6">{{ $t("dialog.confirmTransaction.title") }}</div>
+          </q-card-section>
+          <q-card-section>
+            <div class="confirm-list">
+              <div>
+                <span class="label">{{ $t("dialog.confirmTransaction.sendTo") }}: </span>
+                <br />
+                <span class="address-value">{{ confirmFields.destination }}</span>
+              </div>
+              <br />
+              <span class="label">{{ $t("strings.transactions.amount") }}: </span>
+              {{ confirmFields.totalAmount }} Loki
+              <br />
+              <span class="label">{{ $t("strings.transactions.fee") }}: </span> {{ confirmFields.totalFees }} Loki
+              <br />
+              <span class="label">{{ $t("dialog.confirmTransaction.priority") }}: </span>
+              {{ confirmFields.translatedBlinkOrSlow }}
+            </div>
+          </q-card-section>
+          <q-card-actions align="right">
+            <q-btn v-close-popup flat :label="$t('dialog.buttons.cancel')" color="negative" />
+            <q-btn
+              v-close-popup
+              class="confirm-send-btn"
+              flat
+              :label="$t('buttons.send')"
+              @click="onConfirmTransaction"
+            />
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
+      <q-inner-loading :showing="tx_status.sending" :dark="theme == 'dark'">
+        <q-spinner color="primary" size="30" />
       </q-inner-loading>
     </template>
   </q-page>
@@ -141,28 +188,34 @@ import LokiField from "components/loki_field";
 import WalletPassword from "src/mixins/wallet_password";
 const objectAssignDeep = require("object-assign-deep");
 
+// the case for doing nothing on a tx_status update
+const DO_NOTHING = 10;
+
 export default {
   components: {
     LokiField
   },
   mixins: [WalletPassword],
   data() {
+    let priorityOptions = [
+      { label: this.$t("strings.priorityOptions.blink"), value: 5 }, // Blink
+      { label: this.$t("strings.priorityOptions.slow"), value: 1 } // Slow
+    ];
     return {
       newTx: {
         amount: 0,
         address: "",
         payment_id: "",
-        priority: 5,
+        priority: priorityOptions[0].value,
         address_book: {
           save: false,
           name: "",
           description: ""
         }
       },
-      priorityOptions: [
-        { label: this.$t("strings.priorityOptions.blink"), value: 5 }, // Blink
-        { label: this.$t("strings.priorityOptions.slow"), value: 1 } // Slow
-      ]
+      priorityOptions: priorityOptions,
+      confirmTransaction: false,
+      confirmFields: {}
     };
   },
   computed: mapState({
@@ -210,6 +263,13 @@ export default {
         if (val.code == old.code) return;
         const { code, message } = val;
         switch (code) {
+          // the "nothing", so we can update state without doing anything
+          // in particular
+          case DO_NOTHING:
+            break;
+          case 1:
+            this.buildDialogFields(val);
+            break;
           case 0:
             this.$q.notify({
               type: "positive",
@@ -221,7 +281,7 @@ export default {
               amount: 0,
               address: "",
               payment_id: "",
-              priority: 0,
+              priority: this.priorityOptions[0].value,
               address_book: {
                 save: false,
                 name: "",
@@ -257,8 +317,60 @@ export default {
       this.newTx.address = info.address;
       this.newTx.payment_id = info.payment_id;
     },
+    buildDialogFields(val) {
+      this.confirmTransaction = true;
+      const { feeList, amountList, destinations, metadataList, priority } = val.txData;
+      const totalFees = feeList.reduce((a, b) => a + b, 0) / 1e9;
+      const totalAmount = amountList.reduce((a, b) => a + b, 0) / 1e9;
+      // a tx can be split, but only sent to one address
+      const destination = destinations[0].address;
 
-    send: function() {
+      const isBlink = [0, 2, 3, 4, 5].includes(priority) ? true : false;
+      const blinkOrSlow = isBlink ? "strings.priorityOptions.blink" : "strings.priorityOptions.slow";
+      const translatedBlinkOrSlow = this.$t(blinkOrSlow);
+      this.confirmFields = {
+        metadataList,
+        isBlink,
+        translatedBlinkOrSlow,
+        destination,
+        totalAmount,
+        totalFees
+      };
+    },
+    onConfirmTransaction() {
+      // put the loading spinner up
+      this.$store.commit("gateway/set_tx_status", {
+        code: DO_NOTHING,
+        message: "Getting transaction information",
+        sending: true
+      });
+      const { name, description, save } = this.newTx.address_book;
+      const addressSave = {
+        address: this.newTx.address,
+        payment_id: this.newTx.payment_id,
+        address_book: {
+          description,
+          name,
+          save
+        }
+      };
+
+      const note = this.newTx.note;
+      const metadataList = this.confirmFields.metadataList;
+      const isBlink = this.confirmFields.isBlink;
+
+      const relayTxData = {
+        metadataList,
+        isBlink,
+        addressSave,
+        note
+      };
+
+      this.$gateway.send("wallet", "relay_tx", relayTxData);
+    },
+    // helper for constructing a dialog for confirming transactions
+
+    async send() {
       this.$v.newTx.$touch();
 
       if (this.newTx.amount < 0) {
@@ -309,34 +421,80 @@ export default {
         return;
       }
 
-      this.showPasswordConfirmation({
+      // must wait for the dialog to be returned
+      let passwordDialog = await this.showPasswordConfirmation({
         title: this.$t("dialog.transfer.title"),
         noPasswordMessage: this.$t("dialog.transfer.message"),
         ok: {
-          label: this.$t("dialog.transfer.ok")
-        }
-      })
-        .then(password => {
+          label: this.$t("dialog.transfer.ok"),
+          color: "primary"
+        },
+        dark: this.theme == "dark",
+        color: this.theme == "dark" ? "white" : "dark"
+      });
+      passwordDialog
+        .onOk(password => {
+          password = password || "";
           this.$store.commit("gateway/set_tx_status", {
-            code: 1,
-            message: "Sending transaction",
+            code: DO_NOTHING,
+            message: "Getting transaction information",
             sending: true
           });
           const newTx = objectAssignDeep.noMutate(this.newTx, {
             password
           });
+
           this.$gateway.send("wallet", "transfer", newTx);
         })
-        .catch(() => {});
+        .onDismiss(() => {})
+        .onCancel(() => {});
     }
   }
 };
 </script>
 
 <style lang="scss">
+.confirm-tx-card {
+  color: "primary";
+  width: 450px;
+  max-width: 450x;
+
+  .confirm-list {
+    .q-item {
+      max-height: 100%;
+      margin-top: 0;
+      margin-bottom: 4px;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+  }
+
+  .label {
+    color: #cecece;
+    padding-right: 6px;
+  }
+  .address-value {
+    word-break: break-word;
+  }
+
+  .confirm-send-btn {
+    color: white;
+    background: $positive;
+  }
+}
+
 .send {
   .send-btn {
+    margin-top: 6px;
     width: 200px;
   }
+}
+
+.amount {
+  padding-right: 10px;
+}
+
+.priority {
+  padding-left: 10px;
 }
 </style>

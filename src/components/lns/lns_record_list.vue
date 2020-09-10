@@ -5,7 +5,8 @@
         <q-input
           v-model.trim="name"
           :dark="theme == 'dark'"
-          hide-underline
+          borderless
+          dense
           :placeholder="$t('placeholders.lnsDecryptName')"
           :disable="decrypting"
           @blur="$v.name.$touch"
@@ -17,55 +18,35 @@
     </div>
     <q-list link no-border :dark="theme == 'dark'" class="loki-list">
       <q-item v-for="record in records" :key="record.name_hash" class="loki-list-item">
-        <q-item-side class="type">
+        <q-item-section class="type" avatar>
           <q-icon :name="isLocked(record) ? 'lock' : 'lock_open'" size="24px" />
-        </q-item-side>
-        <q-item-main class="main">
-          <q-item-tile label :class="bindClass(record)">
+        </q-item-section>
+        <q-item-section>
+          <q-item-label :class="bindClass(record)">
             {{ isLocked(record) ? record.name_hash : record.name }}
-          </q-item-tile>
-          <q-item-tile v-if="!isLocked(record)" sublabel>{{ record.value }}</q-item-tile>
-        </q-item-main>
-        <template v-if="isLocked(record)">
-          <q-item-side right class="height">
+          </q-item-label>
+          <q-item-label v-if="!isLocked(record)">{{ record.value }}</q-item-label>
+        </q-item-section>
+        <q-item-section side class="height">
+          <template v-if="isLocked(record)">
             {{ record.register_height | blockHeight }}
-          </q-item-side>
-        </template>
-        <template v-else>
-          <q-item-side right>
-            <q-btn color="secondary" :label="$t('buttons.update')" @click="onUpdate(record)" />
-          </q-item-side>
-        </template>
-
-        <q-item-side v-if="!isLocked(record)" right>
+          </template>
+          <template v-else>
+            <q-item-section>
+              <q-btn color="secondary" :label="$t('buttons.update')" @click="onUpdate(record)" />
+            </q-item-section>
+          </template>
+        </q-item-section>
+        <q-item-section v-if="!isLocked(record)" side>
           {{ record.register_height | blockHeight }}
-        </q-item-side>
-
-        <q-context-menu>
-          <q-list link separator style="min-width: 150px; max-height: 300px;">
-            <template v-if="!isLocked(record)">
-              <q-item v-close-overlay @click.native="copy(record.name, $event, $t('notification.positive.nameCopied'))">
-                <q-item-main :label="$t('menuItems.copyName')" />
-              </q-item>
-
-              <q-item v-close-overlay @click.native="copyValue(record, $event)">
-                <q-item-main :label="record | copyValue" />
-              </q-item>
-            </template>
-
-            <q-item v-close-overlay @click.native="copy(record.owner, $event, $t('notification.positive.ownerCopied'))">
-              <q-item-main :label="$t('menuItems.copyOwner')" />
-            </q-item>
-
-            <q-item
-              v-if="record.backup_owner !== ''"
-              v-close-overlay
-              @click.native="copy(record.backup_owner, $event, $t('notification.positive.backupOwnerCopied'))"
-            >
-              <q-item-main :label="$t('menuItems.copyBackupOwner')" />
-            </q-item>
-          </q-list>
-        </q-context-menu>
+        </q-item-section>
+        <ContextMenu
+          :menu-items="validMenuItems(record)"
+          @ownerCopy="copy(record.owner, $t('notification.positive.ownerCopied'))"
+          @nameCopy="copy(record.name, $t('notification.positive.nameCopied'))"
+          @copyValue="copyValue(record)"
+          @backupOwnerCopy="copy(record.backup_owner, $t('notification.positive.backupOwnerCopied'))"
+        />
       </q-item>
     </q-list>
   </div>
@@ -74,25 +55,21 @@
 <script>
 const { clipboard } = require("electron");
 import { mapState } from "vuex";
-import { i18n } from "plugins/i18n";
+import { i18n } from "boot/i18n";
 import LokiField from "components/loki_field";
 import { lns_name } from "src/validators/common";
+import ContextMenu from "components/menus/contextmenu";
 
 export default {
   name: "LNSRecordList",
   components: {
-    LokiField
+    LokiField,
+    ContextMenu
   },
   filters: {
     blockHeight(value) {
       const heightString = i18n.t("strings.blockHeight");
       return `${heightString}: ${value}`;
-    },
-    copyValue(record) {
-      if (record.type === "session") {
-        return i18n.t("menuItems.copySessionId");
-      }
-      return i18n.t("menuItems.copyAddress");
     }
   },
   data() {
@@ -133,8 +110,30 @@ export default {
     }
   }),
   methods: {
+    validMenuItems(record) {
+      const lockedItems = [
+        { action: "nameCopy", i18n: "menuItems.copyName" },
+        { action: "copyValue", i18n: this.copyValueI18nLabel(record) }
+      ];
+      let menuItems = [{ action: "ownerCopy", i18n: "menuItems.copyOwner" }];
+      const backupOwnerItem = [{ action: "backupOwnerCopy", i18n: "menuItems.copyBackupOwner" }];
+
+      if (!this.isLocked(record)) {
+        menuItems = [...lockedItems, ...menuItems];
+      }
+      if (record.backup_owner !== "") {
+        menuItems = [...menuItems, ...backupOwnerItem];
+      }
+      return menuItems;
+    },
     isLocked(record) {
       return !record.name || !record.value;
+    },
+    copyValueI18nLabel(record) {
+      if (record.type === "session") {
+        return "menuItems.copySessionId";
+      }
+      return "menuItems.copyAddress";
     },
     decrypt() {
       this.$v.name.$touch();
@@ -182,30 +181,20 @@ export default {
       });
       this.decrypting = true;
     },
-    blurEventButton(event) {
-      for (let i = 0; i < event.path.length; i++) {
-        if (event.path[i].tagName == "BUTTON") {
-          event.path[i].blur();
-          break;
-        }
-      }
-    },
     bindClass(record) {
       return [this.isLocked(record) ? "locked" : "unlocked"];
     },
     onUpdate(record) {
       this.$emit("onUpdate", record);
     },
-    copyValue(record, event) {
+    copyValue(record) {
       let message = this.$t("notification.positive.addressCopied");
       if (record.type === "session") {
         message = this.$t("notification.positive.sessionIdCopied");
       }
-      this.copy(record.value, event, message);
+      this.copy(record.value, message);
     },
-    copy(value, event, message) {
-      event.stopPropagation();
-      this.blurEventButton(event);
+    copy(value, message) {
       if (!value) return;
       clipboard.writeText(value.trim());
       this.$q.notify({

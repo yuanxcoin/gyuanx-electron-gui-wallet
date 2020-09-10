@@ -10,7 +10,8 @@
             v-model.trim="txid"
             :dark="theme == 'dark'"
             :placeholder="$t('placeholders.pasteTransactionId')"
-            hide-underline
+            borderless
+            dense
             @blur="$v.txid.$touch"
           />
         </LokiField>
@@ -19,7 +20,8 @@
             v-model.trim="address"
             :dark="theme == 'dark'"
             :placeholder="$t('placeholders.recipientWalletAddress')"
-            hide-underline
+            borderless
+            dense
             @blur="$v.address.$touch"
           />
         </LokiField>
@@ -28,16 +30,17 @@
             v-model.trim="message"
             :dark="theme == 'dark'"
             :placeholder="$t('placeholders.proveOptionalMessage')"
-            hide-underline
+            borderless
+            dense
           />
         </LokiField>
-        <q-field class="buttons q-pt-sm">
+        <div class="buttons submit-button">
           <q-btn color="primary" :label="$t('buttons.generate')" @click="generate" />
           <q-btn v-if="canClear" color="secondary" :label="$t('buttons.clear')" @click="clear" />
           <q-btn v-if="status.state.signature" color="secondary" :label="$t('buttons.copySignature')" @click="copy" />
-        </q-field>
+        </div>
       </div>
-      <div v-if="status.state.signature">
+      <div v-if="status.state.signature" class="signature-wrapper">
         <div class="txid q-mb-sm">
           <div class="title">{{ $t("strings.transactionID") }}</div>
           <div>{{ status.state.txid }}</div>
@@ -156,6 +159,10 @@ export default {
 </script>
 
 <style lang="scss">
+.signature-wrapper {
+  margin-top: 12px;
+}
+
 .prove-transaction {
   .description {
     white-space: pre-line;

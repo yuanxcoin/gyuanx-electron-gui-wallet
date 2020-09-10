@@ -1,19 +1,21 @@
 <template>
   <q-page>
-    <q-list class="wallet-list" link no-border :dark="theme == 'dark'">
+    <q-list class="wallet-list" no-border :dark="theme == 'dark'">
       <template v-if="wallets.list.length">
         <div class="header row justify-between items-center">
           <div class="header-title">
             {{ $t("titles.yourWallets") }}
           </div>
           <q-btn v-if="wallets.list.length" class="add" icon="add" size="md" color="primary">
-            <q-popover class="header-popover">
-              <q-list separator link>
-                <q-item v-for="action in actions" :key="action.name" @click.native="action.handler">
-                  <q-item-main :label="action.name" />
+            <q-menu class="header-popover" :content-class="'header-popover'">
+              <q-list separator>
+                <q-item v-for="action in actions" :key="action.name" clickable @click.native="action.handler">
+                  <q-item-section>
+                    {{ action.name }}
+                  </q-item-section>
                 </q-item>
               </q-list>
-            </q-popover>
+            </q-menu>
           </q-btn>
         </div>
         <div class="hr-separator" />
@@ -22,8 +24,8 @@
           :key="`${wallet.address}-${wallet.name}`"
           @click.native="openWallet(wallet)"
         >
-          <q-item-side>
-            <div class="wallet-icon">
+          <q-item-section avatar>
+            <q-icon class="wallet-icon">
               <svg
                 width="48"
                 viewBox="0 0 17 16"
@@ -50,30 +52,25 @@
                   </g>
                 </g>
               </svg>
-            </div>
-          </q-item-side>
-          <q-item-main>
-            <q-item-tile label>{{ wallet.name }}</q-item-tile>
-            <q-item-tile class="monospace ellipsis" sublabel>{{ wallet.address }}</q-item-tile>
-          </q-item-main>
-
-          <q-context-menu>
-            <q-list link separator style="min-width: 150px; max-height: 300px;">
-              <q-item v-close-overlay @click.native="openWallet(wallet)">
-                <q-item-main :label="$t('menuItems.openWallet')" />
-              </q-item>
-
-              <q-item v-close-overlay @click.native="copyAddress(wallet.address, $event)">
-                <q-item-main :label="$t('menuItems.copyAddress')" />
-              </q-item>
-            </q-list>
-          </q-context-menu>
+            </q-icon>
+          </q-item-section>
+          <q-item-section>
+            <q-item-label class="wallet-name" caption>{{ wallet.name }}</q-item-label>
+            <q-item-label class="monospace ellipsis" caption>{{ wallet.address }}</q-item-label>
+          </q-item-section>
+          <ContextMenu
+            :menu-items="menuItems"
+            @openWallet="openWallet(wallet)"
+            @copyAddress="copyAddress(wallet.address)"
+          />
         </q-item>
-        <q-item-separator />
+        <q-separator />
       </template>
       <template v-else>
         <q-item v-for="action in actions" :key="action.name" @click.native="action.handler">
-          <q-item-main :label="action.name" />
+          <q-item-section>
+            {{ action.name }}
+          </q-item-section>
         </q-item>
       </template>
     </q-list>
@@ -83,8 +80,21 @@
 <script>
 const { clipboard } = require("electron");
 import { mapState } from "vuex";
+import ContextMenu from "components/menus/contextmenu";
 
 export default {
+  components: {
+    ContextMenu
+  },
+  data() {
+    const menuItems = [
+      { action: "openWallet", i18n: "menuItems.openWallet" },
+      { action: "copyAddress", i18n: "menuItems.copyAddress" }
+    ];
+    return {
+      menuItems
+    };
+  },
   computed: mapState({
     theme: state => state.gateway.app.config.appearance.theme,
     wallets: state => state.gateway.wallets,
@@ -92,7 +102,7 @@ export default {
     actions() {
       // TODO: Add this in once LOKI has the functionality
       // <q-item @click.native="restoreViewWallet()">
-      //     <q-item-main label="Restore view-only wallet" />
+      //     <q-item-label label="Restore view-only wallet" />
       // </q-item>
       const actions = [
         {
@@ -169,9 +179,11 @@ export default {
               flat: true,
               label: this.$t("dialog.buttons.cancel"),
               color: this.theme == "dark" ? "white" : "dark"
-            }
+            },
+            dark: this.theme == "dark",
+            color: "positive"
           })
-          .then(password => {
+          .onOk(password => {
             this.$q.loading.show({
               delay: 0
             });
@@ -180,7 +192,8 @@ export default {
               password: password
             });
           })
-          .catch(() => {});
+          .onCancel(() => {})
+          .onDismiss(() => {});
       } else {
         this.$q.loading.show({
           delay: 0
@@ -209,14 +222,7 @@ export default {
     importLegacyWallet() {
       this.$router.replace({ path: "wallet-select/import-legacy" });
     },
-    copyAddress(address, event) {
-      event.stopPropagation();
-      for (let i = 0; i < event.path.length; i++) {
-        if (event.path[i].tagName == "BUTTON") {
-          event.path[i].blur();
-          break;
-        }
-      }
+    copyAddress(address) {
       clipboard.writeText(address);
       this.$q.notify({
         type: "positive",
@@ -229,14 +235,14 @@ export default {
 </script>
 
 <style lang="scss">
-.header-popover.q-popover {
-  max-width: 250px !important;
-}
-
 .wallet-list {
+  .wallet-icon {
+    font-size: 3rem;
+  }
+
   .header {
     margin: 0 16px;
-    margin-bottom: 8px;
+    padding: 6px;
     min-height: 36px;
 
     .header-title {
@@ -248,6 +254,9 @@ export default {
       width: 38px;
       padding: 0;
     }
+  }
+  .wallet-name {
+    font-size: 1.1rem;
   }
   .q-item {
     margin: 10px 16px;

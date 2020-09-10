@@ -3,26 +3,38 @@
     <div class="q-mx-md import-old-gui">
       <q-list link dark no-border class="wallet-list">
         <q-item v-for="state in directory_state" :key="state.directory" :class="{ selected: state.selected }">
-          <q-item-side>
-            <q-checkbox v-model="state.selected" />
-          </q-item-side>
-          <q-item-main @click.native="state.selected = !state.selected">
-            <q-item-tile label>{{ state.directory }}</q-item-tile>
-          </q-item-main>
-          <q-item-side>
-            <q-select v-model="state.type" hide-underline dark class="q-ma-none full-width" :options="selectOptions" />
-          </q-item-side>
+          <q-item-section>
+            <div class="row items-center">
+              <q-item-label class="items-center">
+                <q-checkbox v-model="state.selected" dark color="dark" />
+              </q-item-label>
+              <q-item-label class="wallet-name" @click.native="state.selected = !state.selected">
+                {{ state.directory }}
+              </q-item-label>
+            </div>
+          </q-item-section>
+
+          <q-item-section side>
+            <q-select
+              v-model="state.type"
+              hide-underline
+              dark
+              class="q-ma-none full-width"
+              :options="selectOptions"
+              emit-value
+              map-options
+            />
+          </q-item-section>
         </q-item>
       </q-list>
 
-      <q-field>
-        <q-btn
-          color="primary"
-          :label="$tc('buttons.importWallet', 2)"
-          :disable="selectedWallets.length === 0"
-          @click="import_wallets"
-        />
-      </q-field>
+      <q-btn
+        color="primary"
+        class="submit-button"
+        :label="$tc('buttons.importWallet', 2)"
+        :disable="selectedWallets.length === 0"
+        @click="import_wallets"
+      />
     </div>
   </q-page>
 </template>
@@ -138,6 +150,11 @@ export default {
       margin-bottom: 0px;
       padding: 14px;
       border-radius: 3px;
+
+      .wallet-name {
+        padding-left: 24px;
+        font-size: 18px;
+      }
     }
   }
 }

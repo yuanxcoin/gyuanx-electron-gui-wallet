@@ -1,5 +1,5 @@
 <template>
-  <q-layout-footer class="status-footer">
+  <q-footer class="status-footer">
     <div class="status-line row items-center">
       <div class="status row items-center">
         <span>{{ $t("footer.status") }}:</span>
@@ -21,11 +21,12 @@
       <div :style="{ width: daemon_pct + '%' }"></div>
       <div :style="{ width: wallet_pct + '%' }"></div>
     </div>
-  </q-layout-footer>
+  </q-footer>
 </template>
 
 <script>
 import { mapState } from "vuex";
+
 export default {
   name: "StatusFooter",
   data() {
@@ -35,6 +36,7 @@ export default {
     config: state => state.gateway.app.config,
     daemon: state => state.gateway.daemon,
     wallet: state => state.gateway.wallet,
+    update_required: state => state.gateway.update_required,
 
     config_daemon() {
       return this.config.daemons[this.config.app.net_type];
@@ -59,21 +61,27 @@ export default {
       else return pct;
     },
     status() {
-      if (this.config_daemon.type === "local") {
-        if (this.daemon.info.height_without_bootstrap < this.target_height) {
+      const daemonType = this.config_daemon.type;
+      const isSyncing = this.daemon.info.height_without_bootstrap < this.target_height;
+      const isScanning = this.wallet.info.height < this.target_height - 1 && this.wallet.info.height != 0;
+
+      if (this.update_required) {
+        // i18n string and class of statusbar
+        return "updateRequired";
+      }
+
+      if (daemonType === "local") {
+        if (isSyncing) {
           return "syncing";
-        } else if (this.wallet.info.height < this.target_height - 1 && this.wallet.info.height != 0) {
+        } else if (isScanning) {
           return "scanning";
         } else {
           return "ready";
         }
       } else {
-        if (this.wallet.info.height < this.target_height - 1 && this.wallet.info.height != 0) {
+        if (isScanning) {
           return "scanning";
-        } else if (
-          this.config_daemon.type === "local_remote" &&
-          this.daemon.info.height_without_bootstrap < this.target_height
-        ) {
+        } else if (daemonType === "local_remote" && isSyncing) {
           return "syncing";
         } else {
           return "ready";

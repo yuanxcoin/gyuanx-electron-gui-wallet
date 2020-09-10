@@ -1,12 +1,19 @@
 <template>
   <div class="service-node-staking">
     <div class="q-px-md q-pt-md">
+      <p style="color: #cecece">
+        {{ $t("strings.serviceNodeContributionDescription") }}
+        <span style="cursor: pointer; text-decoration: underline;" @click="lokiWebsite"
+          >Loki {{ $t("strings.website") }}.</span
+        >
+      </p>
       <LokiField :label="$t('fieldLabels.serviceNodeKey')" :error="$v.service_node.key.$error">
         <q-input
           v-model.trim="service_node.key"
           :dark="theme == 'dark'"
           :placeholder="$t('placeholders.hexCharacters', { count: 64 })"
-          hide-underline
+          borderless
+          dense
           @blur="$v.service_node.key.$touch"
         />
       </LokiField>
@@ -19,19 +26,18 @@
           min="0"
           :max="unlocked_balance / 1e9"
           placeholder="0"
-          hide-underline
+          borderless
+          dense
           @blur="$v.service_node.amount.$touch"
         />
         <q-btn
           color="secondary"
           :text-color="theme == 'dark' ? 'white' : 'dark'"
           @click="service_node.amount = unlocked_balance / 1e9"
+          >{{ $t("buttons.all") }}</q-btn
         >
-          {{ $t("buttons.all") }}
-        </q-btn>
       </LokiField>
-
-      <q-field class="buttons q-pt-sm">
+      <div class="submit-button">
         <q-btn :disable="!is_able_to_send" color="primary" :label="$t('buttons.stake')" @click="stake()" />
         <q-btn
           :disable="!is_able_to_send"
@@ -39,13 +45,11 @@
           :label="$t('buttons.sweepAll')"
           @click="sweepAllWarning()"
         />
-      </q-field>
+      </div>
     </div>
-
-    <ServiceNodeUnlock />
-
-    <q-inner-loading :visible="stake_status.sending || tx_status.sending" :dark="theme == 'dark'">
-      <q-spinner color="primary" :size="30" />
+    <ServiceNodeContribute class="contribute" @contribute="fillStakingFields" />
+    <q-inner-loading :showing="stake_status.sending || tx_status.sending" :dark="theme == 'dark'">
+      <q-spinner color="primary" size="30" />
     </q-inner-loading>
   </div>
 </template>
@@ -57,13 +61,13 @@ import { required, decimal } from "vuelidate/lib/validators";
 import { service_node_key, greater_than_zero } from "src/validators/common";
 import LokiField from "components/loki_field";
 import WalletPassword from "src/mixins/wallet_password";
-import ServiceNodeUnlock from "components/service_node_unlock";
+import ServiceNodeContribute from "./service_node_contribute";
 
 export default {
   name: "ServiceNodeStaking",
   components: {
     LokiField,
-    ServiceNodeUnlock
+    ServiceNodeContribute
   },
   mixins: [WalletPassword],
   data() {
@@ -156,26 +160,39 @@ export default {
     }
   },
   methods: {
-    sweepAllWarning: function() {
+    lokiWebsite() {
+      const url = "https://loki.network/service-nodes/";
+      this.$gateway.send("core", "open_url", {
+        url
+      });
+    },
+    fillStakingFields(key, minContribution) {
+      this.service_node.key = key;
+      this.service_node.amount = minContribution;
+    },
+    sweepAllWarning() {
       this.$q
         .dialog({
           title: this.$t("dialog.sweepAllWarning.title"),
           message: this.$t("dialog.sweepAllWarning.message"),
           ok: {
-            label: this.$t("dialog.sweepAllWarning.ok")
+            label: this.$t("dialog.sweepAllWarning.ok"),
+            color: "primary"
           },
           cancel: {
             flat: true,
             label: this.$t("dialog.buttons.cancel"),
             color: this.theme === "dark" ? "white" : "dark"
-          }
+          },
+          dark: this.theme === "dark"
         })
-        .then(() => {
+        .onOk(() => {
           this.sweepAll();
         })
-        .catch(() => {});
+        .onDismiss(() => {})
+        .onCancel(() => {});
     },
-    sweepAll: function() {
+    async sweepAll() {
       const { unlocked_balance } = this.info;
 
       const tx = {
@@ -184,14 +201,19 @@ export default {
         priority: 0
       };
 
-      this.showPasswordConfirmation({
+      let passwordDialog = await this.showPasswordConfirmation({
         title: this.$t("dialog.sweepAll.title"),
         noPasswordMessage: this.$t("dialog.sweepAll.message"),
         ok: {
-          label: this.$t("dialog.sweepAll.ok")
-        }
-      })
-        .then(password => {
+          label: this.$t("dialog.sweepAll.ok"),
+          color: "primary"
+        },
+        dark: this.theme == "dark",
+        color: this.theme == "dark" ? "white" : "dark"
+      });
+      passwordDialog
+        .onOk(password => {
+          password = password || "";
           this.$store.commit("gateway/set_tx_status", {
             code: 1,
             message: "Sweeping all",
@@ -200,9 +222,10 @@ export default {
           const newTx = objectAssignDeep.noMutate(tx, { password });
           this.$gateway.send("wallet", "transfer", newTx);
         })
-        .catch(() => {});
+        .onDismiss(() => {})
+        .onCancel(() => {});
     },
-    stake: function() {
+    async stake() {
       this.$v.service_node.$touch();
 
       if (this.$v.service_node.key.$error) {
@@ -244,14 +267,19 @@ export default {
         return;
       }
 
-      this.showPasswordConfirmation({
+      let passwordDialog = await this.showPasswordConfirmation({
         title: this.$t("dialog.stake.title"),
         noPasswordMessage: this.$t("dialog.stake.message"),
         ok: {
-          label: this.$t("dialog.stake.ok")
-        }
-      })
-        .then(password => {
+          label: this.$t("dialog.stake.ok"),
+          color: this.theme == "dark" ? "white" : "dark"
+        },
+        dark: this.theme == "dark",
+        color: this.theme == "dark" ? "white" : "dark"
+      });
+      passwordDialog
+        .onOk(password => {
+          password = password || "";
           this.$store.commit("gateway/set_snode_status", {
             stake: {
               code: 1,
@@ -266,7 +294,8 @@ export default {
 
           this.$gateway.send("wallet", "stake", service_node);
         })
-        .catch(() => {});
+        .onDismiss(() => {})
+        .onCancel(() => {});
     }
   }
 };
@@ -274,10 +303,25 @@ export default {
 
 <style lang="scss">
 .service-node-staking {
-  .buttons {
+  .submit-button {
     .q-btn:not(:first-child) {
       margin-left: 8px;
     }
+  }
+}
+.contribute {
+  margin-top: 16px;
+  padding-left: 8px;
+}
+.service-node-stake-tab {
+  margin-top: 4px;
+  user-select: none;
+  .header {
+    font-weight: 450;
+  }
+  .q-item-sublabel,
+  .q-list-header {
+    font-size: 14px;
   }
 }
 </style>

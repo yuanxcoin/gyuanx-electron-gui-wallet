@@ -1,54 +1,25 @@
 <template>
-  <div v-if="service_nodes.length > 0" class="service-node-unlock">
+  <div class="service-node-stake-tab">
     <div class="q-pa-md">
       <div class="q-pb-sm header">
-        {{ $t("titles.currentlyStakedNodes") }}
+        <span v-if="service_nodes.length">
+          {{ $t("titles.currentlyStakedNodes") }}
+        </span>
+        <span v-else>{{ $t("strings.serviceNodeStartStakingDescription") }}</span>
       </div>
-      <q-list class="service-node-list" no-border>
-        <q-item v-for="node in service_nodes" :key="node.service_node_pubkey" @click.native="details(node)">
-          <q-item-main>
-            <q-item-tile class="ellipsis" label>{{ node.service_node_pubkey }}</q-item-tile>
-            <q-item-tile sublabel class="non-selectable"
-              >{{ getRole(node) }} • {{ getFee(node) }} • {{ $t("strings.contribution") }}:
-              <FormatLoki :amount="node.ourContributionAmount"
-            /></q-item-tile>
-          </q-item-main>
-          <q-item-side>
-            <q-btn
-              v-if="node.requested_unlock_height === 0"
-              color="primary"
-              size="md"
-              :label="$t('buttons.unlock')"
-              :disabled="!is_ready || unlock_status.sending"
-              @click.native="unlockWarning(node.service_node_pubkey, $event)"
-            />
-            <q-item-tile v-if="node.requested_unlock_height > 0" label>
-              {{
-                $t("strings.unlockingAtHeight", {
-                  number: node.requested_unlock_height
-                })
-              }}
-            </q-item-tile>
-          </q-item-side>
-          <q-context-menu>
-            <q-list link separator style="min-width: 150px; max-height: 300px;">
-              <q-item v-close-overlay @click.native="copyKey(node.service_node_pubkey, $event)">
-                <q-item-main :label="$t('menuItems.copyServiceNodeKey')" />
-              </q-item>
-              <q-item v-close-overlay @click.native="openExplorer(node.service_node_pubkey)">
-                <q-item-main :label="$t('menuItems.viewOnExplorer')" />
-              </q-item>
-            </q-list>
-          </q-context-menu>
-        </q-item>
-      </q-list>
+      <div v-if="service_nodes">
+        <ServiceNodeList
+          :service-nodes="service_nodes"
+          button-i18n="buttons.unlock"
+          :details="details"
+          :action="unlockWarning"
+        />
+      </div>
+      <q-inner-loading :showing="unlock_status.sending || fetching" :dark="theme == 'dark'">
+        <q-spinner color="primary" size="30" />
+      </q-inner-loading>
+      <ServiceNodeDetails ref="serviceNodeDetailsUnlock" :action="unlockWarning" action-i18n="buttons.unlock" />
     </div>
-
-    <ServiceNodeDetails ref="serviceNodeDetails" :unlock="unlockWarning" />
-
-    <q-inner-loading :visible="unlock_status.sending" :dark="theme == 'dark'">
-      <q-spinner color="primary" :size="30" />
-    </q-inner-loading>
   </div>
 </template>
 
@@ -58,16 +29,25 @@ import { mapState } from "vuex";
 import { required } from "vuelidate/lib/validators";
 import { service_node_key } from "src/validators/common";
 import WalletPassword from "src/mixins/wallet_password";
-import FormatLoki from "components/format_loki";
-import ServiceNodeDetails from "components/service_node_details";
+import ServiceNodeDetails from "./service_node_details";
+import ServiceNodeList from "./service_node_list";
 
 export default {
   name: "ServiceNodeUnlock",
   components: {
-    FormatLoki,
-    ServiceNodeDetails
+    ServiceNodeDetails,
+    ServiceNodeList
   },
   mixins: [WalletPassword],
+  data() {
+    const menuItems = [
+      { action: "copyServiceNodeKey", i18n: "menuItems.copyServiceNodeKey" },
+      { action: "viewOnExplorer", i18n: "menuItems.viewOnExplorer" }
+    ];
+    return {
+      menuItems
+    };
+  },
   computed: mapState({
     theme: state => state.gateway.app.config.appearance.theme,
     unlock_status: state => state.gateway.service_node_status.unlock,
@@ -75,21 +55,19 @@ export default {
       const primary = state.gateway.wallet.address_list.primary[0];
       return (primary && primary.address) || null;
     },
-    is_ready() {
-      return this.$store.getters["gateway/isReady"];
-    },
+    // just SNs the user has contributed to
     service_nodes(state) {
-      const nodes = state.gateway.daemon.service_nodes;
-      const getContribution = node => node.contributors.find(c => c.address === this.our_address);
-      // Only show nodes that we contributed to
-      return nodes.filter(getContribution).map(n => {
-        const ourContribution = getContribution(n);
+      const nodes = state.gateway.daemon.service_nodes.nodes;
+      const getOurContribution = node => node.contributors.find(c => c.address === this.our_address);
+      return nodes.filter(getOurContribution).map(n => {
+        const ourContribution = getOurContribution(n);
         return {
           ...n,
           ourContributionAmount: ourContribution.amount
         };
       });
-    }
+    },
+    fetching: state => state.gateway.daemon.service_nodes.fetching
   }),
   validations: {
     node_key: { required, service_node_key }
@@ -118,18 +96,24 @@ export default {
                 title: this.$t("dialog.unlockServiceNode.confirmTitle"),
                 message,
                 ok: {
-                  label: this.$t("dialog.unlockServiceNode.ok")
+                  label: this.$t("dialog.unlockServiceNode.ok"),
+                  color: "primary"
                 },
                 cancel: {
                   flat: true,
                   label: this.$t("dialog.buttons.cancel"),
                   color: this.theme == "dark" ? "white" : "dark"
-                }
+                },
+                style: "min-width: 500px; overflow-wrap: break-word;",
+                dark: this.theme == "dark",
+                color: this.theme == "dark" ? "white" : "dark"
               })
-              .then(() => {
-                this.gatewayUnlock(this.password, this.key, true);
+              .onOk(() => {
+                let password = this.password || "";
+                this.gatewayUnlock(password, this.key, true);
               })
-              .catch(() => {});
+              .onDismiss(() => null)
+              .onCancel(() => null);
             break;
           case -1:
             this.key = null;
@@ -150,47 +134,61 @@ export default {
   },
   methods: {
     details(node) {
-      this.$refs.serviceNodeDetails.isVisible = true;
-      this.$refs.serviceNodeDetails.node = node;
+      this.$refs.serviceNodeDetailsUnlock.isVisible = true;
+      this.$refs.serviceNodeDetailsUnlock.node = node;
     },
-    unlockWarning(key, event) {
+    unlockWarning(node, event) {
+      const key = node.service_node_pubkey;
+      // stop detail page from popping up
+      this.$gateway.send("wallet", "update_service_node_list");
       event.stopPropagation();
       this.$q
         .dialog({
           title: this.$t("dialog.unlockServiceNodeWarning.title"),
           message: this.$t("dialog.unlockServiceNodeWarning.message"),
           ok: {
-            label: this.$t("dialog.unlockServiceNodeWarning.ok")
+            label: this.$t("dialog.unlockServiceNodeWarning.ok"),
+            color: "primary"
           },
           cancel: {
             flat: true,
             label: this.$t("dialog.buttons.cancel"),
             color: this.theme === "dark" ? "white" : "dark"
-          }
+          },
+          dark: this.theme == "dark",
+          color: this.theme == "dark" ? "white" : "dark"
         })
-        .then(() => {
+        .onOk(() => {
           this.unlock(key);
         })
-        .catch(() => {});
+        .onDismiss(() => {})
+        .onCancel(() => {});
     },
-    unlock(key) {
+    async unlock(key) {
       // We store this as it could change between the 2 step process
       this.key = key;
 
-      this.showPasswordConfirmation({
+      let passwordDialog = await this.showPasswordConfirmation({
         title: this.$t("dialog.unlockServiceNode.title"),
         noPasswordMessage: this.$t("dialog.unlockServiceNode.message"),
         ok: {
-          label: this.$t("dialog.unlockServiceNode.ok")
-        }
-      })
-        .then(password => {
-          this.password = password;
+          label: this.$t("dialog.unlockServiceNode.ok"),
+          color: "primary"
+        },
+        dark: this.theme == "dark",
+        color: this.theme == "dark" ? "white" : "dark"
+      });
+
+      passwordDialog
+        .onOk(password => {
+          this.password = password || "";
           this.gatewayUnlock(this.password, this.key, false);
         })
-        .catch(() => {});
+        .onDismiss(() => {})
+        .onCancel(() => {});
     },
     gatewayUnlock(password, key, confirmed = false) {
+      password = password || "";
       this.$store.commit("gateway/set_snode_status", {
         unlock: {
           code: 2, // Code 1 is reserved for can_unlock
@@ -204,14 +202,7 @@ export default {
         confirmed
       });
     },
-    copyKey(key, event) {
-      event.stopPropagation();
-      for (let i = 0; i < event.path.length; i++) {
-        if (event.path[i].tagName == "BUTTON") {
-          event.path[i].blur();
-          break;
-        }
-      }
+    copyKey(key) {
       clipboard.writeText(key);
       this.$q.notify({
         type: "positive",
@@ -240,15 +231,4 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.service-node-unlock {
-  user-select: none;
-  .header {
-    font-weight: 450;
-  }
-  .q-item-sublabel,
-  .q-list-header {
-    font-size: 14px;
-  }
-}
-</style>
+<style lang="scss"></style>

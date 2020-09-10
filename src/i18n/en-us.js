@@ -161,6 +161,11 @@ export default {
       message: "Do you want to send the transaction?",
       ok: "SEND"
     },
+    confirmTransaction: {
+      title: "Confirm transaction",
+      sendTo: "Send to",
+      priority: "Priority"
+    },
     unlockConfirm: {
       title: "Confirm unlock",
       ok: "UNLOCK"
@@ -244,7 +249,8 @@ export default {
     status: "Status",
     syncing: "SYNCING",
     remote: "Remote",
-    wallet: "Wallet"
+    wallet: "Wallet",
+    updateRequired: "UPDATE REQUIRED"
   },
   menuItems: {
     about: "About",
@@ -298,6 +304,7 @@ export default {
       qrCopied: "QR code copied to clipboard",
       registerServiceNodeSuccess: "Successfully registered service node",
       sendSuccess: "Transaction successfully sent",
+      serviceNodeInfoFilled: "Service node key and min amount filled",
       sessionIdCopied: "Session ID copied to clipboard",
       signatureCopied: "Signature copied to clipboard",
       stakeSuccess: "Successfully staked",
@@ -398,6 +405,7 @@ export default {
       subAddressIndex: "Index {index}"
     },
     advancedOptions: "Advanced Options",
+    awaitingConfirmation: "Awaiting confirmation",
     bannedPeers: {
       title: "Banned peers (bans will cleared if wallet is restarted)",
       bannedUntil: "Banned until {time}"
@@ -460,6 +468,7 @@ export default {
       fastest: "Fastest",
       blink: "Blink"
     },
+
     proveTransactionDescription:
       "Generate a proof of your incoming/outgoing payment by supplying the transaction ID, the recipient address and an optional message.\nFor the case of outgoing payments, you can get a 'Spend Proof' that proves the authorship of a transaction. In this case, you don't need to specify the recipient address.",
     readingWalletList: "Reading wallet list",
@@ -470,12 +479,18 @@ export default {
     saveToAddressBook: "Save to address book",
     seedWords: "Seed words",
     selectLanguage: "Select language",
+    serviceNodeContributionDescription:
+      "Staking contributes to the safety of the Loki network. For your contribution, you earn LOKI. Once staked, you will have to wait either 15 or 30 days to have your Loki unlocked, depending on if a stake was unlocked by a contributor or the node was deregistered. To learn more about staking, please visit the",
     serviceNodeRegistrationDescription:
       'Enter the {registerCommand} command produced by the daemon that is registering to become a Service Node using the "{prepareCommand}" command',
+    serviceNodeStartStakingDescription: "To start staking, please visit the Staking tab",
+    noServiceNodesCurrentlyAvailable: "There are currently no service nodes available for contribution",
     serviceNodeDetails: {
       contributors: "Contributors",
       lastRewardBlockHeight: "Last reward block height",
       lastUptimeProof: "Last uptime proof",
+      maxContribution: "Max contribution",
+      minContribution: "Min contribution",
       operatorFee: "Operator Fee",
       registrationHeight: "Registration height",
       unlockHeight: "Unlock height",
@@ -519,7 +534,8 @@ export default {
     userNotUsedAddress: "You have not used this address",
     userUsedAddress: "You have used this address",
     viewKey: "View key",
-    viewOnlyMode: "View only mode. Please load full wallet in order to send coins."
+    viewOnlyMode: "View only mode. Please load full wallet in order to send coins.",
+    website: "website"
   },
   titles: {
     addressBook: "Address book",
@@ -528,6 +544,7 @@ export default {
       checkTransaction: "CHECK TRANSACTION",
       prove: "PROVE"
     },
+    availableForContribution: "Service nodes available for contribution",
     changePassword: "Change password",
     configure: "Configure",
     currentlyStakedNodes: "Currently staked nodes",
@@ -536,7 +553,8 @@ export default {
     rescanWallet: "Rescan wallet",
     serviceNode: {
       registration: "REGISTRATION",
-      staking: "STAKING"
+      staking: "STAKING",
+      myStakes: "MY STAKES"
     },
     serviceNodeDetails: "Service node details",
     settings: {

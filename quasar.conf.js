@@ -1,17 +1,17 @@
 /* eslint-disable no-template-curly-in-string */
 // Configuration for your app
 
-module.exports = function(ctx) {
+module.exports = function() {
   return {
-    // app plugins (/src/plugins)
-    plugins: ["i18n", "axios", "vuelidate", "gateway", "timeago"],
+    // app boot (/src/boot)
+    boot: ["i18n", "axios", "vuelidate", "gateway", "timeago"],
     css: ["app.styl", "~flag-icon-css/css/flag-icon.min.css"],
     extras: [
-      ctx.theme.mat ? "roboto-font" : null,
+      // ctx.theme.mat ? "roboto-font" : null,
       "material-icons" // optional, you are not bound to it
-      // "ionicons",
-      // "mdi",
-      // "fontawesome"
+      // "ionicons-v4",
+      // "mdi-v5",
+      // "fontawesome-v5"
     ],
     supportIE: false,
     build: {
@@ -30,6 +30,15 @@ module.exports = function(ctx) {
                     exclude: /(node_modules|quasar)/
                 })
                 */
+      },
+      chainWebpack(chain) {
+        chain.module
+          .rule("images")
+          .use("url-loader")
+          .tap(options => {
+            options.name = "img/[path][name].[ext]";
+            return options;
+          });
       }
     },
     devServer: {
@@ -41,9 +50,9 @@ module.exports = function(ctx) {
     framework: {
       components: [
         "QLayout",
-        "QLayoutHeader",
-        "QLayoutFooter",
-        "QLayoutDrawer",
+        "QHeader",
+        "QFooter",
+        "QDrawer",
         "QPageContainer",
         "QPage",
         "QToolbar",
@@ -60,35 +69,32 @@ module.exports = function(ctx) {
         "QTab",
         "QRouteTab",
         "QBtnDropdown",
-        "QPopover",
-        "QModal",
-        "QModalLayout",
+        "QMenu",
+        "QDialog",
         "QStep",
         "QStepper",
         "QStepperNavigation",
         "QSpinner",
         "QList",
-        "QListHeader",
+        "QItemLabel",
         "QItem",
-        "QItemMain",
-        "QItemSeparator",
-        "QItemSide",
-        "QItemTile",
+        "QSeparator",
+        "QItemSection",
         "QSelect",
         "QToggle",
         "QPageSticky",
-        "QCollapsible",
+        "QExpansionItem",
         "QCheckbox",
         "QInnerLoading",
         "QInfiniteScroll",
-        "QDatetime",
-        "QContextMenu",
+        "QDate",
+        "QTime",
         "QScrollArea"
       ],
-      directives: ["Ripple", "CloseOverlay"],
+      directives: ["Ripple"],
       // Quasar plugins
       plugins: ["Notify", "Loading", "LocalStorage", "Dialog"]
-      // iconSet: ctx.theme.mat ? "material-icons" : "ionicons"
+      // iconSet: ctx.theme.mat ? "material-icons" : "ionicons-v4"
       // i18n: "de" // Quasar language
     },
     // animations: "all" --- includes all animations

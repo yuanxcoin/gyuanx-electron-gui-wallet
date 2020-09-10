@@ -1,7 +1,7 @@
 <template>
   <q-page class="receive">
     <q-list link no-border :dark="theme == 'dark'" class="loki-list">
-      <q-list-header>{{ $t("strings.addresses.myPrimaryAddress") }}</q-list-header>
+      <q-item-label header>{{ $t("strings.addresses.myPrimaryAddress") }}</q-item-label>
       <ReceiveItem
         v-for="address in address_list.primary"
         :key="address.address"
@@ -15,7 +15,7 @@
       />
 
       <template v-if="address_list.used.length">
-        <q-list-header>{{ $t("strings.addresses.myUsedAddresses") }}</q-list-header>
+        <q-item-label header>{{ $t("strings.addresses.myUsedAddresses") }}</q-item-label>
         <ReceiveItem
           v-for="address in address_list.used"
           :key="address.address"
@@ -32,7 +32,7 @@
       </template>
 
       <template v-if="address_list.unused.length">
-        <q-list-header>{{ $t("strings.addresses.myUnusedAddresses") }}</q-list-header>
+        <q-item-label header>{{ $t("strings.addresses.myUnusedAddresses") }}</q-item-label>
         <ReceiveItem
           v-for="address in address_list.unused"
           :key="address.address"
@@ -53,23 +53,17 @@
 
     <!-- QR Code -->
     <template v-if="QR.address != null">
-      <q-modal v-model="QR.visible" minimized :content-css="{ padding: '25px' }">
-        <div class="text-center q-mb-sm q-pa-md" style="background: white;">
-          <QrcodeVue ref="qr" :value="QR.address" size="240"> </QrcodeVue>
-          <q-context-menu>
-            <q-list link separator style="min-width: 150px; max-height: 300px;">
-              <q-item v-close-overlay @click.native="copyQR()">
-                <q-item-main :label="$t('menuItems.copyQR')" />
-              </q-item>
-              <q-item v-close-overlay @click.native="saveQR()">
-                <q-item-main :label="$t('menuItems.saveQR')" />
-              </q-item>
-            </q-list>
-          </q-context-menu>
-        </div>
-
-        <q-btn color="primary" :label="$t('buttons.close')" @click="QR.visible = false" />
-      </q-modal>
+      <q-dialog v-model="QR.visible" :content-class="'qr-code-modal'">
+        <q-card class="qr-code-card">
+          <div class="text-center q-mb-sm q-pa-md" style="background: white;">
+            <QrcodeVue ref="qr" :value="QR.address" size="240"> </QrcodeVue>
+            <ContextMenu :menu-items="menuItems" @copyQR="copyQR()" @saveQR="saveQR()" />
+          </div>
+          <q-card-actions>
+            <q-btn color="primary" :label="$t('buttons.close')" @click="QR.visible = false" />
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
     </template>
   </q-page>
 </template>
@@ -80,6 +74,7 @@ import { mapState } from "vuex";
 import QrcodeVue from "qrcode.vue";
 import AddressDetails from "components/address_details";
 import ReceiveItem from "components/receive_item";
+import ContextMenu from "components/menus/contextmenu";
 
 export default {
   filters: {
@@ -97,14 +92,20 @@ export default {
   components: {
     AddressDetails,
     QrcodeVue,
-    ReceiveItem
+    ReceiveItem,
+    ContextMenu
   },
   data() {
+    const menuItems = [
+      { action: "copyQR", i18n: "menuItems.copyQR" },
+      { action: "saveQR", i18n: "menuItems.saveQR" }
+    ];
     return {
       QR: {
         visible: false,
         address: null
-      }
+      },
+      menuItems
     };
   },
   computed: mapState({
@@ -113,7 +114,6 @@ export default {
   }),
   methods: {
     details(address) {
-      console.log(address);
       this.$refs.addressDetails.address = address;
       this.$refs.addressDetails.isVisible = true;
     },
@@ -138,12 +138,6 @@ export default {
     },
     copyAddress(address, event) {
       event.stopPropagation();
-      for (let i = 0; i < event.path.length; i++) {
-        if (event.path[i].tagName == "BUTTON") {
-          event.path[i].blur();
-          break;
-        }
-      }
       clipboard.writeText(address);
       this.$q.notify({
         type: "positive",
@@ -156,25 +150,21 @@ export default {
 </script>
 
 <style lang="scss">
+.qr-options-menu {
+  min-width: 150px;
+  max-height: 300px;
+  color: white;
+}
+
 .receive {
   .q-item-label {
     font-weight: 400;
   }
 
-  .q-item-sublabel,
-  .q-list-header {
-    font-size: 13px;
-  }
-
   .loki-list-item {
     cursor: pointer;
 
-    .q-item {
-      padding-top: 4px;
-      padding-bottom: 4px;
-    }
-
-    .q-item-side {
+    .q-item-section {
       display: flex;
       justify-content: center;
       align-items: center;

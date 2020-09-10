@@ -35,7 +35,7 @@ export default {
     selectWalletFile: "SELECT WALLET FILE",
     send: "SEND",
     sendCoins: "SEND COINS",
-    serviceNode: "SERVICE NODE",
+    serviceNode: "SERVICE NODES",
     settings: "SETTINGS",
     showQRCode: "SHOW QR CODE",
     showTxDetails: "SHOW TX DETAILS",
@@ -495,6 +495,7 @@ export default {
       registrationHeight: "Registration height",
       unlockHeight: "Unlock height",
       serviceNodeKey: "Service Node Key",
+      snKey: "SN Key",
       stakingRequirement: "Staking requirement",
       totalContributed: "Total contributed"
     },

@@ -7,17 +7,22 @@
         @click.native="details(nodeWithMinContribution(node))"
       >
         <q-item-section>
-          <q-item-label class="ellipsis">{{ node.service_node_pubkey }}</q-item-label>
+          <q-item-label class="ellipsis"
+            >{{ $t("strings.serviceNodeDetails.snKey") }}: {{ node.service_node_pubkey }}</q-item-label
+          >
           <q-item-label class="non-selectable">
-            <span v-if="getRole(node)">{{ getRole(node) }} •</span> {{ getFee(node) }}
+            <span v-if="getRole(node)">{{ getRole(node) }} •</span>
             <span v-if="node.ourContributionAmount">
               • {{ $t("strings.contribution") }}: <FormatLoki :amount="node.ourContributionAmount"
             /></span>
             <span v-if="node.awaitingContribution">
-              • {{ $t("strings.serviceNodeDetails.minContribution") }}: {{ getMinContribution(node) }} LOKI •
+              {{ $t("strings.serviceNodeDetails.minContribution") }}: {{ getMinContribution(node) }} LOKI •
               {{ $t("strings.serviceNodeDetails.maxContribution") }}: {{ openForContributionLoki(node) }} LOKI
             </span>
           </q-item-label>
+        </q-item-section>
+        <q-item-section v-if="!getRole(node)" side>
+          <span style="font-size: 16px; color: #cecece"> {{ getFee(node) }} </span>
         </q-item-section>
         <q-item-section side>
           <q-btn
@@ -131,7 +136,7 @@ export default {
     getFee(node) {
       const operatorPortion = node.portions_for_operator;
       const percentageFee = (operatorPortion / 18446744073709551612) * 100;
-      return `${percentageFee}% ${this.$t("strings.transactions.fee")}`;
+      return `${percentageFee.toFixed(2)}% ${this.$t("strings.transactions.fee")}`;
     },
     copyKey(key) {
       clipboard.writeText(key);

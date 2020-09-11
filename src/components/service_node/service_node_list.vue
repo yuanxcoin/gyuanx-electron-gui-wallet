@@ -13,8 +13,9 @@
           <q-item-label class="non-selectable">
             <span v-if="getRole(node)">{{ getRole(node) }} •</span>
             <span v-if="node.ourContributionAmount">
-              • {{ $t("strings.contribution") }}: <FormatLoki :amount="node.ourContributionAmount"
-            /></span>
+              {{ $t("strings.contribution") }}:
+              <FormatLoki :amount="node.ourContributionAmount" />
+            </span>
             <span v-if="node.awaitingContribution">
               {{ $t("strings.serviceNodeDetails.minContribution") }}: {{ getMinContribution(node) }} LOKI •
               {{ $t("strings.serviceNodeDetails.maxContribution") }}: {{ openForContributionLoki(node) }} LOKI
@@ -22,7 +23,7 @@
           </q-item-label>
         </q-item-section>
         <q-item-section v-if="!getRole(node)" side>
-          <span style="font-size: 16px; color: #cecece"> {{ getFee(node) }} </span>
+          <span style="font-size: 16px; color: #cecece">{{ getFee(node) }}</span>
         </q-item-section>
         <q-item-section side>
           <q-btn
@@ -56,6 +57,7 @@
 import { clipboard } from "electron";
 import ContextMenu from "components/menus/contextmenu";
 import FormatLoki from "components/format_loki";
+import { mapState } from "vuex";
 
 const MAX_NUMBER_OF_CONTRIBUTORS = 4;
 
@@ -92,6 +94,12 @@ export default {
       menuItems
     };
   },
+  computed: mapState({
+    our_address: state => {
+      const primary = state.gateway.wallet.address_list.primary[0];
+      return (primary && primary.address) || null;
+    }
+  }),
   methods: {
     nodeWithMinContribution(node) {
       const nodeWithMinContribution = { ...node, minContribution: this.getMinContribution(node) };
@@ -112,9 +120,10 @@ export default {
       // don't show a role if the user is not an operator or contributor
       let role = "";
       const opAddress = node.operator_address;
-      if (node.operator_address === this.our_address) {
+      if (opAddress === this.our_address) {
         role = "strings.operator";
       } else if (node.ourContributionAmount && opAddress !== this.our_address) {
+        // if we're not the operator and we have a contribution amount
         role = "strings.contributor";
       }
       return this.$t(role);

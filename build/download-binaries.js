@@ -4,7 +4,7 @@ const path = require("path");
 
 async function download() {
   const { platform, env } = process;
-  const repoUrl = "https://api.github.com/repos/loki-project/loki/releases/latest";
+  const repoUrl = "https://api.github.com/repos/loki-project/loki-core/releases/latest";
   try {
     const pwd = process.cwd();
     const downloadDir = path.join(pwd, "downloads");

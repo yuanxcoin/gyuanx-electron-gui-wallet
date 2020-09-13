@@ -366,6 +366,7 @@ export default {
         note
       };
 
+      // Commit the transaction
       this.$gateway.send("wallet", "relay_tx", relayTxData);
     },
     // helper for constructing a dialog for confirming transactions

@@ -1292,30 +1292,38 @@ export class WalletRPC {
         params.payment_id = payment_id;
       }
 
-      this.sendRPC(rpc_endpoint, params).then(data => {
-        if (data.hasOwnProperty("error")) {
-          let error = data.error.message.charAt(0).toUpperCase() + data.error.message.slice(1);
+      this.sendRPC(rpc_endpoint, params)
+        .then(data => {
+          if (data.hasOwnProperty("error") || !data.hasOwnProperty("result")) {
+            let error = data.error.message.charAt(0).toUpperCase() + data.error.message.slice(1);
+            this.sendGateway("set_tx_status", {
+              code: -1,
+              message: error,
+              sending: false
+            });
+            return;
+          }
+          // update state to show a confirm popup
+          this.sendGateway("set_tx_status", {
+            code: 1,
+            i18n: "strings.awaitingConfirmation",
+            sending: false,
+            txData: {
+              amountList: data.result.amount_list,
+              metadataList: data.result.tx_metadata_list,
+              feeList: data.result.fee_list,
+              priority: data.params.priority,
+              destinations: data.params.destinations
+            }
+          });
+        })
+        .catch(err => {
           this.sendGateway("set_tx_status", {
             code: -1,
-            message: error,
+            message: err.message,
             sending: false
           });
-          return;
-        }
-        // update state to show a confirm popup
-        this.sendGateway("set_tx_status", {
-          code: 1,
-          i18n: "strings.awaitingConfirmation",
-          sending: false,
-          txData: {
-            amountList: data.result.amount_list,
-            metadataList: data.result.tx_metadata_list,
-            feeList: data.result.fee_list,
-            priority: data.params.priority,
-            destinations: data.params.destinations
-          }
         });
-      });
     };
 
     crypto.pbkdf2(password, this.auth[2], 1000, 64, "sha512", cryptoCallback);

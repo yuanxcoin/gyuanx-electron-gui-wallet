@@ -1295,7 +1295,12 @@ export class WalletRPC {
       this.sendRPC(rpc_endpoint, params)
         .then(data => {
           if (data.hasOwnProperty("error") || !data.hasOwnProperty("result")) {
-            let error = data.error.message.charAt(0).toUpperCase() + data.error.message.slice(1);
+            let error = "";
+            if (data.error) {
+              error = data.error.message.charAt(0).toUpperCase() + data.error.message.slice(1);
+            } else {
+              error = `Incorrect result from ${rpc_endpoint} RPC call`;
+            }
             this.sendGateway("set_tx_status", {
               code: -1,
               message: error,

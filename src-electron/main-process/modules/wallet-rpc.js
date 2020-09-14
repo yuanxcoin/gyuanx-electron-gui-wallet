@@ -1296,7 +1296,7 @@ export class WalletRPC {
         .then(data => {
           if (data.hasOwnProperty("error") || !data.hasOwnProperty("result")) {
             let error = "";
-            if (data.error) {
+            if (data.error && data.error.message) {
               error = data.error.message.charAt(0).toUpperCase() + data.error.message.slice(1);
             } else {
               error = `Incorrect result from ${rpc_endpoint} RPC call`;

@@ -10,7 +10,10 @@
         <div class="row gutter-md">
           <!-- Amount -->
           <div class="col-6 amount">
-            <LokiField :label="$t('fieldLabels.amount')" :error="$v.newTx.amount.$error">
+            <LokiField
+              :label="$t('fieldLabels.amount')"
+              :error="$v.newTx.amount.$error"
+            >
               <q-input
                 v-model="newTx.amount"
                 :dark="theme == 'dark'"
@@ -50,7 +53,10 @@
 
         <!-- Address -->
         <div class="col q-mt-sm">
-          <LokiField :label="$t('fieldLabels.address')" :error="$v.newTx.address.$error">
+          <LokiField
+            :label="$t('fieldLabels.address')"
+            :error="$v.newTx.address.$error"
+          >
             <q-input
               v-model.trim="newTx.address"
               :dark="theme == 'dark'"
@@ -59,7 +65,11 @@
               dense
               @blur="$v.newTx.address.$touch"
             />
-            <q-btn color="secondary" :text-color="theme == 'dark' ? 'white' : 'dark'" to="addressbook">
+            <q-btn
+              color="secondary"
+              :text-color="theme == 'dark' ? 'white' : 'dark'"
+              to="addressbook"
+            >
               {{ $t("buttons.contacts") }}
             </q-btn>
           </LokiField>
@@ -67,7 +77,11 @@
 
         <!-- Payment ID -->
         <div class="col q-mt-sm">
-          <LokiField :label="$t('fieldLabels.paymentId')" :error="$v.newTx.payment_id.$error" optional>
+          <LokiField
+            :label="$t('fieldLabels.paymentId')"
+            :error="$v.newTx.payment_id.$error"
+            optional
+          >
             <!-- TODO: count to be '16 or 64 after RPC fixed -->
             <q-input
               v-model.trim="newTx.payment_id"
@@ -139,40 +153,15 @@
           />
         </div>
       </div>
-      <q-dialog v-model="confirmTransaction" persistent>
-        <q-card class="confirm-tx-card" dark>
-          <q-card-section>
-            <div class="text-h6">{{ $t("dialog.confirmTransaction.title") }}</div>
-          </q-card-section>
-          <q-card-section>
-            <div class="confirm-list">
-              <div>
-                <span class="label">{{ $t("dialog.confirmTransaction.sendTo") }}: </span>
-                <br />
-                <span class="address-value">{{ confirmFields.destination }}</span>
-              </div>
-              <br />
-              <span class="label">{{ $t("strings.transactions.amount") }}: </span>
-              {{ confirmFields.totalAmount }} Loki
-              <br />
-              <span class="label">{{ $t("strings.transactions.fee") }}: </span> {{ confirmFields.totalFees }} Loki
-              <br />
-              <span class="label">{{ $t("dialog.confirmTransaction.priority") }}: </span>
-              {{ confirmFields.translatedBlinkOrSlow }}
-            </div>
-          </q-card-section>
-          <q-card-actions align="right">
-            <q-btn v-close-popup flat :label="$t('dialog.buttons.cancel')" color="negative" />
-            <q-btn
-              v-close-popup
-              class="confirm-send-btn"
-              flat
-              :label="$t('buttons.send')"
-              @click="onConfirmTransaction"
-            />
-          </q-card-actions>
-        </q-card>
-      </q-dialog>
+      <ConfirmTransactionDialog
+        :show="confirmTransaction"
+        :amount="confirmFields.totalAmount"
+        :is-blink="confirmFields.isBlink"
+        :send-to="confirmFields.destination"
+        :fee="confirmFields.totalFees"
+        :on-confirm-transaction="onConfirmTransaction"
+        :on-cancel-transaction="onCancelTransaction"
+      />
       <q-inner-loading :showing="tx_status.sending" :dark="theme == 'dark'">
         <q-spinner color="primary" size="30" />
       </q-inner-loading>
@@ -186,6 +175,8 @@ import { required, decimal } from "vuelidate/lib/validators";
 import { payment_id, address, greater_than_zero } from "src/validators/common";
 import LokiField from "components/loki_field";
 import WalletPassword from "src/mixins/wallet_password";
+import ConfirmDialogMixin from "src/mixins/confirm_dialog_mixin";
+import ConfirmTransactionDialog from "components/confirm_tx_dialog";
 const objectAssignDeep = require("object-assign-deep");
 
 // the case for doing nothing on a tx_status update
@@ -193,9 +184,10 @@ const DO_NOTHING = 10;
 
 export default {
   components: {
-    LokiField
+    LokiField,
+    ConfirmTransactionDialog
   },
-  mixins: [WalletPassword],
+  mixins: [WalletPassword, ConfirmDialogMixin],
   data() {
     let priorityOptions = [
       { label: this.$t("strings.priorityOptions.blink"), value: 5 }, // Blink
@@ -214,8 +206,13 @@ export default {
         }
       },
       priorityOptions: priorityOptions,
-      confirmTransaction: false,
-      confirmFields: {}
+      confirmFields: {
+        metadataList: [],
+        isBlink: false,
+        totalAmount: -1,
+        destination: "",
+        totalFees: 0
+      }
     };
   },
   computed: mapState({
@@ -233,7 +230,8 @@ export default {
       const wallet = state.gateway.wallet.info;
       const prefix = (wallet && wallet.address && wallet.address[0]) || "L";
       return `${prefix}..`;
-    }
+    },
+    confirmTransaction: state => state.gateway.tx_status.code === 1
   }),
   validations: {
     newTx: {
@@ -268,7 +266,7 @@ export default {
           case DO_NOTHING:
             break;
           case 1:
-            this.buildDialogFields(val);
+            this.buildDialogFieldsSend(val);
             break;
           case 0:
             this.$q.notify({
@@ -308,7 +306,10 @@ export default {
     }
   },
   mounted() {
-    if (this.$route.path == "/wallet/send" && this.$route.query.hasOwnProperty("address")) {
+    if (
+      this.$route.path == "/wallet/send" &&
+      this.$route.query.hasOwnProperty("address")
+    ) {
       this.autoFill(this.$route.query);
     }
   },
@@ -317,25 +318,9 @@ export default {
       this.newTx.address = info.address;
       this.newTx.payment_id = info.payment_id;
     },
-    buildDialogFields(val) {
-      this.confirmTransaction = true;
-      const { feeList, amountList, destinations, metadataList, priority } = val.txData;
-      const totalFees = feeList.reduce((a, b) => a + b, 0) / 1e9;
-      const totalAmount = amountList.reduce((a, b) => a + b, 0) / 1e9;
-      // a tx can be split, but only sent to one address
-      const destination = destinations[0].address;
-
-      const isBlink = [0, 2, 3, 4, 5].includes(priority) ? true : false;
-      const blinkOrSlow = isBlink ? "strings.priorityOptions.blink" : "strings.priorityOptions.slow";
-      const translatedBlinkOrSlow = this.$t(blinkOrSlow);
-      this.confirmFields = {
-        metadataList,
-        isBlink,
-        translatedBlinkOrSlow,
-        destination,
-        totalAmount,
-        totalFees
-      };
+    buildDialogFieldsSend(txData) {
+      // build using mixin method
+      this.confirmFields = this.buildDialogFields(txData);
     },
     onConfirmTransaction() {
       // put the loading spinner up
@@ -366,9 +351,16 @@ export default {
         note
       };
 
+      // Commit the transaction
       this.$gateway.send("wallet", "relay_tx", relayTxData);
     },
-    // helper for constructing a dialog for confirming transactions
+    onCancelTransaction() {
+      this.$store.commit("gateway/set_tx_status", {
+        code: DO_NOTHING,
+        message: "Cancel the transaction from confirm dialog",
+        sending: false
+      });
+    },
 
     async send() {
       this.$v.newTx.$touch();
@@ -454,35 +446,6 @@ export default {
 </script>
 
 <style lang="scss">
-.confirm-tx-card {
-  color: "primary";
-  width: 450px;
-  max-width: 450x;
-
-  .confirm-list {
-    .q-item {
-      max-height: 100%;
-      margin-top: 0;
-      margin-bottom: 4px;
-      padding-top: 0;
-      padding-bottom: 0;
-    }
-  }
-
-  .label {
-    color: #cecece;
-    padding-right: 6px;
-  }
-  .address-value {
-    word-break: break-word;
-  }
-
-  .confirm-send-btn {
-    color: white;
-    background: $positive;
-  }
-}
-
 .send {
   .send-btn {
     margin-top: 6px;

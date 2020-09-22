@@ -39,13 +39,13 @@ jobs:
 
       - name: Extract zip binaries
         if: runner.os != 'Linux'
-        run: unzip latest.zip
+        run: unzip latest
         shell: bash
         working-directory: ./downloads
 
       - name: Extract xz binaries
         if: runner.os == 'Linux'
-        run: tar -xf latest.xz
+        run: tar -xf latest
         shell: bash
         working-directory: ./downloads
 

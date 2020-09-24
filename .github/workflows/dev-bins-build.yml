@@ -1,4 +1,4 @@
-name: Loki Electron Wallet Build
+name: Loki Electron Wallet With Dev Binaries
 
 on:
   push:
@@ -9,7 +9,7 @@ jobs:
   build:
     runs-on: ${{ matrix.os }}
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         os: [windows-latest, macos-latest, ubuntu-latest]
     steps:
@@ -33,6 +33,7 @@ jobs:
         run: ./download-dev-bins.sh
         env:
           OS: ${{ runner.os }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
         working-directory: ./downloads
 

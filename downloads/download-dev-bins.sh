@@ -9,8 +9,6 @@ if [ -z "$RENAME" ]; then
     RENAME="latest"
 fi
 
-URL="https://builds.lokinet.dev/loki-project/loki-core/"
-
 if [ "$OS" == "Linux" ]; then
     FILE_OS="linux"
 elif [ "$OS" == "Windows" ]; then

@@ -33,7 +33,6 @@ jobs:
         run: ./download-dev-bins.sh
         env:
           OS: ${{ runner.os }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
         working-directory: ./downloads
 

@@ -12,19 +12,17 @@ if [ -z "$RENAME" ]; then
 fi
 
 if [ "$OS" == "Linux" ]; then
-    FILE_OS="linux"
+    ASSET_URL="https://builds.lokinet.dev/loki-project/loki-core/loki-dev-linux-LATEST.tar.xz"
 elif [ "$OS" == "Windows" ]; then
-    FILE_OS="win"
+    ASSET_URL="https://builds.lokinet.dev/loki-project/loki-core/loki-dev-win-LATEST.zip"
 elif [ "$OS" == "macOS" ]; then
-    FILE_OS="macos"
+    ASSET_URL=ASSET_URL="https://builds.lokinet.dev/loki-project/loki-core/loki-dev-macos-LATEST.tar.xz"
 else
     echo "OS must be Linux, Windows or macOS"
     exit 1
 fi
 
 echo "About to download the binaries"
-
-ASSET_URL="https://builds.lokinet.dev/loki-project/loki-core/loki-dev-${FILE_OS}-LATEST.tar.xz"
 
 curl -sL --fail \
     -H "Accept: application/octet-stream" \

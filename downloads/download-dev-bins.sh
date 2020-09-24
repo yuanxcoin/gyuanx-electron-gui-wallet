@@ -1,3 +1,5 @@
+#!/bin/bash
+
 set -e
 
 if [ -z "$OS" ]; then

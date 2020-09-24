@@ -30,7 +30,7 @@ jobs:
         run: npm install
 
       - name: Download lokid binaries
-        run: sudo ./download-dev-bins.sh
+        run: sh download-dev-bins.sh
         env:
           OS: ${{ runner.os }}
         shell: bash

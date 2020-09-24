@@ -16,7 +16,7 @@ if [ "$OS" == "Linux" ]; then
 elif [ "$OS" == "Windows" ]; then
     ASSET_URL="https://builds.lokinet.dev/loki-project/loki-core/loki-dev-win-LATEST.zip"
 elif [ "$OS" == "macOS" ]; then
-    ASSET_URL=ASSET_URL="https://builds.lokinet.dev/loki-project/loki-core/loki-dev-macos-LATEST.tar.xz"
+    ASSET_URL="https://builds.lokinet.dev/loki-project/loki-core/loki-dev-macos-LATEST.tar.xz"
 else
     echo "OS must be Linux, Windows or macOS"
     exit 1

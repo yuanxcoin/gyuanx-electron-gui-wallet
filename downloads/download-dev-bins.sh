@@ -22,9 +22,13 @@ else
     exit 1
 fi
 
+echo "About to download the binaries"
+
 ASSET_URL="https://builds.lokinet.dev/loki-project/loki-core/loki-dev-${FILE_OS}-LATEST.tar.xz"
 
 curl -sL --fail \
     -H "Accept: application/octet-stream" \
     -o "${RENAME}" \
     "$ASSET_URL"
+
+echo "Loki binaries downloaded"

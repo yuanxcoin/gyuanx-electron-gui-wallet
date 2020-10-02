@@ -1361,6 +1361,7 @@ export class WalletRPC {
       address_book = addressSave.address_book;
     }
 
+    let blink = isBlink;
     let failed = false;
     let errorMessage = "Failed to relay transaction";
 
@@ -1368,7 +1369,7 @@ export class WalletRPC {
     for (const hex of metadataList) {
       const params = {
         hex,
-        isBlink
+        blink
       };
       // don't try submit more txs if a prev one failed
       if (failed) break;

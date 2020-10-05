@@ -4,10 +4,18 @@
       <q-header>
         <q-toolbar color="dark" inverted>
           <q-btn flat round dense icon="reply" @click="isVisible = false" />
-          <q-toolbar-title shrink>{{ $t("titles.settings.title") }}</q-toolbar-title>
+          <q-toolbar-title shrink>{{
+            $t("titles.settings.title")
+          }}</q-toolbar-title>
 
           <div class="row col justify-center q-pr-xl">
-            <q-btn-toggle v-model="page" toggle-color="primary" color="tertiary" size="md" :options="tabs" />
+            <q-btn-toggle
+              v-model="page"
+              toggle-color="primary"
+              color="tertiary"
+              size="md"
+              :options="tabs"
+            />
           </div>
 
           <q-btn color="primary" :label="$t('buttons.save')" @click="save" />
@@ -16,7 +24,7 @@
       <q-page-container>
         <div v-if="page == 'general'">
           <div class="q-pa-lg">
-            <SettingsGeneral ref="settingsGeneral"></SettingsGeneral>
+            <SettingsGeneral ref="settingsGeneral" :randomise-remote="false" />
           </div>
         </div>
 
@@ -31,19 +39,26 @@
             >
               <q-item-label>
                 <q-item-label>{{ entry.address }}</q-item-label>
-                <q-item-label>{{ $t("strings.blockHeight") }}: {{ entry.height }}</q-item-label>
+                <q-item-label
+                  >{{ $t("strings.blockHeight") }}:
+                  {{ entry.height }}</q-item-label
+                >
               </q-item-label>
             </q-item>
 
             <template v-if="daemon.bans.length">
-              <q-item-label header>{{ $t("strings.bannedPeers.title") }}</q-item-label>
+              <q-item-label header>{{
+                $t("strings.bannedPeers.title")
+              }}</q-item-label>
               <q-item v-for="entry in daemon.bans" :key="entry.host">
                 <q-item-section>
                   <q-item-label header>{{ entry.host }}</q-item-label>
                   <q-item-label caption>
                     {{
                       $t("strings.bannedPeers.bannedUntil", {
-                        time: new Date(Date.now() + entry.seconds * 1000).toLocaleString()
+                        time: new Date(
+                          Date.now() + entry.seconds * 1000
+                        ).toLocaleString()
                       })
                     }}
                   </q-item-label>

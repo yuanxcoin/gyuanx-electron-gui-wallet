@@ -395,6 +395,13 @@ export default {
   components: {
     LokiField
   },
+  props: {
+    randomiseRemote: {
+      type: Boolean,
+      required: false,
+      default: false
+    }
+  },
   data() {
     return {
       select: 0
@@ -416,8 +423,11 @@ export default {
     }
   }),
   mounted() {
-    // only randomise the remote on mainnet
-    if (this.remotes.length > 0 && this.config.app.net_type === "mainnet") {
+    if (
+      this.randomiseRemote &&
+      this.remotes.length > 0 &&
+      this.config.app.net_type === "mainnet"
+    ) {
       const index = Math.floor(Math.random() * Math.floor(this.remotes.length));
       this.setPreset(this.remotes[index]);
     }

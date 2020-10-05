@@ -462,6 +462,8 @@ export default {
       "Purchase or update a name for a Session ID. If you purchase a name, it may take a minute or two for it to show up in the list.",
     loadingSettings: "Loading settings",
     lokiBalance: "Balance",
+    lokinetNameDescription:
+      "Purchase or update a name on Lokinet. If you purchase a name it may take a minute or two for it to show up in the list. To learn more about lokinet visit: ",
     lokiUnlockedBalance: "Unlocked balance",
     lokiUnlockedShort: "Unlocked",
     me: "Me",
@@ -569,6 +571,10 @@ export default {
     lnsRecordDetails: "LNS record details",
     privateKeys: "Private keys",
     rescanWallet: "Rescan wallet",
+    lns: {
+      sessionId: "SESSION ID",
+      lokinetName: "LOKINET NAME"
+    },
     serviceNode: {
       registration: "REGISTRATION",
       staking: "STAKING",

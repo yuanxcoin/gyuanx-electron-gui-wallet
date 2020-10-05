@@ -1,23 +1,40 @@
 <template>
   <q-page class="lns-page">
-    <LNSInput ref="input" />
-    <LNSRecordList @onUpdate="onUpdate" />
+    <div class="header row items-center justify-center q-pt-md">
+      <q-btn-toggle
+        v-model="screen"
+        toggle-color="primary"
+        color="secondary"
+        :options="[
+          {
+            label: $t('titles.lns.sessionId'),
+            value: 'sessionId'
+          },
+          {
+            label: $t('titles.lns.lokinetName'),
+            value: 'lokinetName'
+          }
+        ]"
+      />
+    </div>
+    <LNSSession v-if="screen === 'sessionId'" />
+    <LNSLokinet v-if="screen === 'lokinetName'" />
   </q-page>
 </template>
 
 <script>
-import LNSInput from "components/lns/lns_input";
-import LNSRecordList from "components/lns/lns_record_list";
+import LNSSession from "components/lns/lns_session";
+import LNSLokinet from "components/lns/lns_lokinet";
 
 export default {
   components: {
-    LNSInput,
-    LNSRecordList
+    LNSSession,
+    LNSLokinet
   },
-  methods: {
-    onUpdate(record) {
-      this.$refs.input.startUpdating(record);
-    }
+  data() {
+    return {
+      screen: "sessionId"
+    };
   }
 };
 </script>

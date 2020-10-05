@@ -2,7 +2,7 @@
   <div class="lokinet-input">
     <div class="q-px-md q-pt-md">
       <div class="q-mb-lg description">
-        {{ $t("strings.lokinetDescription") }}
+        {{ $t("strings.lokinetNameDescription") }}
       </div>
       <!-- <LNSInputForm
         ref="form"
@@ -26,4 +26,10 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="scss">
+.lokinet-input {
+  .description {
+    white-space: pre-line;
+  }
+}
+</style>

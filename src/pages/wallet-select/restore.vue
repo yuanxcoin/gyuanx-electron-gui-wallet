@@ -1,7 +1,11 @@
 <template>
   <q-page>
     <div class="q-mx-md">
-      <LokiField class="q-mt-md" :label="$t('fieldLabels.walletName')" :error="$v.wallet.name.$error">
+      <LokiField
+        class="q-mt-md"
+        :label="$t('fieldLabels.walletName')"
+        :error="$v.wallet.name.$error"
+      >
         <q-input
           v-model="wallet.name"
           :placeholder="$t('placeholders.walletName')"
@@ -13,7 +17,11 @@
         />
       </LokiField>
 
-      <LokiField class="q-mt-md" :label="$t('fieldLabels.mnemonicSeed')" :error="$v.wallet.seed.$error">
+      <LokiField
+        class="q-mt-md"
+        :label="$t('fieldLabels.mnemonicSeed')"
+        :error="$v.wallet.seed.$error"
+      >
         <q-input
           v-model="wallet.seed"
           class="full-width text-area-loki"
@@ -28,14 +36,39 @@
 
       <div class="row items-end q-mt-md">
         <div class="col-md-9 col-sm-8">
-          <LokiField v-if="wallet.refresh_type == 'date'" :label="$t('fieldLabels.restoreFromDate')">
-            <q-input v-model="wallet.refresh_start_date" mask="date" borderless dense>
+          <LokiField
+            v-if="wallet.refresh_type == 'date'"
+            :label="$t('fieldLabels.restoreFromDate')"
+          >
+            <q-input
+              v-model="wallet.refresh_start_date"
+              mask="date"
+              borderless
+              dense
+            >
               <template v-slot:append>
-                <q-icon v-if="wallet.refresh_type == 'date'" name="event" class="cursor-pointer">
-                  <q-popup-proxy ref="qDateProxy" transition-show="scale" transition-hide="scale">
-                    <q-date v-model="wallet.refresh_start_date" :dark="theme == 'dark'" :options="dateRangeOptions">
+                <q-icon
+                  v-if="wallet.refresh_type == 'date'"
+                  name="event"
+                  class="cursor-pointer"
+                >
+                  <q-popup-proxy
+                    ref="qDateProxy"
+                    transition-show="scale"
+                    transition-hide="scale"
+                  >
+                    <q-date
+                      v-model="wallet.refresh_start_date"
+                      :dark="theme == 'dark'"
+                      :options="dateRangeOptions"
+                    >
                       <div class="row items-center justify-end">
-                        <q-btn v-close-popup label="Close" color="primary" flat />
+                        <q-btn
+                          v-close-popup
+                          label="Close"
+                          color="primary"
+                          flat
+                        />
                       </div>
                     </q-date>
                   </q-popup-proxy>
@@ -111,7 +144,12 @@
           @keyup.enter="restore_wallet"
         />
       </LokiField>
-      <q-btn class="submit-button" color="primary" :label="$t('buttons.restoreWallet')" @click="restore_wallet" />
+      <q-btn
+        class="submit-button"
+        color="primary"
+        :label="$t('buttons.restoreWallet')"
+        @click="restore_wallet"
+      />
     </div>
   </q-page>
 </template>
@@ -121,6 +159,7 @@ import { required, numeric } from "vuelidate/lib/validators";
 import { mapState } from "vuex";
 import LokiField from "components/loki_field";
 import { date } from "quasar";
+import _ from "lodash";
 
 const timeStampFirstBlock = 1525305600000;
 const qDateFormat = "YYYY/MM/DD";
@@ -208,7 +247,12 @@ export default {
         .replace(/\t/g, " ")
         .replace(/\s{2,}/g, " ")
         .split(" ");
-      if (seed.length !== 14 && seed.length !== 24 && seed.length !== 25 && seed.length !== 26) {
+      if (
+        seed.length !== 14 &&
+        seed.length !== 24 &&
+        seed.length !== 25 &&
+        seed.length !== 26
+      ) {
         this.$q.notify({
           type: "negative",
           timeout: 1000,
@@ -238,7 +282,17 @@ export default {
         delay: 0
       });
 
-      this.$gateway.send("wallet", "restore_wallet", this.wallet);
+      // we don't want the data in the form changing
+      const wallet_data = _.cloneDeep(this.wallet);
+
+      // we want the date in javascript ms format
+      const dateSeconds = date
+        .extractDate(this.wallet.refresh_start_date, "YYYY/MM/DD")
+        .getTime();
+
+      wallet_data["refresh_start_date"] = dateSeconds;
+
+      this.$gateway.send("wallet", "restore_wallet", wallet_data);
     },
     // Ensures the date is valid
     dateRangeOptions(dateSelected) {

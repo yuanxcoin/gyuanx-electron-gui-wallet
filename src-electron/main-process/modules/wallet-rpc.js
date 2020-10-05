@@ -516,6 +516,7 @@ export class WalletRPC {
     });
   }
 
+  // the date should be in ms from epoch (Jan 1 1970)
   restoreWallet(
     filename,
     password,
@@ -544,10 +545,10 @@ export class WalletRPC {
       });
       return;
     }
+    let restore_height = Number.parseInt(refresh_start_timestamp_or_height);
 
-    let restore_height = refresh_start_timestamp_or_height;
-
-    if (!Number.isInteger(restore_height)) {
+    // if the height can't be parsed just start from block 0
+    if (!restore_height) {
       restore_height = 0;
     }
     seed = seed.trim().replace(/\s{2,}/g, " ");

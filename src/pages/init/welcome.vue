@@ -16,7 +16,7 @@
       </q-step>
 
       <q-step :name="2" :title="$t('titles.configure')">
-        <SettingsGeneral ref="settingsGeneral" />
+        <SettingsGeneral ref="settingsGeneral" :randomise-remote="true" />
       </q-step>
     </q-stepper>
 

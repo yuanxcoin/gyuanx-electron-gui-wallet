@@ -24,7 +24,7 @@
       <q-page-container>
         <div v-if="page == 'general'">
           <div class="q-pa-lg">
-            <SettingsGeneral ref="settingsGeneral" :random_remote="false" />
+            <SettingsGeneral ref="settingsGeneral" :randomise-remote="false" />
           </div>
         </div>
 

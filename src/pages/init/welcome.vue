@@ -1,7 +1,12 @@
 <template>
   <q-page class="welcome">
     <q-stepper ref="stepper" v-model="step" class="welcome-stepper" flat dark>
-      <q-step :name="1" :title="$t('titles.welcome')" :done="step > 1" class="first-step">
+      <q-step
+        :name="1"
+        :title="$t('titles.welcome')"
+        :done="step > 1"
+        class="first-step"
+      >
         <div class="welcome-container">
           <img src="loki.svg" height="100" class="q-mb-md" />
           <div>Wallet Version: v{{ version }}</div>
@@ -11,7 +16,7 @@
       </q-step>
 
       <q-step :name="2" :title="$t('titles.configure')">
-        <SettingsGeneral ref="settingsGeneral" randomise_remote />
+        <SettingsGeneral ref="settingsGeneral" />
       </q-step>
     </q-stepper>
 
@@ -21,7 +26,12 @@
           <q-btn flat :label="$t('buttons.back')" @click="clickPrev()" />
         </div>
         <div>
-          <q-btn class="q-ml-sm" color="primary" :label="$t('buttons.next')" @click="clickNext()" />
+          <q-btn
+            class="q-ml-sm"
+            color="primary"
+            :label="$t('buttons.next')"
+            @click="clickNext()"
+          />
         </div>
       </div>
     </q-footer>

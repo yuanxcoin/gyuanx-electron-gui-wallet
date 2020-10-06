@@ -350,6 +350,8 @@ export class WalletRPC {
         );
         break;
       case "purchase_lns":
+        console.log("purchase lns with params");
+        console.log(params);
         this.purchaseLNS(
           params.password,
           params.type,
@@ -359,7 +361,10 @@ export class WalletRPC {
           params.backup_owner || ""
         );
         break;
-
+      case "lns_known_records":
+        console.log("LNS known records case");
+        this.lnsKnownRecords();
+        break;
       case "update_lns_mapping":
         this.updateLNSMapping(
           params.password,
@@ -1026,6 +1031,20 @@ export class WalletRPC {
   }
 
   /*
+  Get the LNS records cached in this wallet.
+  */
+  async lnsKnownRecords() {
+    try {
+      let known_records = await this.sendRPC("lns_known_records");
+
+      console.log("the known records are right here: ");
+      console.log(known_records);
+    } catch (e) {
+      console.log("There was an error getting known records: " + e);
+    }
+  }
+
+  /*
   Get our LNS record and update our wallet state with decrypted values.
   This will return `null` if the record is not in our currently stored records.
   */
@@ -1535,9 +1554,16 @@ export class WalletRPC {
   }
 
   purchaseLNS(password, type, name, value, owner, backupOwner) {
-    const _name = name.trim().toLowerCase();
+    let _name = name.trim().toLowerCase();
     const _owner = owner.trim() === "" ? null : owner;
     const backup_owner = backupOwner.trim() === "" ? null : backupOwner;
+
+    // the RPC accepts names with the .loki already appeneded only
+    // can be lokinet_1y, lokinet_2y, lokinet_5y, lokinet_10y
+    if (type.startsWith("lokinet")) {
+      _name = _name + ".loki";
+      value = value + ".loki";
+    }
 
     crypto.pbkdf2(
       password,
@@ -1570,6 +1596,9 @@ export class WalletRPC {
           name: _name,
           value
         };
+
+        console.log("params being sent to buy mapping");
+        console.log(params);
 
         this.sendRPC("lns_buy_mapping", params).then(data => {
           if (data.hasOwnProperty("error")) {

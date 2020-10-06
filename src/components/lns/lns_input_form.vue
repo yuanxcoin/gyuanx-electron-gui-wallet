@@ -52,6 +52,7 @@
           :placeholder="value_placeholder"
           borderless
           dense
+          :suffix="record.type === 'session' ? '' : '.loki'"
           @blur="$v.record.value.$touch"
         />
       </LokiField>
@@ -110,15 +111,15 @@
     </div>
   </div>
 </template>
-
 <script>
 import { mapState } from "vuex";
 import { required, maxLength } from "vuelidate/lib/validators";
 import {
   address,
   session_id,
-  lns_name,
-  lokinet_name
+  lokinet_address,
+  lokinet_name,
+  session_name
 } from "src/validators/common";
 import LokiField from "components/loki_field";
 import WalletPassword from "src/mixins/wallet_password";
@@ -153,12 +154,14 @@ export default {
   data() {
     const typeOptions = [
       { label: "Session ID", value: "session" },
-      { label: "Lokinet Name 1 Year", value: "lokinet_1y" },
-      { label: "Lokinet Name 2 Years", value: "lokinet_2y" },
-      { label: "Lokinet Name 5 Year", value: "lokinet_5y" }
+      { label: "Lokinet Name 1 year", value: "lokinet_1y" },
+      { label: "Lokinet Name 2 years", value: "lokinet_2y" },
+      { label: "Lokinet Name 5 years", value: "lokinet_5y" },
+      { label: "Lokinet Name 10 years", value: "lokinet_10y" }
     ];
     const initialRecord = {
-      type: "session",
+      // default to SessionID
+      type: typeOptions[0].value,
       name: "",
       value: "",
       owner: "",
@@ -289,7 +292,7 @@ export default {
       console.log(this.record);
       console.log(this.initialRecord);
       // Send up the submission with the record
-      // this.$emit("onSubmit", this.record, this.initialRecord);
+      this.$emit("onSubmit", this.record, this.initialRecord);
     },
     clear() {
       this.$emit("onClear");
@@ -304,7 +307,14 @@ export default {
           const str = value || "";
           return !(str.startsWith("-") || str.endsWith("-"));
         },
-        validate: lns_name
+        validate: function(value) {
+          if (this.record.type === "session") {
+            return session_name(value);
+          } else {
+            // shortened lokinet LNS name
+            return lokinet_name(value);
+          }
+        }
       },
       owner: {
         validate: function(value) {
@@ -317,8 +327,7 @@ export default {
           if (this.record.type === "session") {
             return session_id(value);
           } else {
-            // must be a lokinet purchase if not a session purchase
-            return lokinet_name(value);
+            return lokinet_address(value);
           }
         }
       },

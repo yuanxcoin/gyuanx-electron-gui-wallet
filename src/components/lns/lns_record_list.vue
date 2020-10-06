@@ -41,9 +41,9 @@
           <q-item-label :class="bindClass(record)">
             {{ isLocked(record) ? record.name_hash : record.name }}
           </q-item-label>
-          <q-item-label v-if="!isLocked(record)">{{
-            record.value
-          }}</q-item-label>
+          <q-item-label v-if="!isLocked(record)">
+            {{ record.value }}
+          </q-item-label>
         </q-item-section>
         <q-item-section side class="height">
           <template v-if="isLocked(record)">
@@ -79,6 +79,10 @@
       </q-item>
     </q-list>
   </div>
+  <div v-else>
+    There are no LNS names registered to this wallet. If you have registered
+    names to this wallet, try refreshing.
+  </div>
 </template>
 
 <script>
@@ -86,7 +90,7 @@ const { clipboard } = require("electron");
 import { mapState } from "vuex";
 import { i18n } from "boot/i18n";
 import LokiField from "components/loki_field";
-import { lns_name } from "src/validators/common";
+import { session_id } from "src/validators/common";
 import ContextMenu from "components/menus/contextmenu";
 
 export default {
@@ -106,6 +110,11 @@ export default {
       name: "",
       decrypting: false
     };
+  },
+  mounted() {
+    // fetch the lns names from the wallet
+    console.log("Fetching LNS names");
+    this.$gateway.send("wallet", "lns_known_records");
   },
   computed: mapState({
     theme: state => state.gateway.app.config.appearance.theme,
@@ -223,6 +232,7 @@ export default {
     onUpdate(record) {
       this.$emit("onUpdate", record);
     },
+    // TODO: Update this
     copyValue(record) {
       let message = this.$t("notification.positive.addressCopied");
       if (record.type === "session") {
@@ -242,7 +252,8 @@ export default {
   },
   validations: {
     name: {
-      lns_name
+      // TODO: validate on both session id and lokinet addresses
+      session_id
     }
   }
 };

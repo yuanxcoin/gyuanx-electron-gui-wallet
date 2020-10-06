@@ -7,9 +7,14 @@ module.exports = {
     node: true,
     browser: true
   },
-  extends: ["plugin:prettier/recommended", "plugin:vue/recommended", "eslint:recommended", "prettier/vue"],
+  extends: [
+    // "plugin:prettier/recommended",
+    "plugin:vue/recommended",
+    "eslint:recommended",
+    "prettier/vue"
+  ],
   // required to lint *.vue files
-  plugins: ["vue"],
+  plugins: ["vue", "prettier"],
   globals: {
     __statics: true,
     __ryo_bin: true

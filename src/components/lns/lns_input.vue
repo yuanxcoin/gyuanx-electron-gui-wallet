@@ -96,10 +96,14 @@ export default {
     },
     async update(record, oldRecord) {
       // Make sure we have a diff between the 2 records
-      const isOwnerDifferent = record.owner !== "" && record.owner !== oldRecord.owner;
-      const isBackupOwnerDifferent = record.backup_owner !== "" && record.backup_owner !== oldRecord.backup_owner;
+      const isOwnerDifferent =
+        record.owner !== "" && record.owner !== oldRecord.owner;
+      const isBackupOwnerDifferent =
+        record.backup_owner !== "" &&
+        record.backup_owner !== oldRecord.backup_owner;
       const isValueDifferent = record.value !== oldRecord.value;
-      const different = isOwnerDifferent || isBackupOwnerDifferent || isValueDifferent;
+      const different =
+        isOwnerDifferent || isBackupOwnerDifferent || isValueDifferent;
       if (!different) {
         this.$q.notify({
           type: "positive",
@@ -166,6 +170,8 @@ export default {
           const lns = objectAssignDeep.noMutate(record, {
             password
           });
+          console.log("here's the lns data sent to the backend");
+          console.log(lns);
           this.$gateway.send("wallet", "purchase_lns", lns);
         })
         .onDismiss(() => {})

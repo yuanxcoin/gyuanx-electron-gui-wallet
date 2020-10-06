@@ -6,11 +6,15 @@ export const greater_than_zero = input => {
 
 export const payment_id = input => {
   // || input.length == 16 to be re-added after rpc fixed
-  return input.length === 0 || (/^[0-9A-Fa-f]+$/.test(input) && input.length == 64);
+  return (
+    input.length === 0 || (/^[0-9A-Fa-f]+$/.test(input) && input.length == 64)
+  );
 };
 
 export const privkey = input => {
-  return input.length === 0 || (/^[0-9A-Fa-f]+$/.test(input) && input.length == 64);
+  return (
+    input.length === 0 || (/^[0-9A-Fa-f]+$/.test(input) && input.length == 64)
+  );
 };
 
 export const service_node_key = input => {
@@ -18,11 +22,21 @@ export const service_node_key = input => {
 };
 
 export const session_id = input => {
-  return input.length == 66 && /^05[0-9A-Za-z]+$/.test(input);
+  return input.length === 66 && /^05[0-9A-Za-z]+$/.test(input);
+};
+
+export const lokinet_name = input => {
+  return (
+    input.length === 52 &&
+    /^[ybndrfg8ejkmcpqxot1uwisza345h769]{51}[yo]\.loki$/.test(input)
+  );
 };
 
 export const lns_name = input => {
-  return input.length === 0 || /^[a-z0-9_]([a-z0-9-_]*[a-z0-9_])?$/.test(input.toLowerCase());
+  return (
+    input.length === 0 ||
+    /^[a-z0-9_]([a-z0-9-_]*[a-z0-9_])?$/.test(input.toLowerCase())
+  );
 };
 
 export const address = (input, gateway) => {

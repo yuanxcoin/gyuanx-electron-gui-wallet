@@ -1,8 +1,31 @@
 <template>
   <div class="lns-input-form">
+    <!-- Type -->
+    <div class="col q-mt-sm">
+      <LokiField
+        :label="$t('fieldLabels.lnsType')"
+        :disable="disableName"
+        :error="$v.record.name.$error"
+      >
+        <q-select
+          v-model.trim="record.type"
+          emit-value
+          map-options
+          :options="typeOptions"
+          :dark="theme == 'dark'"
+          :disable="disableName"
+          borderless
+          dense
+        />
+      </LokiField>
+    </div>
     <!-- Name -->
     <div class="col q-mt-sm">
-      <LokiField :label="$t('fieldLabels.name')" :disable="disableName" :error="$v.record.name.$error">
+      <LokiField
+        :label="$t('fieldLabels.name')"
+        :disable="disableName"
+        :error="$v.record.name.$error"
+      >
         <q-input
           v-model.trim="record.name"
           :dark="theme == 'dark'"
@@ -10,6 +33,7 @@
           :disable="disableName"
           borderless
           dense
+          :suffix="record.type === 'session' ? '' : '.loki'"
           @blur="$v.record.name.$touch"
         />
       </LokiField>
@@ -17,7 +41,11 @@
 
     <!-- Value (Session ID, Wallet Address or .loki address) -->
     <div class="col q-mt-sm">
-      <LokiField class="q-mt-md" :label="value_field_label" :error="$v.record.value.$error">
+      <LokiField
+        class="q-mt-md"
+        :label="value_field_label"
+        :error="$v.record.value.$error"
+      >
         <q-input
           v-model.trim="record.value"
           :dark="theme == 'dark'"
@@ -31,7 +59,12 @@
 
     <!-- Owner -->
     <div class="col q-mt-sm">
-      <LokiField class="q-mt-md" :label="$t('fieldLabels.owner')" :error="$v.record.owner.$error" optional>
+      <LokiField
+        class="q-mt-md"
+        :label="$t('fieldLabels.owner')"
+        :error="$v.record.owner.$error"
+        optional
+      >
         <q-input
           v-model.trim="record.owner"
           :dark="theme == 'dark'"
@@ -45,7 +78,12 @@
 
     <!-- Backup owner -->
     <div class="col q-mt-sm">
-      <LokiField class="q-mt-md" :label="$t('fieldLabels.backupOwner')" :error="$v.record.backup_owner.$error" optional>
+      <LokiField
+        class="q-mt-md"
+        :label="$t('fieldLabels.backupOwner')"
+        :error="$v.record.backup_owner.$error"
+        optional
+      >
         <q-input
           v-model.trim="record.backup_owner"
           :dark="theme == 'dark'"
@@ -63,7 +101,12 @@
         :label="submitLabel"
         @click="submit()"
       />
-      <q-btn v-if="showClearButton" color="secondary" :label="$t('buttons.clear')" @click="clear()" />
+      <q-btn
+        v-if="showClearButton"
+        color="secondary"
+        :label="$t('buttons.clear')"
+        @click="clear()"
+      />
     </div>
   </div>
 </template>
@@ -71,7 +114,12 @@
 <script>
 import { mapState } from "vuex";
 import { required, maxLength } from "vuelidate/lib/validators";
-import { address, session_id, lns_name } from "src/validators/common";
+import {
+  address,
+  session_id,
+  lns_name,
+  lokinet_name
+} from "src/validators/common";
 import LokiField from "components/loki_field";
 import WalletPassword from "src/mixins/wallet_password";
 
@@ -103,6 +151,12 @@ export default {
     }
   },
   data() {
+    const typeOptions = [
+      { label: "Session ID", value: "session" },
+      { label: "Lokinet Name 1 Year", value: "lokinet_1y" },
+      { label: "Lokinet Name 2 Years", value: "lokinet_2y" },
+      { label: "Lokinet Name 5 Year", value: "lokinet_5y" }
+    ];
     const initialRecord = {
       type: "session",
       name: "",
@@ -112,7 +166,8 @@ export default {
     };
     return {
       record: { ...initialRecord },
-      initialRecord
+      initialRecord,
+      typeOptions
     };
   },
   computed: mapState({
@@ -122,10 +177,18 @@ export default {
       return this.$store.getters["gateway/isAbleToSend"];
     },
     value_field_label() {
-      return this.$t("fieldLabels.sessionId");
+      if (this.record.type === "session") {
+        return this.$t("fieldLabels.sessionId");
+      } else {
+        return "LOKINET NAME";
+      }
     },
     value_placeholder() {
-      return this.$t("placeholders.sessionId");
+      if (this.record.type === "session") {
+        return this.$t("placeholders.sessionId");
+      } else {
+        return "LOKINET NAME PLACEHOLDER";
+      }
     },
     owner_placeholder() {
       const { owner } = this.initialRecord || {};
@@ -222,7 +285,11 @@ export default {
         return;
       }
 
-      this.$emit("onSubmit", this.record, this.initialRecord);
+      console.log("Sending this record and the initial record");
+      console.log(this.record);
+      console.log(this.initialRecord);
+      // Send up the submission with the record
+      // this.$emit("onSubmit", this.record, this.initialRecord);
     },
     clear() {
       this.$emit("onClear");
@@ -249,9 +316,10 @@ export default {
         validate: function(value) {
           if (this.record.type === "session") {
             return session_id(value);
+          } else {
+            // must be a lokinet purchase if not a session purchase
+            return lokinet_name(value);
           }
-
-          return false;
         }
       },
       backup_owner: {

@@ -319,6 +319,7 @@ export default {
       }
     },
     onConfirmTransaction() {
+      console.log("start the loading spinner after confirm");
       // put the loading spinner up
       this.$store.commit("gateway/set_sweep_all_status", {
         code: DO_NOTHING,
@@ -329,12 +330,15 @@ export default {
       const metadataList = this.confirmFields.metadataList;
       const isBlink = this.confirmFields.isBlink;
 
+      console.log("confirming the transaction with data");
+
       const relayTxData = {
         metadataList,
         isBlink,
         isSweepAll: true
       };
 
+      console.log(relayTxData);
       // Commit the transaction
       this.$gateway.send("wallet", "relay_tx", relayTxData);
     },
@@ -368,6 +372,8 @@ export default {
         .onCancel(() => {});
     },
     buildDialogFieldsSweepAll(txData) {
+      console.log("Building the confirm box fields with data:");
+      console.log(txData);
       this.confirmFields = this.buildDialogFields(txData);
     },
     areButtonsEnabled() {

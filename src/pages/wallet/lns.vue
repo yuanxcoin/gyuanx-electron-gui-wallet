@@ -7,33 +7,33 @@
         color="secondary"
         :options="[
           {
-            label: $t('titles.lns.sessionId'),
-            value: 'sessionId'
+            label: $t('titles.lns.purchase'),
+            value: 'purchase'
           },
           {
-            label: $t('titles.lns.lokinetName'),
-            value: 'lokinetName'
+            label: $t('titles.lns.myLns'),
+            value: 'my_lns'
           }
         ]"
       />
     </div>
-    <LNSSession v-if="screen === 'sessionId'" />
-    <LNSLokinet v-if="screen === 'lokinetName'" />
+    <LNSPurchase v-if="screen === 'purchase'" />
+    <MyLNS v-if="screen === 'my_lns'" />
   </q-page>
 </template>
 
 <script>
-import LNSSession from "components/lns/lns_session";
-import LNSLokinet from "components/lns/lns_lokinet";
+import LNSPurchase from "components/lns/lns_purchase";
+import MyLNS from "components/lns/lns_mylns";
 
 export default {
   components: {
-    LNSSession,
-    LNSLokinet
+    MyLNS,
+    LNSPurchase
   },
   data() {
     return {
-      screen: "sessionId"
+      screen: "purchase"
     };
   }
 };

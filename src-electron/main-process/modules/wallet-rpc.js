@@ -1060,7 +1060,7 @@ export class WalletRPC {
   Get a LNS record associated with the given name
   */
   async getLNSRecord(type, name) {
-    const types = ["session"]; // We currently only support session
+    const types = ["session", "lokinet"]; // We currently only support session and lokinet
     if (!types.includes(type)) return null;
 
     if (!name || name.trim().length === 0) return null;
@@ -1352,6 +1352,7 @@ export class WalletRPC {
 
   // submits the transaction to the blockchain, irreversible from here
   async relayTransaction(metadataList, isBlink, addressSave, note, isSweepAll) {
+    console.log("Relay transaction called");
     // for a sweep these don't exist
     let address = "";
     let payment_id = "";
@@ -1362,7 +1363,8 @@ export class WalletRPC {
       address_book = addressSave.address_book;
     }
 
-    let blink = isBlink;
+    console.log("metadatalist is here:");
+    console.log(metadataList);
     let failed = false;
     let errorMessage = "Failed to relay transaction";
 
@@ -1370,13 +1372,14 @@ export class WalletRPC {
     for (const hex of metadataList) {
       const params = {
         hex,
-        blink
+        blink: isBlink
       };
       // don't try submit more txs if a prev one failed
       if (failed) break;
       try {
         const data = await this.sendRPC("relay_tx", params);
         if (data.hasOwnProperty("error")) {
+          console.log("rpc return errored, set the error message");
           errorMessage = data.error.message || errorMessage;
           failed = true;
           break;
@@ -1386,11 +1389,13 @@ export class WalletRPC {
             this.saveTxNotes(tx_hash, note);
           }
         } else {
+          console.log("invalid format of relay_tx");
           errorMessage = "Invalid format of relay_tx RPC return message";
           failed = true;
           break;
         }
       } catch (e) {
+        console.log("Failed in teh try block of relay");
         failed = true;
         errorMessage = e.toString();
       }

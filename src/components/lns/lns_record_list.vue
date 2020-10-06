@@ -1,7 +1,14 @@
 <template>
   <div v-if="records.length > 0" class="lns-record-list">
-    <div v-if="needsDecryption" class="decrypt q-pa-md row justify-between items-end">
-      <LokiField :label="$t('fieldLabels.decryptRecord')" :disable="decrypting" :error="$v.name.$error">
+    <div
+      v-if="needsDecryption"
+      class="decrypt q-pa-md row justify-between items-end"
+    >
+      <LokiField
+        :label="$t('fieldLabels.decryptRecord')"
+        :disable="decrypting"
+        :error="$v.name.$error"
+      >
         <q-input
           v-model.trim="name"
           :dark="theme == 'dark'"
@@ -13,11 +20,20 @@
         />
       </LokiField>
       <div class="btn-wrapper q-ml-md row items-center">
-        <q-btn color="primary" :label="$t('buttons.decrypt')" :loading="decrypting" @click="decrypt()" />
+        <q-btn
+          color="primary"
+          :label="$t('buttons.decrypt')"
+          :loading="decrypting"
+          @click="decrypt()"
+        />
       </div>
     </div>
     <q-list link no-border :dark="theme == 'dark'" class="loki-list">
-      <q-item v-for="record in records" :key="record.name_hash" class="loki-list-item">
+      <q-item
+        v-for="record in records"
+        :key="record.name_hash"
+        class="loki-list-item"
+      >
         <q-item-section class="type" avatar>
           <q-icon :name="isLocked(record) ? 'lock' : 'lock_open'" size="24px" />
         </q-item-section>
@@ -25,7 +41,9 @@
           <q-item-label :class="bindClass(record)">
             {{ isLocked(record) ? record.name_hash : record.name }}
           </q-item-label>
-          <q-item-label v-if="!isLocked(record)">{{ record.value }}</q-item-label>
+          <q-item-label v-if="!isLocked(record)">{{
+            record.value
+          }}</q-item-label>
         </q-item-section>
         <q-item-section side class="height">
           <template v-if="isLocked(record)">
@@ -33,7 +51,11 @@
           </template>
           <template v-else>
             <q-item-section>
-              <q-btn color="secondary" :label="$t('buttons.update')" @click="onUpdate(record)" />
+              <q-btn
+                color="secondary"
+                :label="$t('buttons.update')"
+                @click="onUpdate(record)"
+              />
             </q-item-section>
           </template>
         </q-item-section>
@@ -42,10 +64,17 @@
         </q-item-section>
         <ContextMenu
           :menu-items="validMenuItems(record)"
-          @ownerCopy="copy(record.owner, $t('notification.positive.ownerCopied'))"
+          @ownerCopy="
+            copy(record.owner, $t('notification.positive.ownerCopied'))
+          "
           @nameCopy="copy(record.name, $t('notification.positive.nameCopied'))"
           @copyValue="copyValue(record)"
-          @backupOwnerCopy="copy(record.backup_owner, $t('notification.positive.backupOwnerCopied'))"
+          @backupOwnerCopy="
+            copy(
+              record.backup_owner,
+              $t('notification.positive.backupOwnerCopied')
+            )
+          "
         />
       </q-item>
     </q-list>
@@ -90,7 +119,10 @@ export default {
       const ourAddresses = this.ourAddresses;
       const records = state.gateway.wallet.lnsRecords;
       const ourRecords = records.filter(record => {
-        return ourAddresses.includes(record.owner) || ourAddresses.includes(record.backup_owner);
+        return (
+          ourAddresses.includes(record.owner) ||
+          ourAddresses.includes(record.backup_owner)
+        );
       });
 
       // Sort the records by decrypted ones first, followed by non-decrypted
@@ -116,7 +148,9 @@ export default {
         { action: "copyValue", i18n: this.copyValueI18nLabel(record) }
       ];
       let menuItems = [{ action: "ownerCopy", i18n: "menuItems.copyOwner" }];
-      const backupOwnerItem = [{ action: "backupOwnerCopy", i18n: "menuItems.copyBackupOwner" }];
+      const backupOwnerItem = [
+        { action: "backupOwnerCopy", i18n: "menuItems.copyBackupOwner" }
+      ];
 
       if (!this.isLocked(record)) {
         menuItems = [...lockedItems, ...menuItems];
@@ -163,7 +197,9 @@ export default {
           this.$q.notify({
             type: "positive",
             timeout: 2000,
-            message: this.$t("notification.positive.decryptedLNSRecord", { name })
+            message: this.$t("notification.positive.decryptedLNSRecord", {
+              name
+            })
           });
           this.name = "";
         } else {

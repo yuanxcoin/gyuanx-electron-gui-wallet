@@ -63,13 +63,6 @@ export default {
       decrypting: false
     };
   },
-  //   mounted() {
-  //     // fetch the lns names from the wallet
-  //     console.log("Records are here: ");
-  //     console.log(this.records);
-  //     // this.$gateway.send("wallet", "lns_known_records");
-  //     this.$gateway.send("update");
-  //   },
   computed: mapState({
     theme: state => state.gateway.app.config.appearance.theme,
     ourAddresses(state) {

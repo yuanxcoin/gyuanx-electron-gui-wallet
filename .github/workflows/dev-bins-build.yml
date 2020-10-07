@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - dev-bins
+      - lokinet-name-reg
 
 jobs:
   build:

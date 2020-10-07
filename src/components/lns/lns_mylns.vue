@@ -4,18 +4,18 @@
       <div class="q-mb-lg description">
         {{ $t("strings.myLnsDescription") }}
       </div>
-      <LNSRecordList />
+      <LNSRecords />
     </div>
   </div>
 </template>
 
 <script>
-import LNSRecordList from "./lns_record_list";
+import LNSRecords from "./lns_records";
 
 export default {
   name: "MyLNS",
   components: {
-    LNSRecordList
+    LNSRecords
   }
 };
 </script>

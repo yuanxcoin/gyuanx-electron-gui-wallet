@@ -488,8 +488,15 @@ export class Daemon {
     if (!Array.isArray(owners) || owners.length === 0) {
       return [];
     }
+    console.log("Getting records for owners with owners:");
+    console.log(owners[0]);
 
-    const data = await this.sendRPC("lns_owners_to_names", { entries: owners });
+    // try just the main address as owner
+    const data = await this.sendRPC("lns_owners_to_names", {
+      entries: [owners[0]]
+    });
+    console.log("data returned from lns_owners_to_names call");
+    console.log(data);
     if (!data.hasOwnProperty("result")) return [];
 
     // We need to map request_index to owner
@@ -514,7 +521,11 @@ export class Daemon {
       entries: [
         {
           name_hash: nameHash,
-          types: [0] // Update this when we have other types. Type 0 = session
+          // Update this when we have other types.
+          // 0 = session
+          // 2+ = lokinet for different # years
+          // TODO: Ensure these are actually the correct types
+          types: [0, 2]
         }
       ]
     };
@@ -525,15 +536,22 @@ export class Daemon {
     const entries = this._sanitizeLNSRecords(data.result.entries);
     if (entries.length === 0) return null;
 
+    console.log("Returning entries 0 of entries:");
+    console.log(entries);
     return entries[0];
   }
 
   _sanitizeLNSRecords(records) {
+    console.log("sanitizing lns records: ");
     return (records || []).map(record => {
       // Record type is in uint16 format
       // Session = 0
-      // For now since wallet and loki names haven't been implemented, we always assume it's session
-      const type = "session";
+      console.log("record is ");
+      console.log(record);
+      let type = "lokinet";
+      if (record.type === 0) {
+        type = "session";
+      }
       return {
         ...record,
         type

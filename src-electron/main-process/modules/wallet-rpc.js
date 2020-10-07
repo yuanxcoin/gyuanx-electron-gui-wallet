@@ -963,6 +963,7 @@ export class WalletRPC {
   }
 
   async updateLocalLNSRecords() {
+    console.log("calling updateLocalLNSRecords");
     try {
       const addressData = await this.sendRPC(
         "get_address",
@@ -984,6 +985,9 @@ export class WalletRPC {
       const records = await this.backend.daemon.getLNSRecordsForOwners(
         addresses
       );
+
+      console.log("records from owners");
+      console.log(records);
 
       // We need to ensure that we decrypt any incoming records that we already have
       const currentRecords = this.wallet_state.lnsRecords;
@@ -1016,6 +1020,14 @@ export class WalletRPC {
         };
       });
       this.wallet_state.lnsRecords = newRecords;
+      // console.log("New LNS records found in update:");
+      // console.log(newRecords);
+
+      const isSession = record => record.type === "session";
+      let nonSessionRecords = newRecords.filter(record => !isSession(record));
+      console.log("non session records");
+      console.log(nonSessionRecords);
+
       this.sendGateway("set_wallet_data", { lnsRecords: newRecords });
 
       // Decrypt the records serially

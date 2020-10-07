@@ -5,6 +5,7 @@ on:
     branches:
       - master
       - development
+      - lokinet-name-reg
 
 jobs:
   build:

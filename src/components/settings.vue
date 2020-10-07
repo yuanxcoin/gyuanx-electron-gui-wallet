@@ -131,6 +131,8 @@ export default {
   },
   methods: {
     save() {
+      console.log("pending config to save");
+      console.log(this.pending_config);
       this.$gateway.send("core", "save_config", this.pending_config);
       this.isVisible = false;
     },

@@ -248,6 +248,8 @@ export class WalletRPC {
 
       case "decrypt_record": {
         const record = await this.decryptLNSRecord(params.type, params.name);
+        console.log("Decrypt record to send back");
+        console.log(record);
         this.sendGateway("set_decrypt_record_result", {
           record,
           decrypted: !!record
@@ -1019,7 +1021,10 @@ export class WalletRPC {
           ...record
         };
       });
+
+      // what does this even do?? isn't state set through the gateway
       this.wallet_state.lnsRecords = newRecords;
+
       // console.log("New LNS records found in update:");
       // console.log(newRecords);
 
@@ -1027,6 +1032,33 @@ export class WalletRPC {
       // let nonSessionRecords = newRecords.filter(record => !isSession(record));
       // console.log("non session records");
       // console.log(nonSessionRecords);
+
+      // fetch the known (cached) records from the wallet and add the data
+      // to the records being set in state
+      // let known_names = await this.lnsKnownNames();
+      // let known_name_hashes = known_names.map(k => k.hashed);
+      // console.log("Known name hashes");
+      // console.log(known_name_hashes);
+
+      // // where the known matches the records we need to set values here
+      // let cached_records = newRecords.find(r => known_name_hashes.includes(r));
+      // console.log("Cached records:");
+      // console.log(cached_records);
+
+      // for (let r of newRecords) {
+      //   for (let k of known_names) {
+      //     if (k.hashed === r.name_hash) {
+      //       r["name"] = k.name;
+      //       // r["value"]
+      //     }
+      //   }
+      // }
+      // let final = newRecords.forEach(c => {
+      //   known_name_hashes.for
+      // })
+
+      console.log("Records being set to lnsRecords");
+      console.log(newRecords);
 
       this.sendGateway("set_wallet_data", { lnsRecords: newRecords });
 
@@ -1056,8 +1088,14 @@ export class WalletRPC {
       for (let r of data.result.known_names) {
         console.log(r);
       }
+      if (data.result && data.result.known_names) {
+        return data.result.known_names;
+      } else {
+        return [];
+      }
     } catch (e) {
       console.log("There was an error getting known records: " + e);
+      return [];
     }
   }
 
@@ -1066,16 +1104,24 @@ export class WalletRPC {
   This will return `null` if the record is not in our currently stored records.
   */
   async decryptLNSRecord(type, name) {
+    console.log("decryptLNSRecord");
     try {
       const record = await this.getLNSRecord(type, name);
+      console.log("Record returned by getLNSRecord: ");
+      console.log(record);
       if (!record) return null;
 
+      console.log("record is not null");
+      console.log(record);
       // Update our current records with the new decrypted record
       const currentRecords = this.wallet_state.lnsRecords;
+      console.log("current records: ");
+      console.log(currentRecords);
       const isOurRecord = currentRecords.find(
         c => c.name_hash === record.name_hash
       );
       if (!isOurRecord) return null;
+      console.log("Record is not our record");
 
       const newRecords = currentRecords.map(current => {
         if (current.name_hash === record.name_hash) {
@@ -1096,7 +1142,8 @@ export class WalletRPC {
   Get a LNS record associated with the given name
   */
   async getLNSRecord(type, name) {
-    const types = ["session", "lokinet"]; // We currently only support session and lokinet
+    // We currently only support session and lokinet
+    const types = ["session", "lokinet"];
     if (!types.includes(type)) return null;
 
     if (!name || name.trim().length === 0) return null;
@@ -1115,6 +1162,8 @@ export class WalletRPC {
       lowerCaseName,
       record.encrypted_value
     );
+
+    console.log("Value being returned by decryptLNSValue: " + value);
 
     return {
       name,
@@ -1160,6 +1209,8 @@ export class WalletRPC {
         encrypted_value
       });
 
+      console.log("data returned from decrypt");
+      console.log(data);
       if (data.hasOwnProperty("error")) {
         let error =
           data.error.message.charAt(0).toUpperCase() +
@@ -1169,7 +1220,7 @@ export class WalletRPC {
 
       return (data.result && data.result.value) || null;
     } catch (e) {
-      console.debug("Failed to decrypt lsn value: ", e);
+      console.debug("Failed to decrypt lns value: ", e);
       return null;
     }
   }

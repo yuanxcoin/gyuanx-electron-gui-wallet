@@ -142,7 +142,6 @@ export default {
       const backupOwnerItem = [
         { action: "backupOwnerCopy", i18n: "menuItems.copyBackupOwner" }
       ];
-
       if (!this.isLocked(record)) {
         menuItems = [...lockedItems, ...menuItems];
       }
@@ -152,6 +151,8 @@ export default {
       return menuItems;
     },
     isLocked(record) {
+      console.log("a record:");
+      console.log(record);
       return !record.name || !record.value;
     },
     copyValueI18nLabel(record) {
@@ -185,7 +186,10 @@ export default {
 
       const name = this.name.trim();
 
+      console.log("setting gateway once call");
       this.$gateway.once("decrypt_record_result", data => {
+        console.log("data returned from decrypt result");
+        console.log(data);
         if (data.decrypted) {
           this.$q.notify({
             type: "positive",
@@ -206,7 +210,6 @@ export default {
       });
 
       let type = "session";
-
       // session names cannot have a "." so this is safe
       if (name.endsWith(".loki")) {
         type = "lokinet";

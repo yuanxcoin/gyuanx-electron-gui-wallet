@@ -1,5 +1,5 @@
 <template>
-  <q-list link no-border :dark="theme == 'dark'" class="loki-list">
+  <q-list link no-border :dark="theme == 'dark'" class="lns-record-list">
     <q-item
       v-for="record in recordList"
       :key="record.name_hash"
@@ -85,4 +85,27 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="scss">
+.lns-record-list {
+  .q-item {
+    cursor: pointer;
+    background: #313131;
+    -webkit-transition: background-color 0.2s ease-in;
+    transition: background-color 0.2s ease-in;
+
+    border-radius: 3px;
+
+    + .q-item {
+      margin-top: 10px;
+    }
+  }
+
+  .q-item-sublabel {
+    color: #313131;
+  }
+
+  .q-item:hover {
+    background: rgba(117, 117, 117, 0.3);
+  }
+}
+</style>

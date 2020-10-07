@@ -350,8 +350,8 @@ export class WalletRPC {
         );
         break;
       case "purchase_lns":
-        console.log("purchase lns with params");
-        console.log(params);
+        // console.log("purchase lns with params");
+        // console.log(params);
         this.purchaseLNS(
           params.password,
           params.type,
@@ -361,9 +361,9 @@ export class WalletRPC {
           params.backup_owner || ""
         );
         break;
-      case "lns_known_records":
+      case "lns_known_names":
         console.log("LNS known records case");
-        this.lnsKnownRecords();
+        this.lnsKnownNames();
         break;
       case "update_lns_mapping":
         this.updateLNSMapping(
@@ -986,8 +986,8 @@ export class WalletRPC {
         addresses
       );
 
-      console.log("records from owners");
-      console.log(records);
+      // console.log("records from owners");
+      // console.log(records);
 
       // We need to ensure that we decrypt any incoming records that we already have
       const currentRecords = this.wallet_state.lnsRecords;
@@ -1023,10 +1023,10 @@ export class WalletRPC {
       // console.log("New LNS records found in update:");
       // console.log(newRecords);
 
-      const isSession = record => record.type === "session";
-      let nonSessionRecords = newRecords.filter(record => !isSession(record));
-      console.log("non session records");
-      console.log(nonSessionRecords);
+      // const isSession = record => record.type === "session";
+      // let nonSessionRecords = newRecords.filter(record => !isSession(record));
+      // console.log("non session records");
+      // console.log(nonSessionRecords);
 
       this.sendGateway("set_wallet_data", { lnsRecords: newRecords });
 
@@ -1043,14 +1043,19 @@ export class WalletRPC {
   }
 
   /*
-  Get the LNS records cached in this wallet.
+  Get the LNS records cached in this (local) wallet. Call alongside the other call to update as
+  we go
   */
-  async lnsKnownRecords() {
+  async lnsKnownNames() {
+    console.log("lns known names let's start");
     try {
-      let known_records = await this.sendRPC("lns_known_records");
+      let data = await this.sendRPC("lns_known_names");
 
       console.log("the known records are right here: ");
-      console.log(known_records);
+      console.log(data);
+      for (let r of data.result.known_names) {
+        console.log(r);
+      }
     } catch (e) {
       console.log("There was an error getting known records: " + e);
     }
@@ -1142,6 +1147,10 @@ export class WalletRPC {
   }
 
   async decryptLNSValue(type, name, encrypted_value) {
+    console.log("type name and encrypted value are: ");
+    console.log(type);
+    console.log(name);
+    console.log(encrypted_value);
     if (!type || !name || !encrypted_value) return null;
 
     try {

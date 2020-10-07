@@ -35,6 +35,10 @@ export const lokinet_name = input => {
   return true;
 };
 
+export const session_id_or_lokinet_name = input => {
+  return session_id(input) || lokinet_name(input);
+};
+
 // Full lokinet address
 export const lokinet_address = input => {
   console.log("lokinet address input");

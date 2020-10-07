@@ -572,8 +572,8 @@ export default {
     privateKeys: "Private keys",
     rescanWallet: "Rescan wallet",
     lns: {
-      sessionId: "SESSION ID",
-      lokinetName: "LOKINET NAME"
+      purchase: "PURCHASE",
+      myLns: "MY LNS"
     },
     serviceNode: {
       registration: "REGISTRATION",

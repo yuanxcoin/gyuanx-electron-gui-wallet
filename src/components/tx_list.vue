@@ -202,6 +202,8 @@ export default {
       const all_pending = ["pending", "pool"];
       // just stop logging errors due to dup txs so I can work on LNS without interruption
       // this.tx_list_filtered = [];
+      console.log("here's the tx list");
+      console.log(this.tx_list);
       this.tx_list_filtered = this.tx_list.filter(tx => {
         let valid = true;
 

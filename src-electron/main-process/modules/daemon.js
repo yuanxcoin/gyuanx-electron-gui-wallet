@@ -488,6 +488,7 @@ export class Daemon {
     if (!Array.isArray(owners) || owners.length === 0) {
       return [];
     }
+    // NEED TO FIX THIS
     console.log("Getting records for owners with owners:");
     console.log(owners[0]);
 
@@ -495,8 +496,6 @@ export class Daemon {
     const data = await this.sendRPC("lns_owners_to_names", {
       entries: [owners[0]]
     });
-    console.log("data returned from lns_owners_to_names call");
-    console.log(data);
     if (!data.hasOwnProperty("result")) return [];
 
     // We need to map request_index to owner
@@ -546,8 +545,7 @@ export class Daemon {
     return (records || []).map(record => {
       // Record type is in uint16 format
       // Session = 0
-      console.log("record is ");
-      console.log(record);
+      // Lokinet = 2
       let type = "lokinet";
       if (record.type === 0) {
         type = "session";

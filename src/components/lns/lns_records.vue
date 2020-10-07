@@ -1,9 +1,6 @@
 <template>
   <div class="lns-record-list">
-    <div
-      v-if="needsDecryption"
-      class="decrypt q-pa-md row justify-between items-end"
-    >
+    <div v-if="needsDecryption" class="decrypt row justify-between items-end">
       <LokiField
         :label="$t('fieldLabels.decryptRecord')"
         :disable="decrypting"
@@ -28,10 +25,14 @@
         />
       </div>
     </div>
-    <h3>Session records</h3>
-    <LNSRecordList :record-list="session_records" />
-    <h3>Lokinet records</h3>
-    <LNSRecordList :record-list="lokinet_records" />
+    <div v-if="session_records.length > 0" class="records-group">
+      <span class="record-type-title">Session records</span>
+      <LNSRecordList :record-list="session_records" />
+    </div>
+    <div v-if="lokinet_records.length > 0" class="records-group">
+      <span class="record-type-title">Lokinet records</span>
+      <LNSRecordList :record-list="lokinet_records" />
+    </div>
   </div>
 </template>
 
@@ -40,7 +41,7 @@ const { clipboard } = require("electron");
 import { mapState } from "vuex";
 import { i18n } from "boot/i18n";
 import LokiField from "components/loki_field";
-import { session_id } from "src/validators/common";
+import { session_id_or_lokinet_name } from "src/validators/common";
 // import ContextMenu from "components/menus/contextmenu";
 import LNSRecordList from "./lns_record_list";
 
@@ -63,6 +64,10 @@ export default {
       decrypting: false
     };
   },
+  mounted() {
+    console.log("lns_known_names kicking off");
+    this.$gateway.send("wallet", "lns_known_names");
+  },
   computed: mapState({
     theme: state => state.gateway.app.config.appearance.theme,
     ourAddresses(state) {
@@ -81,8 +86,8 @@ export default {
             ourAddresses.includes(record.backup_owner))
         );
       });
-      console.log("records in lokinet records:");
-      console.log(ourRecords);
+      //   console.log("records in lokinet records:");
+      //   console.log(ourRecords);
 
       // Sort the records by decrypted ones first, followed by non-decrypted
       return ourRecords.sort((a, b) => {
@@ -100,8 +105,8 @@ export default {
       // can clean this up for less reptition
       const ourAddresses = this.ourAddresses;
       const records = state.gateway.wallet.lnsRecords;
-      console.log("records in lokinet records:");
-      console.log(ourRecords);
+      //   console.log("records in lokinet records:");
+      //   console.log(ourRecords);
       const ourRecords = records.filter(record => {
         return (
           record.type === "lokinet" &&
@@ -124,8 +129,6 @@ export default {
     },
     needsDecryption() {
       const records = [...this.lokinet_records, ...this.session_records];
-      console.log("needs decryption??");
-      console.log(records);
       return records.find(r => this.isLocked(r));
     }
   }),
@@ -154,6 +157,8 @@ export default {
     copyValueI18nLabel(record) {
       if (record.type === "session") {
         return "menuItems.copySessionId";
+      } else if (record.type === "lokinet") {
+        return "menuItems.copyLokinetName";
       }
       return "menuItems.copyAddress";
     },
@@ -199,9 +204,20 @@ export default {
         }
         this.decrypting = false;
       });
+
+      let type = "session";
+
+      // session names cannot have a "." so this is safe
+      if (name.endsWith(".loki")) {
+        type = "lokinet";
+      }
+
+      console.log("decrypt about to be called, name is and type is");
+      console.log(name);
+      console.log(type);
       this.$gateway.send("wallet", "decrypt_record", {
         name,
-        type: "session"
+        type
       });
       this.decrypting = true;
     },
@@ -226,13 +242,15 @@ export default {
       });
     }
   },
+
+  // ENSURE THIS IS CORRECT, I THINK IT'S WRONG ATM
   validations: {
     // name: function(value) {
     //   // TODO: validate on both session id and lokinet addresses
     //   session_id(value) || lokinet_name(value);
     // }
     name: {
-      session_id
+      session_id_or_lokinet_name
     }
   }
 };
@@ -252,9 +270,21 @@ export default {
   }
 
   .decrypt {
+    margin-bottom: 20px;
+
     .btn-wrapper {
       height: 46px;
     }
   }
+}
+
+.record-type-title {
+  font-weight: bold;
+  margin-bottom: 40px;
+  padding-bottom: 40px;
+}
+
+.records-group {
+  padding-bottom: 40px;
 }
 </style>

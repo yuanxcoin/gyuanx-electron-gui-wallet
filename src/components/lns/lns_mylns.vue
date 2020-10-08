@@ -1,10 +1,10 @@
 <template>
   <div class="my-lns">
     <div class="q-px-md q-pt-md">
-      <div class="q-mb-lg description">
+      <div class="description">
         {{ $t("strings.lnsDescription") }}
       </div>
-      <LNSRecords @onUpdate="onUpdate" />
+      <LNSRecords @onUpdate="onUpdate" @onRenew="onRenew" />
     </div>
   </div>
 </template>
@@ -19,9 +19,10 @@ export default {
   },
   methods: {
     onUpdate(record) {
-      console.log("MyLNS on update");
-      console.log(record);
       this.$emit("onUpdate", record);
+    },
+    onRenew(record) {
+      this.$emit("onRenew", record);
     }
   }
 };
@@ -32,6 +33,7 @@ export default {
   .description {
     white-space: pre-line;
     color: #cecece;
+    margin-bottom: 8px;
   }
 }
 </style>

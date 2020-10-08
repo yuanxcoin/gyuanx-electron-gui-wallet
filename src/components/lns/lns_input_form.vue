@@ -4,16 +4,16 @@
     <div class="col q-mt-sm">
       <LokiField
         :label="$t('fieldLabels.lnsType')"
-        :disable="disableName"
+        :disable="updating"
         :error="$v.record.name.$error"
       >
         <q-select
           v-model.trim="record.type"
           emit-value
           map-options
-          :options="typeOptions"
+          :options="renewing ? lokinetOptions : typeOptions"
           :dark="theme == 'dark'"
-          :disable="disableName"
+          :disable="updating"
           borderless
           dense
         />
@@ -52,6 +52,7 @@
           :placeholder="value_placeholder"
           borderless
           dense
+          :disable="renewing"
           :suffix="record.type === 'session' ? '' : '.loki'"
           @blur="$v.record.value.$touch"
         />
@@ -135,6 +136,20 @@ export default {
       type: String,
       required: true
     },
+    updating: {
+      type: Boolean,
+      required: true
+    },
+    renewing: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
+    disableType: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
     disableName: {
       type: Boolean,
       required: false,
@@ -152,16 +167,18 @@ export default {
     }
   },
   data() {
-    const typeOptions = [
-      { label: "Session ID", value: "session" },
+    let sessionOptions = [{ label: "Session ID", value: "session" }];
+    let lokinetOptions = [
       { label: "Lokinet Name 1 year", value: "lokinet_1y" },
       { label: "Lokinet Name 2 years", value: "lokinet_2y" },
       { label: "Lokinet Name 5 years", value: "lokinet_5y" },
       { label: "Lokinet Name 10 years", value: "lokinet_10y" }
     ];
+    let typeOptions = [...sessionOptions, ...lokinetOptions];
+
     const initialRecord = {
-      // default to SessionID
-      type: typeOptions[0].value,
+      // Lokinet 1 year is valid on renew or purchase
+      type: typeOptions[1].value,
       name: "",
       value: "",
       owner: "",
@@ -169,8 +186,8 @@ export default {
     };
     return {
       record: { ...initialRecord },
-      initialRecord,
-      typeOptions
+      typeOptions,
+      lokinetOptions
     };
   },
   computed: mapState({
@@ -183,14 +200,14 @@ export default {
       if (this.record.type === "session") {
         return this.$t("fieldLabels.sessionId");
       } else {
-        return "LOKINET NAME";
+        return this.$t("fieldLabels.lokinetFullAddress");
       }
     },
     value_placeholder() {
       if (this.record.type === "session") {
         return this.$t("placeholders.sessionId");
       } else {
-        return "LOKINET NAME PLACEHOLDER";
+        return this.$t("placeholders.lokinetFullAddress");
       }
     },
     owner_placeholder() {
@@ -287,10 +304,6 @@ export default {
         });
         return;
       }
-
-      console.log("Sending this record and the initial record");
-      console.log(this.record);
-      console.log(this.initialRecord);
       // Send up the submission with the record
       this.$emit("onSubmit", this.record, this.initialRecord);
     },

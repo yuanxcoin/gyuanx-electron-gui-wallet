@@ -26,12 +26,25 @@
       </div>
     </div>
     <div v-if="session_records.length > 0" class="records-group">
-      <span class="record-type-title">Session records</span>
-      <LNSRecordList :record-list="session_records" @onUpdate="onUpdate" />
+      <span class="record-type-title">{{
+        $t("titles.lnsSessionRecords")
+      }}</span>
+      <LNSRecordList
+        :record-list="session_records"
+        :is-lokinet="false"
+        @onUpdate="onUpdate"
+      />
     </div>
     <div v-if="lokinet_records.length > 0" class="records-group">
-      <span class="record-type-title">Lokinet records</span>
-      <LNSRecordList :record-list="lokinet_records" @onUpdate="onUpdate" />
+      <span class="record-type-title">{{
+        $t("titles.lnsLokinetRecords")
+      }}</span>
+      <LNSRecordList
+        :record-list="lokinet_records"
+        :is-lokinet="true"
+        @onUpdate="onUpdate"
+        @onRenew="onRenew"
+      />
     </div>
   </div>
 </template>
@@ -39,7 +52,6 @@
 <script>
 const { clipboard } = require("electron");
 import { mapState } from "vuex";
-import { i18n } from "boot/i18n";
 import LokiField from "components/loki_field";
 import { session_id_or_lokinet_name } from "src/validators/common";
 // import ContextMenu from "components/menus/contextmenu";
@@ -51,12 +63,6 @@ export default {
     LokiField,
     LNSRecordList
     // ContextMenu
-  },
-  filters: {
-    blockHeight(value) {
-      const heightString = i18n.t("strings.blockHeight");
-      return `${heightString}: ${value}`;
-    }
   },
   data() {
     return {
@@ -75,30 +81,6 @@ export default {
       const { used, unused, primary } = address_list;
       const all = [...used, ...unused, ...primary];
       return all.map(a => a.address).filter(a => !!a);
-    },
-    records_of_type(state, type) {
-      // receives the type and returns the records of that type
-      const ourAddresses = this.ourAddresses;
-      const records = state.gateway.wallet.lnsRecords;
-      const ourRecords = records.filter(record => {
-        return (
-          record.type === type &&
-          (ourAddresses.includes(record.owner) ||
-            ourAddresses.includes(record.backup_owner))
-        );
-      });
-
-      // Sort the records by decrypted ones first, followed by non-decrypted
-      return ourRecords.sort((a, b) => {
-        if (a.name && !b.name) {
-          return -1;
-        } else if (b.name && !a.name) {
-          return 1;
-        } else if (a.name && b.name) {
-          return a.name.localeCompare(b.name);
-        }
-        return b.update_height - a.update_height;
-      });
     },
     session_records(state) {
       return this.records_of_type(state, "session");
@@ -129,6 +111,30 @@ export default {
       }
       return menuItems;
     },
+    records_of_type(state, type) {
+      // receives the type and returns the records of that type
+      const ourAddresses = this.ourAddresses;
+      const records = state.gateway.wallet.lnsRecords;
+      const ourRecords = records.filter(record => {
+        return (
+          record.type === type &&
+          (ourAddresses.includes(record.owner) ||
+            ourAddresses.includes(record.backup_owner))
+        );
+      });
+
+      // Sort the records by decrypted ones first, followed by non-decrypted
+      return ourRecords.sort((a, b) => {
+        if (a.name && !b.name) {
+          return -1;
+        } else if (b.name && !a.name) {
+          return 1;
+        } else if (a.name && b.name) {
+          return a.name.localeCompare(b.name);
+        }
+        return b.update_height - a.update_height;
+      });
+    },
     isLocked(record) {
       return !record.name || !record.value;
     },
@@ -144,6 +150,11 @@ export default {
       console.log("update record");
       console.log(record);
       this.$emit("onUpdate", record);
+    },
+    onRenew(record) {
+      console.log("renew lns record");
+      console.log(record);
+      this.$emit("onRenew", record);
     },
     decrypt() {
       this.$v.name.$touch();
@@ -197,9 +208,6 @@ export default {
         type = "lokinet";
       }
 
-      console.log("decrypt about to be called, name is and type is");
-      console.log(name);
-      console.log(type);
       this.$gateway.send("wallet", "decrypt_record", {
         name,
         type

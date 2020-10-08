@@ -29,6 +29,7 @@ export default {
     purchase: "PURCHASE",
     receive: "RECEIVE",
     registerServiceNode: "REGISTER SERVICE NODE",
+    renew: "RENEW",
     rescan: "RESCAN",
     restoreWallet: "RESTORE WALLET",
     save: "SAVE",
@@ -208,8 +209,10 @@ export default {
     },
     limitDownloadRate: "LIMIT DOWNLOAD RATE",
     limitUploadRate: "LIMIT UPLOAD RATE",
+    lnsType: "LNS RECORD TYPE",
     localDaemonIP: "LOCAL DAEMON IP",
     localDaemonPort: "LOCAL DAEMON PORT",
+    lokinetFullAddress: "LOKINET FULL ADDRESS",
     maxIncomingPeers: "MAX INCOMING PEERS",
     maxOutgoingPeers: "MAX OUTGOING PEERS",
     message: "MESSAGE",
@@ -390,6 +393,8 @@ export default {
     lnsName: "The name to purchase via Loki Name Service",
     lnsBackupOwner: "The wallet address of the backup owner",
     lnsDecryptName: "A LNS name that belongs to you",
+    lokinetFullAddress:
+      "Full lokinet address to map LNS name to (without .loki)",
     mnemonicSeed: "25 (or 24) word mnemonic seed",
     pasteTransactionId: "Paste transaction ID",
     pasteTransactionProof: "Paste transaction proof",
@@ -458,8 +463,9 @@ export default {
     },
     destinationUnknown: "Destination Unknown",
     editAddressBookEntry: "Edit address book entry",
+    expirationHeight: "Expiration height",
     lnsPurchaseDescription:
-      "Purchase or update a name for a Session ID. If you purchase a name, it may take a minute or two for it to show up in the list.",
+      "Purchase or update an LNS record. If you purchase a name, it may take a minute or two for it to show up in the list.",
     lnsDescription:
       "Here you can find all the LNS names owned by this wallet. Decrypting a record you own will return the name and value of that LNS record.",
     loadingSettings: "Loading settings",
@@ -571,6 +577,8 @@ export default {
     configure: "Configure",
     currentlyStakedNodes: "Currently staked nodes",
     lnsRecordDetails: "LNS record details",
+    lnsSessionRecords: "Session records",
+    lnsLokinetRecords: "Lokinet records",
     privateKeys: "Private keys",
     rescanWallet: "Rescan wallet",
     lns: {
@@ -582,6 +590,7 @@ export default {
       staking: "STAKING",
       myStakes: "MY STAKES"
     },
+
     serviceNodeDetails: "Service node details",
     settings: {
       title: "Settings",

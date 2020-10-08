@@ -248,8 +248,6 @@ export class WalletRPC {
 
       case "decrypt_record": {
         const record = await this.decryptLNSRecord(params.type, params.name);
-        console.log("Decrypt record to send back");
-        console.log(record);
         this.sendGateway("set_decrypt_record_result", {
           record,
           decrypted: !!record
@@ -352,8 +350,6 @@ export class WalletRPC {
         );
         break;
       case "purchase_lns":
-        // console.log("purchase lns with params");
-        // console.log(params);
         this.purchaseLNS(
           params.password,
           params.type,
@@ -1033,14 +1029,14 @@ export class WalletRPC {
       // console.log("non session records");
       // console.log(nonSessionRecords);
 
-      // // fetch the known (cached) records from the wallet and add the data
-      // // to the records being set in state
+      // fetch the known (cached) records from the wallet and add the data
+      // to the records being set in state
       // let known_names = await this.lnsKnownNames();
       // let known_name_hashes = known_names.map(k => k.hashed);
       // console.log("Known name hashes");
       // console.log(known_name_hashes);
 
-      // // where the known matches the records we need to set values here
+      // where the known matches the records we need to set values here
       // let cached_records = newRecords.find(r => known_name_hashes.includes(r));
       // console.log("Cached records:");
       // console.log(cached_records);
@@ -1049,7 +1045,7 @@ export class WalletRPC {
       //   for (let k of known_names) {
       //     if (k.hashed === r.name_hash) {
       //       r["name"] = k.name;
-      //       // r["value"]
+      //       // r["value"] = k.value;
       //     }
       //   }
       // }
@@ -1079,12 +1075,9 @@ export class WalletRPC {
   we go
   */
   async lnsKnownNames() {
-    console.log("lns known names let's start");
     try {
       let data = await this.sendRPC("lns_known_names");
 
-      console.log("the known records are right here: ");
-      console.log(data);
       for (let r of data.result.known_names) {
         console.log(r);
       }
@@ -1104,23 +1097,21 @@ export class WalletRPC {
   This will return `null` if the record is not in our currently stored records.
   */
   async decryptLNSRecord(type, name) {
-    console.log("decryptLNSRecord");
+    let _type = type;
+    // type can initially be "lokinet_1y" etc. on a purchase
+    if (type.startsWith("lokinet")) {
+      _type = "lokinet";
+    }
     try {
-      const record = await this.getLNSRecord(type, name);
-      console.log("Record returned by getLNSRecord: ");
-      console.log(record);
+      const record = await this.getLNSRecord(_type, name);
       if (!record) return null;
 
-      console.log("record is not null");
       // Update our current records with the new decrypted record
       const currentRecords = this.wallet_state.lnsRecords;
-      console.log("current records: ");
-      console.log(currentRecords);
       const isOurRecord = currentRecords.find(
         c => c.name_hash === record.name_hash
       );
       if (!isOurRecord) return null;
-      console.log("Record is not our record");
 
       const newRecords = currentRecords.map(current => {
         if (current.name_hash === record.name_hash) {
@@ -1142,14 +1133,17 @@ export class WalletRPC {
   */
   async getLNSRecord(type, name) {
     // We currently only support session and lokinet
-    console.log("type and name");
-    console.log(type, name);
     const types = ["session", "lokinet"];
     if (!types.includes(type)) return null;
 
     if (!name || name.trim().length === 0) return null;
 
     const lowerCaseName = name.toLowerCase();
+
+    let fullName = lowerCaseName;
+    if (type === "lokinet" && !name.endsWith(".loki")) {
+      fullName = fullName + ".loki";
+    }
 
     const nameHash = await this.hashLNSName(type, lowerCaseName);
     if (!nameHash) return null;
@@ -1160,14 +1154,12 @@ export class WalletRPC {
     // Decrypt the value if possible
     const value = await this.decryptLNSValue(
       type,
-      lowerCaseName,
+      fullName,
       record.encrypted_value
     );
 
-    console.log("Value being returned by decryptLNSValue: " + value);
-
     return {
-      name,
+      name: fullName,
       value,
       ...record
     };
@@ -1176,10 +1168,15 @@ export class WalletRPC {
   async hashLNSName(type, name) {
     if (!type || !name) return null;
 
+    let fullName = name;
+    if (type === "lokinet" && !name.endsWith(".loki")) {
+      fullName = fullName + ".loki";
+    }
+
     try {
       const data = await this.sendRPC("lns_hash_name", {
         type,
-        name
+        name: fullName
       });
 
       if (data.hasOwnProperty("error")) {
@@ -1191,27 +1188,26 @@ export class WalletRPC {
 
       return (data.result && data.result.name) || null;
     } catch (e) {
-      console.debug("Failed to hash lsn name: ", e);
+      console.debug("Failed to hash lns name: ", e);
       return null;
     }
   }
 
   async decryptLNSValue(type, name, encrypted_value) {
-    console.log("type name and encrypted value are: ");
-    console.log(type);
-    console.log(name);
-    console.log(encrypted_value);
     if (!type || !name || !encrypted_value) return null;
+
+    let fullName = name;
+    if (type === "lokinet" && !name.endsWith(".loki")) {
+      fullName = fullName + ".loki";
+    }
 
     try {
       const data = await this.sendRPC("lns_decrypt_value", {
         type,
-        name,
+        name: fullName,
         encrypted_value
       });
 
-      console.log("data returned from decrypt");
-      console.log(data);
       if (data.hasOwnProperty("error")) {
         let error =
           data.error.message.charAt(0).toUpperCase() +
@@ -1455,8 +1451,6 @@ export class WalletRPC {
       address_book = addressSave.address_book;
     }
 
-    console.log("metadatalist is here:");
-    console.log(metadataList);
     let failed = false;
     let errorMessage = "Failed to relay transaction";
 
@@ -1471,7 +1465,6 @@ export class WalletRPC {
       try {
         const data = await this.sendRPC("relay_tx", params);
         if (data.hasOwnProperty("error")) {
-          console.log("rpc return errored, set the error message");
           errorMessage = data.error.message || errorMessage;
           failed = true;
           break;
@@ -1481,13 +1474,11 @@ export class WalletRPC {
             this.saveTxNotes(tx_hash, note);
           }
         } else {
-          console.log("invalid format of relay_tx");
           errorMessage = "Invalid format of relay_tx RPC return message";
           failed = true;
           break;
         }
       } catch (e) {
-        console.log("Failed in teh try block of relay");
         failed = true;
         errorMessage = e.toString();
       }
@@ -1670,9 +1661,6 @@ export class WalletRPC {
           value
         };
 
-        console.log("params being sent to buy mapping");
-        console.log(params);
-
         this.sendRPC("lns_buy_mapping", params).then(data => {
           if (data.hasOwnProperty("error")) {
             let error =
@@ -1702,9 +1690,16 @@ export class WalletRPC {
   }
 
   updateLNSMapping(password, type, name, value, owner, backupOwner) {
-    const _name = name.trim().toLowerCase();
+    let _name = name.trim().toLowerCase();
     const _owner = owner.trim() === "" ? null : owner;
     const backup_owner = backupOwner.trim() === "" ? null : backupOwner;
+
+    // updated records have type "lokinet" or "session"
+    // UI passes the values without the extension
+    if (type === "lokinet") {
+      _name = _name + ".loki";
+      value = value + ".loki";
+    }
 
     crypto.pbkdf2(
       password,

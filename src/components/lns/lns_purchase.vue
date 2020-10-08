@@ -18,11 +18,11 @@ export default {
     LNSInput
   },
   methods: {
-    startUpdating: function(record) {
-      console.log("start updating called from above");
-      console.log(record);
-      console.log(this.$refs.input);
+    startUpdating(record) {
       this.$refs.input.startUpdating(record);
+    },
+    startRenewing(record) {
+      this.$refs.input.startRenewing(record);
     }
   }
 };

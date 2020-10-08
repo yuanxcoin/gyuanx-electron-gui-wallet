@@ -3,8 +3,10 @@
     <LNSInputForm
       ref="form"
       :submit-label="submit_label"
-      :disable-name="updating"
-      :show-clear-button="updating"
+      :disable-name="updating || renewing"
+      :updating="updating"
+      :renewing="renewing"
+      :show-clear-button="updating || renewing"
       :disable-submit-button="disable_submit_button"
       @onSubmit="onSubmit"
       @onClear="onClear"
@@ -29,7 +31,8 @@ export default {
   mixins: [WalletPassword],
   data() {
     return {
-      updating: false
+      updating: false,
+      renewing: false
     };
   },
   computed: mapState({
@@ -41,7 +44,12 @@ export default {
       return this.unlocked_balance < minBalance * 1e9;
     },
     submit_label() {
-      const label = this.updating ? "buttons.update" : "buttons.purchase";
+      let label = "buttons.purchase";
+      if (this.updating) {
+        label = "buttons.update";
+      } else if (this.renewing) {
+        label = "buttons.renew";
+      }
       return this.$t(label);
     }
   }),
@@ -78,6 +86,15 @@ export default {
       this.$refs.form.setRecord(record);
       this.updating = true;
     },
+    startRenewing(record) {
+      this.renewing = true;
+      // set the type such that we default to one year
+      let renewRecord = {
+        ...record,
+        type: "lokinet_1y"
+      };
+      this.$refs.form.setRecord(renewRecord);
+    },
     onSubmit(record, oldRecord) {
       if (this.updating) {
         this.update(record, oldRecord);
@@ -88,6 +105,7 @@ export default {
     onClear() {
       this.$refs.form.reset();
       this.updating = false;
+      this.renewing = false;
     },
     async update(record, oldRecord) {
       // Make sure we have a diff between the 2 records
@@ -99,6 +117,8 @@ export default {
       const isValueDifferent = record.value !== oldRecord.value;
       const different =
         isOwnerDifferent || isBackupOwnerDifferent || isValueDifferent;
+
+      // TODO: This is a little confusing, if nothing was actually updated
       if (!different) {
         this.$q.notify({
           type: "positive",
@@ -165,8 +185,6 @@ export default {
           const lns = objectAssignDeep.noMutate(record, {
             password
           });
-          console.log("here's the lns data sent to the backend");
-          console.log(lns);
           this.$gateway.send("wallet", "purchase_lns", lns);
         })
         .onDismiss(() => {})

@@ -22,16 +22,29 @@
         </template>
         <template v-else>
           <q-item-section>
-            <q-btn
-              color="secondary"
-              :label="$t('buttons.update')"
-              @click="onUpdate(record)"
-            />
+            <div class="row update-renew-buttons">
+              <q-btn
+                color="secondary"
+                :label="$t('buttons.update')"
+                @click="onUpdate(record)"
+              />
+              <q-btn
+                v-if="isLokinet"
+                color="secondary"
+                :label="$t('buttons.renew')"
+                @click="onRenew(record)"
+              />
+            </div>
           </q-item-section>
         </template>
       </q-item-section>
       <q-item-section v-if="!isLocked(record)" side>
-        {{ record.update_height | blockHeight }}
+        <span v-if="record.type === 'session'">
+          {{ record.update_height | blockHeight }}
+        </span>
+        <span v-else>
+          {{ record.expiration_height | expirationHeight }}
+        </span>
       </q-item-section>
       <!-- <ContextMenu
         :menu-items="validMenuItems(record)"
@@ -60,6 +73,10 @@ export default {
     recordList: {
       type: Array,
       required: true
+    },
+    isLokinet: {
+      type: Boolean,
+      required: true
     }
   },
   // components: {
@@ -72,6 +89,10 @@ export default {
     blockHeight(value) {
       const heightString = i18n.t("strings.blockHeight");
       return `${heightString}: ${value}`;
+    },
+    expirationHeight(value) {
+      const expirationHeightString = i18n.t("strings.expirationHeight");
+      return `${expirationHeightString}: ${value}`;
     }
   },
   methods: {
@@ -82,8 +103,10 @@ export default {
       return [this.isLocked(record) ? "locked" : "unlocked"];
     },
     onUpdate(record) {
-      console.log(record);
       this.$emit("onUpdate", record);
+    },
+    onRenew(record) {
+      this.$emit("onRenew", record);
     }
   }
 };
@@ -110,6 +133,11 @@ export default {
 
   .q-item:hover {
     background: rgba(117, 117, 117, 0.3);
+  }
+}
+.update-renew-buttons {
+  .q-btn:not(:first-child) {
+    margin-left: 8px;
   }
 }
 </style>

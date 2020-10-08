@@ -359,6 +359,9 @@ export class WalletRPC {
           params.backup_owner || ""
         );
         break;
+      case "lns_renew_mapping":
+        this.lnsRenewMapping(params.password, params.type, params.name);
+        break;
       case "lns_known_names":
         console.log("LNS known records case");
         this.lnsKnownNames();
@@ -1090,6 +1093,81 @@ export class WalletRPC {
       console.log("There was an error getting known records: " + e);
       return [];
     }
+  }
+
+  /*
+  Renews an LNS (Lokinet) mapping, since they can expire
+  type can be:
+  lokinet_1y, lokinet_2y, lokinet_5y, lokinet_10y
+  */
+  lnsRenewMapping(password, type, name) {
+    console.log("Lns renew mapping called with type and name:");
+    console.log(type, name);
+    let _name = name.trim().toLowerCase();
+
+    // the RPC accepts names with the .loki already appeneded only
+    // can be lokinet_1y, lokinet_2y, lokinet_5y, lokinet_10y
+    if (type.startsWith("lokinet")) {
+      _name = _name + ".loki";
+    }
+
+    crypto.pbkdf2(
+      password,
+      this.auth[2],
+      1000,
+      64,
+      "sha512",
+      (err, password_hash) => {
+        if (err) {
+          this.sendGateway("set_lns_status", {
+            code: -1,
+            i18n: "notification.errors.internalError",
+            sending: false
+          });
+          return;
+        }
+        if (!this.isValidPasswordHash(password_hash)) {
+          this.sendGateway("set_lns_status", {
+            code: -1,
+            i18n: "notification.errors.invalidPassword",
+            sending: false
+          });
+          return;
+        }
+
+        const params = {
+          type,
+          name: _name
+        };
+
+        console.log("lns renew mapping about to be called");
+        this.sendRPC("lns_renew_mapping", params).then(data => {
+          if (data.hasOwnProperty("error")) {
+            console.log("error");
+            console.log(data);
+            let error =
+              data.error.message.charAt(0).toUpperCase() +
+              data.error.message.slice(1);
+            this.sendGateway("set_lns_status", {
+              code: -1,
+              message: error,
+              sending: false
+            });
+            return;
+          }
+
+          this.purchasedNames[name.trim()] = type;
+
+          setTimeout(() => this.updateLocalLNSRecords(), 5000);
+
+          this.sendGateway("set_lns_status", {
+            code: 0,
+            i18n: "notification.positive.nameRenewed",
+            sending: false
+          });
+        });
+      }
+    );
   }
 
   /*

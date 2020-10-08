@@ -113,6 +113,11 @@ export default {
       message: "Do you want to purchase the name?",
       ok: "PURCHASE"
     },
+    renew: {
+      title: "Renew name",
+      message: "Do you want to renew the name?",
+      ok: "RENEW"
+    },
     registerServiceNode: {
       title: "Register service node",
       message: "Do you want to register the service node?",
@@ -307,6 +312,7 @@ export default {
       lnsRecordUpdated: "LNS Record was successfully updated",
       passwordUpdated: "Password updated",
       namePurchased: "Name successfully purchased",
+      nameRenewed: "Name successfully renewed",
       nameCopied: "Name copied to clipboard",
       ownerCopied: "Owner copied to clipboard",
       qrCopied: "QR code copied to clipboard",

@@ -71,7 +71,6 @@ export default {
     };
   },
   mounted() {
-    console.log("lns_known_names kicking off");
     this.$gateway.send("wallet", "lns_known_names");
   },
   computed: mapState({
@@ -147,13 +146,9 @@ export default {
       return "menuItems.copyAddress";
     },
     onUpdate(record) {
-      console.log("update record");
-      console.log(record);
       this.$emit("onUpdate", record);
     },
     onRenew(record) {
-      console.log("renew lns record");
-      console.log(record);
       this.$emit("onRenew", record);
     },
     decrypt() {
@@ -179,10 +174,7 @@ export default {
 
       const name = this.name.trim();
 
-      console.log("setting gateway once call");
       this.$gateway.once("decrypt_record_result", data => {
-        console.log("data returned from decrypt result");
-        console.log(data);
         if (data.decrypted) {
           this.$q.notify({
             type: "positive",

@@ -98,6 +98,8 @@ export default {
     onSubmit(record, oldRecord) {
       if (this.updating) {
         this.update(record, oldRecord);
+      } else if (this.renewing) {
+        this.renew(record);
       } else {
         this.purchase(record);
       }
@@ -186,6 +188,38 @@ export default {
             password
           });
           this.$gateway.send("wallet", "purchase_lns", lns);
+        })
+        .onDismiss(() => {})
+        .onCancel(() => {});
+    },
+    async renew(record) {
+      console.log("renew the record");
+      console.log(record);
+      let passwordDialog = await this.showPasswordConfirmation({
+        title: this.$t("dialog.renew.title"),
+        noPasswordMessage: this.$t("dialog.renew.message"),
+        ok: {
+          label: this.$t("dialog.renew.ok"),
+          color: "primary"
+        },
+        dark: this.theme == "dark",
+        color: this.theme == "dark" ? "white" : "dark"
+      });
+      passwordDialog
+        .onOk(password => {
+          // if no password set
+          password = password || "";
+          this.$store.commit("gateway/set_lns_status", {
+            code: 1,
+            message: "Sending renew mapping transaction",
+            sending: true
+          });
+          const params = {
+            type: record.type,
+            name: record.name,
+            password
+          };
+          this.$gateway.send("wallet", "lns_renew_mapping", params);
         })
         .onDismiss(() => {})
         .onCancel(() => {});

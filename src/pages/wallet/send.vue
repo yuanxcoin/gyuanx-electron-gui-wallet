@@ -82,13 +82,12 @@
             :error="$v.newTx.payment_id.$error"
             optional
           >
-            <!-- TODO: count to be '16 or 64 after RPC fixed -->
             <q-input
               v-model.trim="newTx.payment_id"
               :dark="theme == 'dark'"
               :placeholder="
                 $t('placeholders.hexCharacters', {
-                  count: '64'
+                  count: '16 or 64'
                 })
               "
               borderless

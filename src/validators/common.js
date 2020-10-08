@@ -4,9 +4,9 @@ export const greater_than_zero = input => {
 };
 
 export const payment_id = input => {
-  // || input.length == 16 to be re-added after rpc fixed
   return (
-    input.length === 0 || (/^[0-9A-Fa-f]+$/.test(input) && input.length == 64)
+    input.length === 0 ||
+    (/^[0-9A-Fa-f]+$/.test(input) && (input.length == 64 || input.length == 16))
   );
 };
 

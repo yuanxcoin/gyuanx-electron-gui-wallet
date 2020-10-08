@@ -1033,8 +1033,8 @@ export class WalletRPC {
       // console.log("non session records");
       // console.log(nonSessionRecords);
 
-      // fetch the known (cached) records from the wallet and add the data
-      // to the records being set in state
+      // // fetch the known (cached) records from the wallet and add the data
+      // // to the records being set in state
       // let known_names = await this.lnsKnownNames();
       // let known_name_hashes = known_names.map(k => k.hashed);
       // console.log("Known name hashes");
@@ -1057,8 +1057,8 @@ export class WalletRPC {
       //   known_name_hashes.for
       // })
 
-      console.log("Records being set to lnsRecords");
-      console.log(newRecords);
+      // console.log("Records being set to lnsRecords");
+      // console.log(newRecords);
 
       this.sendGateway("set_wallet_data", { lnsRecords: newRecords });
 
@@ -1112,7 +1112,6 @@ export class WalletRPC {
       if (!record) return null;
 
       console.log("record is not null");
-      console.log(record);
       // Update our current records with the new decrypted record
       const currentRecords = this.wallet_state.lnsRecords;
       console.log("current records: ");
@@ -1143,6 +1142,8 @@ export class WalletRPC {
   */
   async getLNSRecord(type, name) {
     // We currently only support session and lokinet
+    console.log("type and name");
+    console.log(type, name);
     const types = ["session", "lokinet"];
     if (!types.includes(type)) return null;
 

@@ -1,7 +1,18 @@
 export default {
   methods: {
     buildDialogFields(val) {
-      const { feeList, amountList, destinations, metadataList, priority, isSweepAll, address } = val.txData;
+      const {
+        feeList,
+        amountList,
+        destinations,
+        metadataList,
+        priority,
+        isSweepAll,
+        address
+      } = val.txData;
+
+      console.log("build dialog fields, dests");
+      console.log(destinations);
       const totalFees = feeList.reduce((a, b) => a + b, 0) / 1e9;
       const totalAmount = amountList.reduce((a, b) => a + b, 0) / 1e9;
       // If the tx is a sweep all, we're sending to the wallet's primary address

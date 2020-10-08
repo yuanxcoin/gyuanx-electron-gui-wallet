@@ -2,9 +2,9 @@
   <div class="my-lns">
     <div class="q-px-md q-pt-md">
       <div class="q-mb-lg description">
-        {{ $t("strings.myLnsDescription") }}
+        {{ $t("strings.lnsDescription") }}
       </div>
-      <LNSRecords />
+      <LNSRecords @onUpdate="onUpdate" />
     </div>
   </div>
 </template>
@@ -16,6 +16,13 @@ export default {
   name: "MyLNS",
   components: {
     LNSRecords
+  },
+  methods: {
+    onUpdate(record) {
+      console.log("MyLNS on update");
+      console.log(record);
+      this.$emit("onUpdate", record);
+    }
   }
 };
 </script>
@@ -24,6 +31,7 @@ export default {
 .my-lns {
   .description {
     white-space: pre-line;
+    color: #cecece;
   }
 }
 </style>

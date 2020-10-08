@@ -489,8 +489,8 @@ export class Daemon {
       return [];
     }
     // NEED TO FIX THIS
-    console.log("Getting records for owners with owners:");
-    console.log(owners[0]);
+    // console.log("Getting records for owners with owners:");
+    // console.log(owners[0]);
 
     // try just the main address as owner
     const data = await this.sendRPC("lns_owners_to_names", {
@@ -535,13 +535,12 @@ export class Daemon {
     const entries = this._sanitizeLNSRecords(data.result.entries);
     if (entries.length === 0) return null;
 
-    console.log("Returning entries 0 of entries:");
-    console.log(entries);
+    // console.log("Returning entries 0 of entries:");
+    // console.log(entries);
     return entries[0];
   }
 
   _sanitizeLNSRecords(records) {
-    console.log("sanitizing lns records: ");
     return (records || []).map(record => {
       // Record type is in uint16 format
       // Session = 0

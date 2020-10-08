@@ -458,8 +458,10 @@ export default {
     },
     destinationUnknown: "Destination Unknown",
     editAddressBookEntry: "Edit address book entry",
-    lnsDescription:
+    lnsPurchaseDescription:
       "Purchase or update a name for a Session ID. If you purchase a name, it may take a minute or two for it to show up in the list.",
+    lnsDescription:
+      "Here you can find all the LNS names owned by this wallet. Decrypting a record you own will return the name and value of that LNS record.",
     loadingSettings: "Loading settings",
     lokiBalance: "Balance",
     lokinetNameDescription:

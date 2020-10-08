@@ -18,7 +18,7 @@
       </q-item-section>
       <q-item-section side class="height">
         <template v-if="isLocked(record)">
-          {{ record.register_height | blockHeight }}
+          {{ record.update_height | blockHeight }}
         </template>
         <template v-else>
           <q-item-section>
@@ -31,7 +31,7 @@
         </template>
       </q-item-section>
       <q-item-section v-if="!isLocked(record)" side>
-        {{ record.register_height | blockHeight }}
+        {{ record.update_height | blockHeight }}
       </q-item-section>
       <!-- <ContextMenu
         :menu-items="validMenuItems(record)"
@@ -80,6 +80,10 @@ export default {
     },
     bindClass(record) {
       return [this.isLocked(record) ? "locked" : "unlocked"];
+    },
+    onUpdate(record) {
+      console.log(record);
+      this.$emit("onUpdate", record);
     }
   }
 };

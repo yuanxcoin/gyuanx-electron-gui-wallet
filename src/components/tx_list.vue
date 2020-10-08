@@ -15,8 +15,8 @@
           class="loki-list tx-list"
         >
           <q-item
-            v-for="tx in tx_list_paged"
-            :key="`${tx.txid}-${tx.type}`"
+            v-for="(tx, i) in tx_list_paged"
+            :key="`${tx.txid}-${tx.type}-${i}`"
             class="loki-list-item transaction"
             :class="'tx-' + tx.type"
             @click.native="details(tx)"

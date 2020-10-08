@@ -27,11 +27,11 @@
     </div>
     <div v-if="session_records.length > 0" class="records-group">
       <span class="record-type-title">Session records</span>
-      <LNSRecordList :record-list="session_records" />
+      <LNSRecordList :record-list="session_records" @onUpdate="onUpdate" />
     </div>
     <div v-if="lokinet_records.length > 0" class="records-group">
       <span class="record-type-title">Lokinet records</span>
-      <LNSRecordList :record-list="lokinet_records" />
+      <LNSRecordList :record-list="lokinet_records" @onUpdate="onUpdate" />
     </div>
   </div>
 </template>
@@ -76,18 +76,17 @@ export default {
       const all = [...used, ...unused, ...primary];
       return all.map(a => a.address).filter(a => !!a);
     },
-    session_records(state) {
+    records_of_type(state, type) {
+      // receives the type and returns the records of that type
       const ourAddresses = this.ourAddresses;
       const records = state.gateway.wallet.lnsRecords;
       const ourRecords = records.filter(record => {
         return (
-          record.type === "session" &&
+          record.type === type &&
           (ourAddresses.includes(record.owner) ||
             ourAddresses.includes(record.backup_owner))
         );
       });
-      //   console.log("records in lokinet records:");
-      //   console.log(ourRecords);
 
       // Sort the records by decrypted ones first, followed by non-decrypted
       return ourRecords.sort((a, b) => {
@@ -98,34 +97,14 @@ export default {
         } else if (a.name && b.name) {
           return a.name.localeCompare(b.name);
         }
-        return b.register_height - a.register_height;
+        return b.update_height - a.update_height;
       });
     },
+    session_records(state) {
+      return this.records_of_type(state, "session");
+    },
     lokinet_records(state) {
-      // can clean this up for less reptition
-      const ourAddresses = this.ourAddresses;
-      const records = state.gateway.wallet.lnsRecords;
-      //   console.log("records in lokinet records:");
-      //   console.log(ourRecords);
-      const ourRecords = records.filter(record => {
-        return (
-          record.type === "lokinet" &&
-          (ourAddresses.includes(record.owner) ||
-            ourAddresses.includes(record.backup_owner))
-        );
-      });
-
-      // Sort the records by decrypted ones first, followed by non-decrypted
-      return ourRecords.sort((a, b) => {
-        if (a.name && !b.name) {
-          return -1;
-        } else if (b.name && !a.name) {
-          return 1;
-        } else if (a.name && b.name) {
-          return a.name.localeCompare(b.name);
-        }
-        return b.register_height - a.register_height;
-      });
+      return this.records_of_type(state, "lokinet");
     },
     needsDecryption() {
       const records = [...this.lokinet_records, ...this.session_records];
@@ -151,8 +130,6 @@ export default {
       return menuItems;
     },
     isLocked(record) {
-      console.log("a record:");
-      console.log(record);
       return !record.name || !record.value;
     },
     copyValueI18nLabel(record) {
@@ -162,6 +139,11 @@ export default {
         return "menuItems.copyLokinetName";
       }
       return "menuItems.copyAddress";
+    },
+    onUpdate(record) {
+      console.log("update record");
+      console.log(record);
+      this.$emit("onUpdate", record);
     },
     decrypt() {
       this.$v.name.$touch();
@@ -223,9 +205,6 @@ export default {
         type
       });
       this.decrypting = true;
-    },
-    onUpdate(record) {
-      this.$emit("onUpdate", record);
     },
     // TODO: Update this
     copyValue(record) {

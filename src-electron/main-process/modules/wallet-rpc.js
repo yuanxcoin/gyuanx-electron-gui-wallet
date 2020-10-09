@@ -1059,7 +1059,6 @@ export class WalletRPC {
       if (data.result && data.result.known_names) {
         return data.result.known_names;
       } else {
-        console.debug("No known names found");
         return [];
       }
     } catch (e) {

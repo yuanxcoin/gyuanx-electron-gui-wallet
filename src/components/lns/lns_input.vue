@@ -96,9 +96,9 @@ export default {
       };
       this.$refs.form.setRecord(renewRecord);
     },
-    onSubmit(record, oldRecord) {
+    onSubmit(record) {
       if (this.updating) {
-        this.update(record, oldRecord);
+        this.update(record);
       } else if (this.renewing) {
         this.renew(record);
       } else {
@@ -110,32 +110,12 @@ export default {
       this.updating = false;
       this.renewing = false;
     },
-    async update(record, oldRecord) {
-      // Make sure we have a diff between the 2 records
-      const isOwnerDifferent =
-        record.owner !== "" && record.owner !== oldRecord.owner;
-      const isBackupOwnerDifferent =
-        record.backup_owner !== "" &&
-        record.backup_owner !== oldRecord.backup_owner;
-      const isValueDifferent = record.value !== oldRecord.value;
-      const different =
-        isOwnerDifferent || isBackupOwnerDifferent || isValueDifferent;
-
-      // TODO: This is a little confusing, if nothing was actually updated
-      if (!different) {
-        this.$q.notify({
-          type: "positive",
-          timeout: 1000,
-          message: this.$t("notification.positive.lnsRecordUpdated")
-        });
-        return;
-      }
-
+    async update(record) {
       const updatedRecord = {
         ...record,
-        value: isValueDifferent ? record.value : oldRecord.value,
-        owner: isOwnerDifferent ? record.owner : "",
-        backup_owner: isBackupOwnerDifferent ? record.backup_owner : ""
+        value: record.value,
+        owner: record.owner,
+        backup_owner: record.backup_owner
       };
 
       let passwordDialog = await this.showPasswordConfirmation({

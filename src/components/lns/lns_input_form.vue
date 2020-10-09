@@ -87,6 +87,7 @@
           v-model.trim="record.backup_owner"
           :dark="theme == 'dark'"
           :placeholder="$t('placeholders.lnsBackupOwner')"
+          :disable="renewing"
           borderless
           dense
           @blur="$v.record.backup_owner.$touch"
@@ -95,7 +96,7 @@
     </div>
     <div class="buttons">
       <q-btn
-        :disable="!is_able_to_send || disableSubmitButton"
+        :disable="!is_able_to_send || disableSubmitButton || !can_update"
         color="primary"
         :label="submitLabel"
         @click="submit()"
@@ -200,6 +201,23 @@ export default {
         return this.$t("fieldLabels.lokinetFullAddress");
       }
     },
+    can_update() {
+      // if we are on update screen and there have been no changes, then not allowed
+      // to click "update"
+      if (this.updating === true) {
+        const isOwnerDifferent =
+          this.record.owner !== "" &&
+          this.record.owner !== this.initialRecord.owner;
+        const isBackupOwnerDifferent =
+          this.record.backup_owner !== "" &&
+          this.record.backup_owner !== this.initialRecord.backup_owner;
+        const isValueDifferent = this.record.value !== this.initialRecord.value;
+        const different =
+          isOwnerDifferent || isBackupOwnerDifferent || isValueDifferent;
+        return different;
+      }
+      return true;
+    },
     value_placeholder() {
       if (this.record.type === "session") {
         return this.$t("placeholders.sessionId");
@@ -302,7 +320,7 @@ export default {
         return;
       }
       // Send up the submission with the record
-      this.$emit("onSubmit", this.record, this.initialRecord);
+      this.$emit("onSubmit", this.record);
     },
     clear() {
       this.$emit("onClear");

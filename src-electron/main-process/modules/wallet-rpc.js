@@ -363,9 +363,6 @@ export class WalletRPC {
       case "lns_renew_mapping":
         this.lnsRenewMapping(params.password, params.type, params.name);
         break;
-      case "lns_known_names":
-        this.lnsKnownNames();
-        break;
       case "update_lns_mapping":
         this.updateLNSMapping(
           params.password,
@@ -375,7 +372,6 @@ export class WalletRPC {
           params.owner || "",
           params.backup_owner || ""
         );
-
         break;
 
       case "prove_transaction":
@@ -964,7 +960,6 @@ export class WalletRPC {
   }
 
   async updateLocalLNSRecords() {
-    console.log("calling updateLocalLNSRecords");
     try {
       const addressData = await this.sendRPC(
         "get_address",
@@ -1020,42 +1015,20 @@ export class WalletRPC {
 
       this.wallet_state.lnsRecords = newRecords;
 
-      // console.log("New LNS records found in update:");
-      // console.log(newRecords);
-
-      // ========= FETCH THE CACHED RECORDS HERE AND JOIN WITH THE OTHER RECORDS =====
-      // ===== UI DISPLAYS UNLOCKED RECORDS IF THE ENTRY HAS A 'name' and 'value' field
-      // const isSession = record => record.type === "session";
-      // let nonSessionRecords = newRecords.filter(record => !isSession(record));
-      // console.log("non session records");
-      // console.log(nonSessionRecords);
-
       // fetch the known (cached) records from the wallet and add the data
       // to the records being set in state
-      // let known_names = await this.lnsKnownNames();
-      // let known_name_hashes = known_names.map(k => k.hashed);
-      // console.log("Known name hashes");
-      // console.log(known_name_hashes);
+      let known_names = await this.lnsKnownNames();
 
-      // where the known matches the records we need to set values here
-      // let cached_records = newRecords.find(r => known_name_hashes.includes(r));
-      // console.log("Cached records:");
-      // console.log(cached_records);
-
-      // for (let r of newRecords) {
-      //   for (let k of known_names) {
-      //     if (k.hashed === r.name_hash) {
-      //       r["name"] = k.name;
-      //       // r["value"] = k.value;
-      //     }
-      //   }
-      // }
-      // let final = newRecords.forEach(c => {
-      //   known_name_hashes.for
-      // })
-
-      // console.log("Records being set to lnsRecords");
-      // console.log(newRecords);
+      // Fill the necessary decrypted values of the cached LNS names
+      for (let r of newRecords) {
+        for (let k of known_names) {
+          if (k.hashed === r.name_hash) {
+            r["name"] = k.name;
+            r["value"] = k.value;
+            r["expiration_height"] = k.expiration_height;
+          }
+        }
+      }
 
       this.sendGateway("set_wallet_data", { lnsRecords: newRecords });
 
@@ -1072,23 +1045,25 @@ export class WalletRPC {
   }
 
   /*
-  Get the LNS records cached in this (local) wallet. Call alongside the other call to update as
-  we go
+  Get the LNS records cached in this wallet. 
   */
   async lnsKnownNames() {
     try {
-      let data = await this.sendRPC("lns_known_names");
+      let params = {
+        decrypt: true,
+        include_expired: false
+      };
 
-      for (let r of data.result.known_names) {
-        console.log(r);
-      }
+      let data = await this.sendRPC("lns_known_names", params);
+
       if (data.result && data.result.known_names) {
         return data.result.known_names;
       } else {
+        console.debug("No known names found");
         return [];
       }
     } catch (e) {
-      console.log("There was an error getting known records: " + e);
+      console.debug("There was an error getting known records: " + e);
       return [];
     }
   }

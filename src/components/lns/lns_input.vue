@@ -111,17 +111,12 @@ export default {
       this.renewing = false;
     },
     async update(record, oldRecord) {
-      console.log("update called");
-      console.log(record);
-      console.log(oldRecord);
       // Make sure we have a diff between the 2 records
       const isOwnerDifferent =
         record.owner !== "" && record.owner !== oldRecord.owner;
       const isBackupOwnerDifferent =
         record.backup_owner !== "" &&
         record.backup_owner !== oldRecord.backup_owner;
-      console.log("old value: " + oldRecord.value);
-      console.log("new value: " + record.value);
       const isValueDifferent = record.value !== oldRecord.value;
       const different =
         isOwnerDifferent || isBackupOwnerDifferent || isValueDifferent;
@@ -142,8 +137,6 @@ export default {
         owner: isOwnerDifferent ? record.owner : "",
         backup_owner: isBackupOwnerDifferent ? record.backup_owner : ""
       };
-      console.log("updated record");
-      console.log(updatedRecord);
 
       let passwordDialog = await this.showPasswordConfirmation({
         title: this.$t("dialog.lnsUpdate.title"),
@@ -201,8 +194,6 @@ export default {
         .onCancel(() => {});
     },
     async renew(record) {
-      console.log("renew the record");
-      console.log(record);
       let passwordDialog = await this.showPasswordConfirmation({
         title: this.$t("dialog.renew.title"),
         noPasswordMessage: this.$t("dialog.renew.message"),

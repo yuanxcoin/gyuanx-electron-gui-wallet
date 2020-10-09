@@ -73,6 +73,7 @@
           :placeholder="owner_placeholder"
           borderless
           dense
+          :disable="renewing"
           @blur="$v.record.owner.$touch"
         />
       </LokiField>

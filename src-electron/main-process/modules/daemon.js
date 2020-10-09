@@ -1,4 +1,5 @@
 import child_process from "child_process";
+
 const request = require("request-promise");
 const queue = require("promise-queue");
 const http = require("http");
@@ -488,20 +489,18 @@ export class Daemon {
     if (!Array.isArray(owners) || owners.length === 0) {
       return [];
     }
-    // NEED TO FIX THIS
-    // console.log("Getting records for owners with owners:");
-    // console.log(owners[0]);
 
-    // try just the main address as owner
+    // only 256 addresses allowed in this call
+    let ownersMax = owners.slice(0, 256);
     const data = await this.sendRPC("lns_owners_to_names", {
-      entries: [owners[0]]
+      entries: ownersMax
     });
     if (!data.hasOwnProperty("result")) return [];
 
     // We need to map request_index to owner
     const { entries } = data.result;
     const recordsWithOwners = (entries || []).map(record => {
-      const owner = owners[record.request_index];
+      const owner = ownersMax[record.request_index];
       return {
         ...record,
         owner
@@ -520,10 +519,8 @@ export class Daemon {
       entries: [
         {
           name_hash: nameHash,
-          // Update this when we have other types.
           // 0 = session
-          // 2+ = lokinet for different # years
-          // TODO: Ensure these are actually the correct types
+          // 2 = lokinet
           types: [0, 2]
         }
       ]
@@ -535,8 +532,6 @@ export class Daemon {
     const entries = this._sanitizeLNSRecords(data.result.entries);
     if (entries.length === 0) return null;
 
-    // console.log("Returning entries 0 of entries:");
-    // console.log(entries);
     return entries[0];
   }
 

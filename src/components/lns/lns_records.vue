@@ -50,11 +50,9 @@
 </template>
 
 <script>
-const { clipboard } = require("electron");
 import { mapState } from "vuex";
 import LokiField from "components/loki_field";
 import { session_id_or_lokinet_name } from "src/validators/common";
-// import ContextMenu from "components/menus/contextmenu";
 import LNSRecordList from "./lns_record_list";
 
 export default {
@@ -62,7 +60,6 @@ export default {
   components: {
     LokiField,
     LNSRecordList
-    // ContextMenu
   },
   data() {
     return {
@@ -93,23 +90,6 @@ export default {
     }
   }),
   methods: {
-    validMenuItems(record) {
-      const lockedItems = [
-        { action: "nameCopy", i18n: "menuItems.copyName" },
-        { action: "copyValue", i18n: this.copyValueI18nLabel(record) }
-      ];
-      let menuItems = [{ action: "ownerCopy", i18n: "menuItems.copyOwner" }];
-      const backupOwnerItem = [
-        { action: "backupOwnerCopy", i18n: "menuItems.copyBackupOwner" }
-      ];
-      if (!this.isLocked(record)) {
-        menuItems = [...lockedItems, ...menuItems];
-      }
-      if (record.backup_owner !== "") {
-        menuItems = [...menuItems, ...backupOwnerItem];
-      }
-      return menuItems;
-    },
     records_of_type(state, type) {
       // receives the type and returns the records of that type
       const ourAddresses = this.ourAddresses;
@@ -136,14 +116,6 @@ export default {
     },
     isLocked(record) {
       return !record.name || !record.value;
-    },
-    copyValueI18nLabel(record) {
-      if (record.type === "session") {
-        return "menuItems.copySessionId";
-      } else if (record.type === "lokinet") {
-        return "menuItems.copyLokinetName";
-      }
-      return "menuItems.copyAddress";
     },
     onUpdate(record) {
       this.$emit("onUpdate", record);
@@ -205,23 +177,6 @@ export default {
         type
       });
       this.decrypting = true;
-    },
-    // TODO: Update this
-    copyValue(record) {
-      let message = this.$t("notification.positive.addressCopied");
-      if (record.type === "session") {
-        message = this.$t("notification.positive.sessionIdCopied");
-      }
-      this.copy(record.value, message);
-    },
-    copy(value, message) {
-      if (!value) return;
-      clipboard.writeText(value.trim());
-      this.$q.notify({
-        type: "positive",
-        timeout: 2000,
-        message
-      });
     }
   },
 

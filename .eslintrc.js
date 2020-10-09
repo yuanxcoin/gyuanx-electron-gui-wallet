@@ -1,20 +1,22 @@
 module.exports = {
   root: true,
   parserOptions: {
-    parser: "babel-eslint"
+    parser: "babel-eslint",
+    ecmaVersion: 10,
+    sourceType: "module"
   },
   env: {
     node: true,
-    browser: true
+    browser: true,
+    es6: true
   },
   extends: [
-    // "plugin:prettier/recommended",
     "plugin:vue/recommended",
     "eslint:recommended",
-    "prettier/vue"
+    "prettier/vue",
+    "plugin:prettier/recommended"
   ],
-  // required to lint *.vue files
-  plugins: ["vue", "prettier"],
+  plugins: ["prettier"],
   globals: {
     __statics: true,
     __ryo_bin: true
@@ -23,7 +25,7 @@ module.exports = {
   rules: {
     // allow debugger during development
     "no-console": process.env.NODE_ENV === "production" ? "error" : "off",
-    "no-debugger": process.env.NODE_ENV === "production" ? "error" : "off",
-    "vue/component-name-in-template-casing": ["error", "PascalCase"]
+    "no-debugger": process.env.NODE_ENV === "production" ? "error" : "off"
+    // "vue/component-name-in-template-casing": ["error", "PascalCase"]
   }
 };

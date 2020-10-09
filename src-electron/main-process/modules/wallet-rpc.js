@@ -1,4 +1,5 @@
 import child_process from "child_process";
+
 const request = require("request-promise");
 const queue = require("promise-queue");
 const http = require("http");
@@ -363,7 +364,6 @@ export class WalletRPC {
         this.lnsRenewMapping(params.password, params.type, params.name);
         break;
       case "lns_known_names":
-        console.log("LNS known records case");
         this.lnsKnownNames();
         break;
       case "update_lns_mapping":
@@ -987,9 +987,6 @@ export class WalletRPC {
         addresses
       );
 
-      // console.log("records from owners");
-      // console.log(records);
-
       // We need to ensure that we decrypt any incoming records that we already have
       const currentRecords = this.wallet_state.lnsRecords;
       const recordsToUpdate = { ...this.purchasedNames };
@@ -1021,12 +1018,13 @@ export class WalletRPC {
         };
       });
 
-      // what does this even do?? isn't state set through the gateway
       this.wallet_state.lnsRecords = newRecords;
 
       // console.log("New LNS records found in update:");
       // console.log(newRecords);
 
+      // ========= FETCH THE CACHED RECORDS HERE AND JOIN WITH THE OTHER RECORDS =====
+      // ===== UI DISPLAYS UNLOCKED RECORDS IF THE ENTRY HAS A 'name' and 'value' field
       // const isSession = record => record.type === "session";
       // let nonSessionRecords = newRecords.filter(record => !isSession(record));
       // console.log("non session records");
@@ -1101,8 +1099,6 @@ export class WalletRPC {
   lokinet_1y, lokinet_2y, lokinet_5y, lokinet_10y
   */
   lnsRenewMapping(password, type, name) {
-    console.log("Lns renew mapping called with type and name:");
-    console.log(type, name);
     let _name = name.trim().toLowerCase();
 
     // the RPC accepts names with the .loki already appeneded only
@@ -1140,11 +1136,8 @@ export class WalletRPC {
           name: _name
         };
 
-        console.log("lns renew mapping about to be called");
         this.sendRPC("lns_renew_mapping", params).then(data => {
           if (data.hasOwnProperty("error")) {
-            console.log("error");
-            console.log(data);
             let error =
               data.error.message.charAt(0).toUpperCase() +
               data.error.message.slice(1);
@@ -1518,7 +1511,6 @@ export class WalletRPC {
 
   // submits the transaction to the blockchain, irreversible from here
   async relayTransaction(metadataList, isBlink, addressSave, note, isSweepAll) {
-    console.log("Relay transaction called");
     // for a sweep these don't exist
     let address = "";
     let payment_id = "";

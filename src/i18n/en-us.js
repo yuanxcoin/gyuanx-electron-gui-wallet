@@ -270,6 +270,8 @@ export default {
     changePassword: "Change Password",
     copyAddress: "Copy address",
     copyBackupOwner: "Copy backup owner",
+    copyLokinetAddress: "Copy lokinet address",
+    copyLokinetName: "Copy lokinet name",
     copyName: "Copy name",
     copyOwner: "Copy owner",
     copyQR: "Copy QR code",
@@ -310,6 +312,8 @@ export default {
         imported: "Key images imported"
       },
       lnsRecordUpdated: "LNS Record was successfully updated",
+      lokinetAddressCopied: "Full lokinet address copied",
+      lokinetNameCopied: "Lokinet name copied",
       passwordUpdated: "Password updated",
       namePurchased: "Name successfully purchased",
       nameRenewed: "Name successfully renewed",

@@ -25,7 +25,7 @@ export const session_id = input => {
 };
 
 // shortened Lokinet LNS name
-export const lokinet_name = input => {
+export const lokinet_name = (input, lokiExt = false) => {
   let inputSafe = input || "";
   let maxLength = 32;
 
@@ -40,16 +40,22 @@ export const lokinet_name = input => {
   );
 
   let reservedNames = ["localhost", "loki", "snode"];
+  let regexCheck;
+  if (lokiExt) {
+    regexCheck = /^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.loki$/.test(inputSafe);
+  } else {
+    regexCheck = /^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/.test(inputSafe);
+  }
   return (
     inputSafe.length <= maxLength &&
     dashRule &&
     !reservedNames.includes(inputSafe) &&
-    /^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/.test(inputSafe)
+    regexCheck
   );
 };
 
 export const session_id_or_lokinet_name = input => {
-  return session_id(input) || lokinet_name(input);
+  return session_id(input) || lokinet_name(input, true);
 };
 
 // Full lokinet address

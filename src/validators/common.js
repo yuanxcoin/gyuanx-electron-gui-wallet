@@ -27,9 +27,22 @@ export const session_id = input => {
 // shortened Lokinet LNS name
 export const lokinet_name = input => {
   let inputSafe = input || "";
+  let maxLength = 32;
+
+  if (inputSafe.includes("-")) {
+    maxLength = 63;
+  }
+
+  let dashRule = !(
+    inputSafe.length > 4 &&
+    inputSafe.slice(2, 4) === "--" &&
+    !(inputSafe.slice(0, 2) === "xn")
+  );
 
   let reservedNames = ["localhost", "loki", "snode"];
   return (
+    inputSafe.length <= maxLength &&
+    dashRule &&
     !reservedNames.includes(inputSafe) &&
     /^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/.test(inputSafe)
   );

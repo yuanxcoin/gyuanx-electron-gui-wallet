@@ -29,6 +29,7 @@ export default {
     purchase: "PURCHASE",
     receive: "RECEIVE",
     registerServiceNode: "REGISTER SERVICE NODE",
+    renew: "RENEW",
     rescan: "RESCAN",
     restoreWallet: "RESTORE WALLET",
     save: "SAVE",
@@ -111,6 +112,11 @@ export default {
       title: "Purchase name",
       message: "Do you want to purchase the name?",
       ok: "PURCHASE"
+    },
+    renew: {
+      title: "Renew name",
+      message: "Do you want to renew the name?",
+      ok: "RENEW"
     },
     registerServiceNode: {
       title: "Register service node",
@@ -208,8 +214,10 @@ export default {
     },
     limitDownloadRate: "LIMIT DOWNLOAD RATE",
     limitUploadRate: "LIMIT UPLOAD RATE",
+    lnsType: "LNS RECORD TYPE",
     localDaemonIP: "LOCAL DAEMON IP",
     localDaemonPort: "LOCAL DAEMON PORT",
+    lokinetFullAddress: "LOKINET FULL ADDRESS",
     maxIncomingPeers: "MAX INCOMING PEERS",
     maxOutgoingPeers: "MAX OUTGOING PEERS",
     message: "MESSAGE",
@@ -262,6 +270,8 @@ export default {
     changePassword: "Change Password",
     copyAddress: "Copy address",
     copyBackupOwner: "Copy backup owner",
+    copyLokinetAddress: "Copy lokinet address",
+    copyLokinetName: "Copy lokinet name",
     copyName: "Copy name",
     copyOwner: "Copy owner",
     copyQR: "Copy QR code",
@@ -302,8 +312,11 @@ export default {
         imported: "Key images imported"
       },
       lnsRecordUpdated: "LNS Record was successfully updated",
+      lokinetAddressCopied: "Full lokinet address copied",
+      lokinetNameCopied: "Lokinet name copied",
       passwordUpdated: "Password updated",
       namePurchased: "Name successfully purchased",
+      nameRenewed: "Name successfully renewed",
       nameCopied: "Name copied to clipboard",
       ownerCopied: "Owner copied to clipboard",
       qrCopied: "QR code copied to clipboard",
@@ -390,6 +403,8 @@ export default {
     lnsName: "The name to purchase via Loki Name Service",
     lnsBackupOwner: "The wallet address of the backup owner",
     lnsDecryptName: "A LNS name that belongs to you",
+    lokinetFullAddress:
+      "Full lokinet address to map LNS name to (without .loki)",
     mnemonicSeed: "25 (or 24) word mnemonic seed",
     pasteTransactionId: "Paste transaction ID",
     pasteTransactionProof: "Paste transaction proof",
@@ -458,10 +473,15 @@ export default {
     },
     destinationUnknown: "Destination Unknown",
     editAddressBookEntry: "Edit address book entry",
+    expirationHeight: "Expiration height",
+    lnsPurchaseDescription:
+      "Purchase or update an LNS record. If you purchase a name, it may take a minute or two for it to show up in the list.",
     lnsDescription:
-      "Purchase or update a name for a Session ID. If you purchase a name, it may take a minute or two for it to show up in the list.",
+      "Here you can find all the LNS names owned by this wallet. Decrypting a record you own will return the name and value of that LNS record.",
     loadingSettings: "Loading settings",
     lokiBalance: "Balance",
+    lokinetNameDescription:
+      "Purchase or update a name on Lokinet. If you purchase a name it may take a minute or two for it to show up in the list. To learn more about lokinet visit: ",
     lokiUnlockedBalance: "Unlocked balance",
     lokiUnlockedShort: "Unlocked",
     me: "Me",
@@ -567,13 +587,20 @@ export default {
     configure: "Configure",
     currentlyStakedNodes: "Currently staked nodes",
     lnsRecordDetails: "LNS record details",
+    lnsSessionRecords: "Session records",
+    lnsLokinetRecords: "Lokinet records",
     privateKeys: "Private keys",
     rescanWallet: "Rescan wallet",
+    lns: {
+      purchase: "PURCHASE",
+      myLns: "MY LNS"
+    },
     serviceNode: {
       registration: "REGISTRATION",
       staking: "STAKING",
       myStakes: "MY STAKES"
     },
+
     serviceNodeDetails: "Service node details",
     settings: {
       title: "Settings",

@@ -2,11 +2,7 @@
   <div class="lns-input-form">
     <!-- Type -->
     <div class="col q-mt-sm">
-      <LokiField
-        :label="$t('fieldLabels.lnsType')"
-        :disable="updating"
-        :error="$v.record.name.$error"
-      >
+      <LokiField :label="$t('fieldLabels.lnsType')" :disable="updating">
         <q-select
           v-model.trim="record.type"
           emit-value
@@ -341,6 +337,7 @@ export default {
           if (this.record.type === "session") {
             return session_id(value);
           } else {
+            // full lokinet address
             return lokinet_address(value);
           }
         }

@@ -180,12 +180,7 @@ export default {
     }
   },
 
-  // ENSURE THIS IS CORRECT, I THINK IT'S WRONG ATM
   validations: {
-    // name: function(value) {
-    //   // TODO: validate on both session id and lokinet addresses
-    //   session_id(value) || lokinet_name(value);
-    // }
     name: {
       session_id_or_lokinet_name
     }

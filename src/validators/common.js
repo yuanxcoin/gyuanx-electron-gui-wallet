@@ -26,13 +26,13 @@ export const session_id = input => {
 
 // shortened Lokinet LNS name
 export const lokinet_name = input => {
-  console.log("lokinet name called");
   let inputSafe = input || "";
-  console.log(inputSafe);
-  // 63 including or excluding .loki??
-  // const maxLen = inputSafe.contains("-") ? 32 : 63;
-  // console.log("max len is: " + maxLen);
-  return true;
+
+  let reservedNames = ["localhost", "loki", "snode"];
+  return (
+    !reservedNames.includes(inputSafe) &&
+    /^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/.test(inputSafe)
+  );
 };
 
 export const session_id_or_lokinet_name = input => {
@@ -41,8 +41,6 @@ export const session_id_or_lokinet_name = input => {
 
 // Full lokinet address
 export const lokinet_address = input => {
-  console.log("lokinet address input");
-  console.log(input);
   return (
     input.length === 52 &&
     /^[ybndrfg8ejkmcpqxot1uwisza345h769]{51}[yo]$/.test(input)

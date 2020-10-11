@@ -474,6 +474,12 @@ export default {
     destinationUnknown: "Destination Unknown",
     editAddressBookEntry: "Edit address book entry",
     expirationHeight: "Expiration height",
+    lns: {
+      sessionID: "Session ID",
+      lokinetName1Year: "Lokinet Name 1 year",
+      lokinetNameXYears: "Lokinet Name {years} years",
+      prices: "LNS Prices:"
+    },
     lnsPurchaseDescription:
       "Purchase or update an LNS record. If you purchase a name, it may take a minute or two for it to show up in the list.",
     lnsDescription:

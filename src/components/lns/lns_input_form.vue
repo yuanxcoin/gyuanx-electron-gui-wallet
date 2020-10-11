@@ -165,12 +165,23 @@ export default {
     }
   },
   data() {
-    let sessionOptions = [{ label: "Session ID", value: "session" }];
+    let sessionOptions = [
+      { label: this.$t("strings.lns.sessionID"), value: "session" }
+    ];
     let lokinetOptions = [
-      { label: "Lokinet Name 1 year", value: "lokinet_1y" },
-      { label: "Lokinet Name 2 years", value: "lokinet_2y" },
-      { label: "Lokinet Name 5 years", value: "lokinet_5y" },
-      { label: "Lokinet Name 10 years", value: "lokinet_10y" }
+      { label: this.$t("strings.lns.lokinetName1Year"), value: "lokinet_1y" },
+      {
+        label: this.$t("strings.lns.lokinetNameXYears", { years: 2 }),
+        value: "lokinet_2y"
+      },
+      {
+        label: this.$t("strings.lns.lokinetNameXYears", { years: 5 }),
+        value: "lokinet_5y"
+      },
+      {
+        label: this.$t("strings.lns.lokinetNameXYears", { years: 10 }),
+        value: "lokinet_10y"
+      }
     ];
     let typeOptions = [...sessionOptions, ...lokinetOptions];
 

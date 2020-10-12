@@ -8,10 +8,15 @@
 
     <template v-else>
       <q-infinite-scroll ref="scroller" @load="loadMore">
-        <q-list link no-border :dark="theme == 'dark'" class="loki-list tx-list">
+        <q-list
+          link
+          no-border
+          :dark="theme == 'dark'"
+          class="loki-list tx-list"
+        >
           <q-item
-            v-for="tx in tx_list_paged"
-            :key="`${tx.txid}-${tx.type}`"
+            v-for="(tx, i) in tx_list_paged"
+            :key="`${tx.txid}-${tx.type}-${i}`"
             class="loki-list-item transaction"
             :class="'tx-' + tx.type"
             @click.native="details(tx)"
@@ -27,7 +32,11 @@
             </q-item-label>
             <q-item-section class="meta">
               <q-item-label>
-                <timeago :datetime="tx.timestamp * 1000" :auto-update="60" :locale="$i18n.locale" />
+                <timeago
+                  :datetime="tx.timestamp * 1000"
+                  :auto-update="60"
+                  :locale="$i18n.locale"
+                />
               </q-item-label>
               <q-item-label caption>{{ formatHeight(tx) }}</q-item-label>
             </q-item-section>
@@ -228,7 +237,9 @@ export default {
         }
 
         if (this.toIncomingAddressIndex !== -1) {
-          valid = tx.hasOwnProperty("subaddr_index") && tx.subaddr_index.minor == this.toIncomingAddressIndex;
+          valid =
+            tx.hasOwnProperty("subaddr_index") &&
+            tx.subaddr_index.minor == this.toIncomingAddressIndex;
           return valid;
         }
 
@@ -258,11 +269,17 @@ export default {
       return this.address_book.find(book => book.address === address);
     },
     pageTxList() {
-      this.tx_list_paged = this.tx_list_filtered.slice(0, this.limit !== -1 ? this.limit : this.page * 24 + 24);
+      this.tx_list_paged = this.tx_list_filtered.slice(
+        0,
+        this.limit !== -1 ? this.limit : this.page * 24 + 24
+      );
     },
     loadMore: function(index, done) {
       this.page = index;
-      if (this.limit !== -1 || this.tx_list_filtered.length < this.page * 24 + 24) {
+      if (
+        this.limit !== -1 ||
+        this.tx_list_filtered.length < this.page * 24 + 24
+      ) {
         this.$refs.scroller.stop();
       }
       this.pageTxList();
@@ -280,8 +297,15 @@ export default {
       let confirms = Math.max(0, this.wallet_height - height);
       if (height == 0) return this.$t("strings.transactions.types.pending");
       if (confirms < Math.max(10, tx.unlock_time - height))
-        return this.$t("strings.blockHeight") + `: ${height} (${confirms} confirm${confirms == 1 ? "" : "s"})`;
-      else return this.$t("strings.blockHeight") + `: ${height} (${this.$t("strings.transactionConfirmed")})`;
+        return (
+          this.$t("strings.blockHeight") +
+          `: ${height} (${confirms} confirm${confirms == 1 ? "" : "s"})`
+        );
+      else
+        return (
+          this.$t("strings.blockHeight") +
+          `: ${height} (${this.$t("strings.transactionConfirmed")})`
+        );
     },
     copyTxId(txid) {
       clipboard.writeText(txid);

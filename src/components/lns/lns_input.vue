@@ -1,22 +1,19 @@
 <template>
   <div class="lns-input">
-    <div class="q-px-md q-pt-md">
-      <div class="q-mb-lg description">
-        {{ $t("strings.lnsDescription") }}
-      </div>
-      <LNSInputForm
-        ref="form"
-        :submit-label="submit_label"
-        :disable-name="updating"
-        :show-clear-button="updating"
-        :disable-submit-button="disable_submit_button"
-        @onSubmit="onSubmit"
-        @onClear="onClear"
-      />
-      <q-inner-loading :showing="lns_status.sending" :dark="theme == 'dark'">
-        <q-spinner color="primary" size="30" />
-      </q-inner-loading>
-    </div>
+    <LNSInputForm
+      ref="form"
+      :submit-label="submit_label"
+      :disable-name="updating || renewing"
+      :updating="updating"
+      :renewing="renewing"
+      :show-clear-button="updating || renewing"
+      :disable-submit-button="disable_submit_button"
+      @onSubmit="onSubmit"
+      @onClear="onClear"
+    />
+    <q-inner-loading :showing="lns_status.sending" :dark="theme == 'dark'">
+      <q-spinner color="primary" size="30" />
+    </q-inner-loading>
   </div>
 </template>
 
@@ -34,7 +31,8 @@ export default {
   mixins: [WalletPassword],
   data() {
     return {
-      updating: false
+      updating: false,
+      renewing: false
     };
   },
   computed: mapState({
@@ -46,7 +44,12 @@ export default {
       return this.unlocked_balance < minBalance * 1e9;
     },
     submit_label() {
-      const label = this.updating ? "buttons.update" : "buttons.purchase";
+      let label = "buttons.purchase";
+      if (this.updating) {
+        label = "buttons.update";
+      } else if (this.renewing) {
+        label = "buttons.renew";
+      }
       return this.$t(label);
     }
   }),
@@ -63,8 +66,9 @@ export default {
               timeout: 1000,
               message
             });
-
             this.$refs.form.reset();
+            this.renewing = false;
+            this.updating = false;
             break;
           case -1:
             this.$q.notify({
@@ -83,9 +87,20 @@ export default {
       this.$refs.form.setRecord(record);
       this.updating = true;
     },
-    onSubmit(record, oldRecord) {
+    startRenewing(record) {
+      this.renewing = true;
+      // set the type such that we default to one year
+      let renewRecord = {
+        ...record,
+        type: "lokinet_1y"
+      };
+      this.$refs.form.setRecord(renewRecord);
+    },
+    onSubmit(record) {
       if (this.updating) {
-        this.update(record, oldRecord);
+        this.update(record);
+      } else if (this.renewing) {
+        this.renew(record);
       } else {
         this.purchase(record);
       }
@@ -93,27 +108,14 @@ export default {
     onClear() {
       this.$refs.form.reset();
       this.updating = false;
+      this.renewing = false;
     },
-    async update(record, oldRecord) {
-      // Make sure we have a diff between the 2 records
-      const isOwnerDifferent = record.owner !== "" && record.owner !== oldRecord.owner;
-      const isBackupOwnerDifferent = record.backup_owner !== "" && record.backup_owner !== oldRecord.backup_owner;
-      const isValueDifferent = record.value !== oldRecord.value;
-      const different = isOwnerDifferent || isBackupOwnerDifferent || isValueDifferent;
-      if (!different) {
-        this.$q.notify({
-          type: "positive",
-          timeout: 1000,
-          message: this.$t("notification.positive.lnsRecordUpdated")
-        });
-        return;
-      }
-
+    async update(record) {
       const updatedRecord = {
         ...record,
-        value: isValueDifferent ? record.value : "",
-        owner: isOwnerDifferent ? record.owner : "",
-        backup_owner: isBackupOwnerDifferent ? record.backup_owner : ""
+        value: record.value,
+        owner: record.owner,
+        backup_owner: record.backup_owner
       };
 
       let passwordDialog = await this.showPasswordConfirmation({
@@ -170,15 +172,39 @@ export default {
         })
         .onDismiss(() => {})
         .onCancel(() => {});
+    },
+    async renew(record) {
+      let passwordDialog = await this.showPasswordConfirmation({
+        title: this.$t("dialog.renew.title"),
+        noPasswordMessage: this.$t("dialog.renew.message"),
+        ok: {
+          label: this.$t("dialog.renew.ok"),
+          color: "primary"
+        },
+        dark: this.theme == "dark",
+        color: this.theme == "dark" ? "white" : "dark"
+      });
+      passwordDialog
+        .onOk(password => {
+          // if no password set
+          password = password || "";
+          this.$store.commit("gateway/set_lns_status", {
+            code: 1,
+            message: "Sending renew mapping transaction",
+            sending: true
+          });
+          const params = {
+            type: record.type,
+            name: record.name,
+            password
+          };
+          this.$gateway.send("wallet", "lns_renew_mapping", params);
+        })
+        .onDismiss(() => {})
+        .onCancel(() => {});
     }
   }
 };
 </script>
 
-<style lang="scss">
-.lns-input {
-  .description {
-    white-space: pre-line;
-  }
-}
-</style>
+<style lang="scss"></style>

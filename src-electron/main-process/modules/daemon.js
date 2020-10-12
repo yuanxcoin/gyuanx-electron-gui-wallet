@@ -1,4 +1,5 @@
 import child_process from "child_process";
+
 const request = require("request-promise");
 const queue = require("promise-queue");
 const http = require("http");
@@ -45,12 +46,16 @@ export class Daemon {
         if (!fs.existsSync(lokid_path)) {
           resolve(false);
         }
-        child_process.exec(lokid_version_cmd, { detached: true }, (error, stdout) => {
-          if (error) {
-            resolve(false);
+        child_process.exec(
+          lokid_version_cmd,
+          { detached: true },
+          (error, stdout) => {
+            if (error) {
+              resolve(false);
+            }
+            resolve(stdout);
           }
-          resolve(stdout);
-        });
+        );
       }
     });
   }
@@ -152,7 +157,10 @@ export class Daemon {
 
       // TODO: Check if we need to push this command for staging too
       if (daemon.type === "local_remote" && net_type === "mainnet") {
-        args.push("--bootstrap-daemon-address", `${daemon.remote_host}:${daemon.remote_port}`);
+        args.push(
+          "--bootstrap-daemon-address",
+          `${daemon.remote_host}:${daemon.remote_port}`
+        );
       }
 
       // save this info for later RPC calls
@@ -166,15 +174,26 @@ export class Daemon {
         .then(status => {
           if (status === "closed") {
             if (process.platform === "win32") {
-              this.daemonProcess = child_process.spawn(path.join(__ryo_bin, "lokid.exe"), args);
+              this.daemonProcess = child_process.spawn(
+                path.join(__ryo_bin, "lokid.exe"),
+                args
+              );
             } else {
-              this.daemonProcess = child_process.spawn(path.join(__ryo_bin, "lokid"), args, {
-                detached: true
-              });
+              this.daemonProcess = child_process.spawn(
+                path.join(__ryo_bin, "lokid"),
+                args,
+                {
+                  detached: true
+                }
+              );
             }
 
-            this.daemonProcess.stdout.on("data", data => process.stdout.write(`Daemon: ${data}`));
-            this.daemonProcess.on("error", err => process.stderr.write(`Daemon: ${err}`));
+            this.daemonProcess.stdout.on("data", data =>
+              process.stdout.write(`Daemon: ${data}`)
+            );
+            this.daemonProcess.on("error", err =>
+              process.stderr.write(`Daemon: ${err}`)
+            );
             this.daemonProcess.on("close", code => {
               process.stderr.write(`Daemon: exited with code ${code} \n`);
               this.daemonProcess = null;
@@ -193,7 +212,11 @@ export class Daemon {
                   clearInterval(intrvl);
                   resolve();
                 } else {
-                  if (this.daemonProcess && data.error.cause && data.error.cause.code === "ECONNREFUSED") {
+                  if (
+                    this.daemonProcess &&
+                    data.error.cause &&
+                    data.error.cause.code === "ECONNREFUSED"
+                  ) {
                     // Ignore
                   } else {
                     clearInterval(intrvl);
@@ -293,11 +316,17 @@ export class Daemon {
           if (data.error.code == -2) {
             // Too big height
             this.getRPC("last_block_header").then(data => {
-              if (data.hasOwnProperty("error") || !data.hasOwnProperty("result")) {
+              if (
+                data.hasOwnProperty("error") ||
+                !data.hasOwnProperty("result")
+              ) {
                 return reject();
               }
 
-              let new_pivot = [data.result.block_header.height, data.result.block_header.timestamp];
+              let new_pivot = [
+                data.result.block_header.height,
+                data.result.block_header.timestamp
+              ];
 
               // If we are within an hour that is good enough
               // If for some reason there is a > 1h gap between blocks
@@ -315,7 +344,10 @@ export class Daemon {
           }
         }
 
-        let new_pivot = [data.result.block_header.height, data.result.block_header.timestamp];
+        let new_pivot = [
+          data.result.block_header.height,
+          data.result.block_header.timestamp
+        ];
 
         // If we are within an hour that is good enough
         // If for some reason there is a > 1h gap between blocks
@@ -330,7 +362,11 @@ export class Daemon {
     })
       .then(pivot_or_height => {
         return Array.isArray(pivot_or_height)
-          ? this.timestampToHeight(timestamp, pivot_or_height, recursion_limit + 1)
+          ? this.timestampToHeight(
+              timestamp,
+              pivot_or_height,
+              recursion_limit + 1
+            )
           : pivot_or_height;
       })
       .catch(() => {
@@ -374,7 +410,11 @@ export class Daemon {
     Promise.all(actions).then(data => {
       let daemon_info = {};
       for (let n of data) {
-        if (n == undefined || !n.hasOwnProperty("result") || n.result == undefined) {
+        if (
+          n == undefined ||
+          !n.hasOwnProperty("result") ||
+          n.result == undefined
+        ) {
           continue;
         }
         if (n.method == "get_info") {
@@ -404,14 +444,24 @@ export class Daemon {
     Promise.all(actions).then(data => {
       let daemon_info = {};
       for (let n of data) {
-        if (n == undefined || !n.hasOwnProperty("result") || n.result == undefined) {
+        if (
+          n == undefined ||
+          !n.hasOwnProperty("result") ||
+          n.result == undefined
+        ) {
           continue;
         }
-        if (n.method == "get_connections" && n.result.hasOwnProperty("connections")) {
+        if (
+          n.method == "get_connections" &&
+          n.result.hasOwnProperty("connections")
+        ) {
           daemon_info.connections = n.result.connections;
         } else if (n.method == "get_bans" && n.result.hasOwnProperty("bans")) {
           daemon_info.bans = n.result.bans;
-        } else if (n.method == "get_txpool_backlog" && n.result.hasOwnProperty("backlog")) {
+        } else if (
+          n.method == "get_txpool_backlog" &&
+          n.result.hasOwnProperty("backlog")
+        ) {
           daemon_info.tx_pool_backlog = n.result.backlog;
         }
       }
@@ -440,13 +490,17 @@ export class Daemon {
       return [];
     }
 
-    const data = await this.sendRPC("lns_owners_to_names", { entries: owners });
+    // only 256 addresses allowed in this call
+    let ownersMax = owners.slice(0, 256);
+    const data = await this.sendRPC("lns_owners_to_names", {
+      entries: ownersMax
+    });
     if (!data.hasOwnProperty("result")) return [];
 
     // We need to map request_index to owner
     const { entries } = data.result;
     const recordsWithOwners = (entries || []).map(record => {
-      const owner = owners[record.request_index];
+      const owner = ownersMax[record.request_index];
       return {
         ...record,
         owner
@@ -465,7 +519,9 @@ export class Daemon {
       entries: [
         {
           name_hash: nameHash,
-          types: [0] // Update this when we have other types. Type 0 = session
+          // 0 = session
+          // 2 = lokinet
+          types: [0, 2]
         }
       ]
     };
@@ -483,8 +539,11 @@ export class Daemon {
     return (records || []).map(record => {
       // Record type is in uint16 format
       // Session = 0
-      // For now since wallet and loki names haven't been implemented, we always assume it's session
-      const type = "session";
+      // Lokinet = 2
+      let type = "lokinet";
+      if (record.type === 0) {
+        type = "session";
+      }
       return {
         ...record,
         type

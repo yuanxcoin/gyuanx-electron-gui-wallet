@@ -1,4 +1,5 @@
 import child_process from "child_process";
+
 const request = require("request-promise");
 const queue = require("promise-queue");
 const http = require("http");
@@ -359,7 +360,9 @@ export class WalletRPC {
           params.backup_owner || ""
         );
         break;
-
+      case "lns_renew_mapping":
+        this.lnsRenewMapping(params.password, params.type, params.name);
+        break;
       case "update_lns_mapping":
         this.updateLNSMapping(
           params.password,
@@ -369,7 +372,6 @@ export class WalletRPC {
           params.owner || "",
           params.backup_owner || ""
         );
-
         break;
 
       case "prove_transaction":
@@ -516,6 +518,7 @@ export class WalletRPC {
     });
   }
 
+  // the date should be in ms from epoch (Jan 1 1970)
   restoreWallet(
     filename,
     password,
@@ -544,10 +547,10 @@ export class WalletRPC {
       });
       return;
     }
+    let restore_height = Number.parseInt(refresh_start_timestamp_or_height);
 
-    let restore_height = refresh_start_timestamp_or_height;
-
-    if (!Number.isInteger(restore_height)) {
+    // if the height can't be parsed just start from block 0
+    if (!restore_height) {
       restore_height = 0;
     }
     seed = seed.trim().replace(/\s{2,}/g, " ");
@@ -1009,7 +1012,24 @@ export class WalletRPC {
           ...record
         };
       });
+
       this.wallet_state.lnsRecords = newRecords;
+
+      // fetch the known (cached) records from the wallet and add the data
+      // to the records being set in state
+      let known_names = await this.lnsKnownNames();
+
+      // Fill the necessary decrypted values of the cached LNS names
+      for (let r of newRecords) {
+        for (let k of known_names) {
+          if (k.hashed === r.name_hash) {
+            r["name"] = k.name;
+            r["value"] = k.value;
+            r["expiration_height"] = k.expiration_height;
+          }
+        }
+      }
+
       this.sendGateway("set_wallet_data", { lnsRecords: newRecords });
 
       // Decrypt the records serially
@@ -1025,12 +1045,110 @@ export class WalletRPC {
   }
 
   /*
+  Get the LNS records cached in this wallet. 
+  */
+  async lnsKnownNames() {
+    try {
+      let params = {
+        decrypt: true,
+        include_expired: false
+      };
+
+      let data = await this.sendRPC("lns_known_names", params);
+
+      if (data.result && data.result.known_names) {
+        return data.result.known_names;
+      } else {
+        return [];
+      }
+    } catch (e) {
+      console.debug("There was an error getting known records: " + e);
+      return [];
+    }
+  }
+
+  /*
+  Renews an LNS (Lokinet) mapping, since they can expire
+  type can be:
+  lokinet_1y, lokinet_2y, lokinet_5y, lokinet_10y
+  */
+  lnsRenewMapping(password, type, name) {
+    let _name = name.trim().toLowerCase();
+
+    // the RPC accepts names with the .loki already appeneded only
+    // can be lokinet_1y, lokinet_2y, lokinet_5y, lokinet_10y
+    if (type.startsWith("lokinet")) {
+      _name = _name + ".loki";
+    }
+
+    crypto.pbkdf2(
+      password,
+      this.auth[2],
+      1000,
+      64,
+      "sha512",
+      (err, password_hash) => {
+        if (err) {
+          this.sendGateway("set_lns_status", {
+            code: -1,
+            i18n: "notification.errors.internalError",
+            sending: false
+          });
+          return;
+        }
+        if (!this.isValidPasswordHash(password_hash)) {
+          this.sendGateway("set_lns_status", {
+            code: -1,
+            i18n: "notification.errors.invalidPassword",
+            sending: false
+          });
+          return;
+        }
+
+        const params = {
+          type,
+          name: _name
+        };
+
+        this.sendRPC("lns_renew_mapping", params).then(data => {
+          if (data.hasOwnProperty("error")) {
+            let error =
+              data.error.message.charAt(0).toUpperCase() +
+              data.error.message.slice(1);
+            this.sendGateway("set_lns_status", {
+              code: -1,
+              message: error,
+              sending: false
+            });
+            return;
+          }
+
+          this.purchasedNames[name.trim()] = type;
+
+          setTimeout(() => this.updateLocalLNSRecords(), 5000);
+
+          this.sendGateway("set_lns_status", {
+            code: 0,
+            i18n: "notification.positive.nameRenewed",
+            sending: false
+          });
+        });
+      }
+    );
+  }
+
+  /*
   Get our LNS record and update our wallet state with decrypted values.
   This will return `null` if the record is not in our currently stored records.
   */
   async decryptLNSRecord(type, name) {
+    let _type = type;
+    // type can initially be "lokinet_1y" etc. on a purchase
+    if (type.startsWith("lokinet")) {
+      _type = "lokinet";
+    }
     try {
-      const record = await this.getLNSRecord(type, name);
+      const record = await this.getLNSRecord(_type, name);
       if (!record) return null;
 
       // Update our current records with the new decrypted record
@@ -1059,12 +1177,18 @@ export class WalletRPC {
   Get a LNS record associated with the given name
   */
   async getLNSRecord(type, name) {
-    const types = ["session"]; // We currently only support session
+    // We currently only support session and lokinet
+    const types = ["session", "lokinet"];
     if (!types.includes(type)) return null;
 
     if (!name || name.trim().length === 0) return null;
 
     const lowerCaseName = name.toLowerCase();
+
+    let fullName = lowerCaseName;
+    if (type === "lokinet" && !name.endsWith(".loki")) {
+      fullName = fullName + ".loki";
+    }
 
     const nameHash = await this.hashLNSName(type, lowerCaseName);
     if (!nameHash) return null;
@@ -1075,12 +1199,12 @@ export class WalletRPC {
     // Decrypt the value if possible
     const value = await this.decryptLNSValue(
       type,
-      lowerCaseName,
+      fullName,
       record.encrypted_value
     );
 
     return {
-      name,
+      name: fullName,
       value,
       ...record
     };
@@ -1089,10 +1213,15 @@ export class WalletRPC {
   async hashLNSName(type, name) {
     if (!type || !name) return null;
 
+    let fullName = name;
+    if (type === "lokinet" && !name.endsWith(".loki")) {
+      fullName = fullName + ".loki";
+    }
+
     try {
       const data = await this.sendRPC("lns_hash_name", {
         type,
-        name
+        name: fullName
       });
 
       if (data.hasOwnProperty("error")) {
@@ -1104,7 +1233,7 @@ export class WalletRPC {
 
       return (data.result && data.result.name) || null;
     } catch (e) {
-      console.debug("Failed to hash lsn name: ", e);
+      console.debug("Failed to hash lns name: ", e);
       return null;
     }
   }
@@ -1112,10 +1241,15 @@ export class WalletRPC {
   async decryptLNSValue(type, name, encrypted_value) {
     if (!type || !name || !encrypted_value) return null;
 
+    let fullName = name;
+    if (type === "lokinet" && !name.endsWith(".loki")) {
+      fullName = fullName + ".loki";
+    }
+
     try {
       const data = await this.sendRPC("lns_decrypt_value", {
         type,
-        name,
+        name: fullName,
         encrypted_value
       });
 
@@ -1128,7 +1262,7 @@ export class WalletRPC {
 
       return (data.result && data.result.value) || null;
     } catch (e) {
-      console.debug("Failed to decrypt lsn value: ", e);
+      console.debug("Failed to decrypt lns value: ", e);
       return null;
     }
   }
@@ -1368,7 +1502,7 @@ export class WalletRPC {
     for (const hex of metadataList) {
       const params = {
         hex,
-        isBlink
+        blink: isBlink
       };
       // don't try submit more txs if a prev one failed
       if (failed) break;
@@ -1528,9 +1662,16 @@ export class WalletRPC {
   }
 
   purchaseLNS(password, type, name, value, owner, backupOwner) {
-    const _name = name.trim().toLowerCase();
+    let _name = name.trim().toLowerCase();
     const _owner = owner.trim() === "" ? null : owner;
     const backup_owner = backupOwner.trim() === "" ? null : backupOwner;
+
+    // the RPC accepts names with the .loki already appeneded only
+    // can be lokinet_1y, lokinet_2y, lokinet_5y, lokinet_10y
+    if (type.startsWith("lokinet")) {
+      _name = _name + ".loki";
+      value = value + ".loki";
+    }
 
     crypto.pbkdf2(
       password,
@@ -1593,9 +1734,16 @@ export class WalletRPC {
   }
 
   updateLNSMapping(password, type, name, value, owner, backupOwner) {
-    const _name = name.trim().toLowerCase();
+    let _name = name.trim().toLowerCase();
     const _owner = owner.trim() === "" ? null : owner;
     const backup_owner = backupOwner.trim() === "" ? null : backupOwner;
+
+    // updated records have type "lokinet" or "session"
+    // UI passes the values without the extension
+    if (type === "lokinet") {
+      _name = _name + ".loki";
+      value = value + ".loki";
+    }
 
     crypto.pbkdf2(
       password,

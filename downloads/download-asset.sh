@@ -20,7 +20,7 @@ if [ "$OS" == "Linux" ]; then
 elif [ "$OS" == "Windows" ]; then
     FILE_NAME_REGEX="win"
 elif [ "$OS" == "macOS" ]; then
-    FILE_NAME_REGEX="osx"
+    FILE_NAME_REGEX="macos"
 else
     echo "OS must be Linux, Windows or macOS"
     exit 1

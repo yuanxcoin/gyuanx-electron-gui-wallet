@@ -38,13 +38,13 @@ jobs:
         working-directory: ./downloads
 
       - name: Extract zip binaries
-        if: runner.os != 'Linux'
+        if: runner.os == 'Windows'
         run: unzip latest
         shell: bash
         working-directory: ./downloads
 
       - name: Extract xz binaries
-        if: runner.os == 'Linux'
+        if: runner.os != 'Windows'
         run: tar -xf latest
         shell: bash
         working-directory: ./downloads

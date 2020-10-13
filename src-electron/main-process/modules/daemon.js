@@ -121,8 +121,6 @@ export class Daemon {
         daemon.rpc_bind_port,
         "--zmq-rpc-bind-ip",
         daemon.zmq_rpc_bind_ip,
-        "--zmq-rpc-bind-port",
-        daemon.zmq_rpc_bind_port,
         "--out-peers",
         daemon.out_peers,
         "--in-peers",

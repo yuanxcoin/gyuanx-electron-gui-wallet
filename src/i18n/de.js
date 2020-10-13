@@ -52,12 +52,14 @@ export default {
     banPeer: {
       title: "Peer blockieren",
       peerDetailsTitle: "Peer Details",
-      message: "Dauer der Blockierung des Peers eingeben.\nStandard 3600 = 1 Stunde.",
+      message:
+        "Dauer der Blockierung des Peers eingeben.\nStandard 3600 = 1 Stunde.",
       ok: "Peer blockieren"
     },
     copyAddress: {
       title: "Adresse kopieren",
-      message: "Es is eine Payment ID mit dieser Adresse verbunden.\n Bitte die Paymend ID separat kopieren"
+      message:
+        "Es is eine Payment ID mit dieser Adresse verbunden.\n Bitte die Paymend ID separat kopieren"
     },
     copyPrivateKeys: {
       // Copy {seedWords/viewKey/spendKey}
@@ -87,7 +89,8 @@ export default {
     },
     noPassword: {
       title: "Kein Passwort angelegt",
-      message: "Bist du sicher, dass du eine Wallet ohne Passwort erstellen möchtest?",
+      message:
+        "Bist du sicher, dass du eine Wallet ohne Passwort erstellen möchtest?",
       ok: "JA"
     },
     password: {
@@ -107,7 +110,8 @@ export default {
     },
     restart: {
       title: "Erneut starten",
-      message: "Änderungen erfordern einen Neustart. Möchtest du jetzt neu starten?",
+      message:
+        "Änderungen erfordern einen Neustart. Möchtest du jetzt neu starten?",
       ok: "NEUSTART"
     },
     showPrivateKeys: {
@@ -133,7 +137,8 @@ export default {
     },
     switchWallet: {
       title: "Wallet wechseln",
-      closeMessage: "Bist du sicher, dass du die aktuelle Wallet schliessen möchtest?",
+      closeMessage:
+        "Bist du sicher, dass du die aktuelle Wallet schliessen möchtest?",
       restartMessage:
         "Die Wallet RPC synchronisiert sich gerade\n Wenn du deine Wallet wechseln möchtest, musst du die Anwendung erneut starten. \n Die Synchronisation wird abgebrochen und du musst die Blockchain erneut scannen. "
     },
@@ -172,7 +177,6 @@ export default {
     chooseNetwork: "NETZWERK AUSWÄHLEN",
     daemonLogLevel: "DAEMON LOG LEVEL",
     daemonP2pPort: "DAEMON P2P PORT",
-    daemonZMQPort: "DAEMON ZMQ PORT",
     dataStoragePath: "DATENSICHERUNGSPFAD",
     filter: "FILTER",
     filterTransactionType: "FILTERN NACH TRANSAKTIONSTYP",
@@ -275,7 +279,8 @@ export default {
     },
     errors: {
       banningPeer: "Fehler bei der Blockierung des Peer",
-      cannotAccessRemoteNode: "Remote Node nicht erreichbar, bitte versuche es mit einer anderen Remote Node",
+      cannotAccessRemoteNode:
+        "Remote Node nicht erreichbar, bitte versuche es mit einer anderen Remote Node",
       changingPassword: "Fehler beim Ändern des Passworts",
       copyWalletFail: "Fehler beim Kopieren der Wallet",
       copyingPrivateKeys: "Fehler beim Kopieren der Private Keys",
@@ -289,7 +294,8 @@ export default {
       failedServiceNodeUnlock: "Fehler beim Service Node unlock",
       failedToSetLanguage: "Fehler bei der Auswahl der Sprache: {lang}",
       failedWalletImport: "Fehler beim Importieren der Wallet",
-      failedWalletOpen: "Fehler beim Öffnen der Wallet. Bitte versuche es erneut",
+      failedWalletOpen:
+        "Fehler beim Öffnen der Wallet. Bitte versuche es erneut",
       internalError: "Interner Fehler",
       invalidAddress: "Adresse nicht gültig",
       invalidAmount: "Betrag nicht gültig",
@@ -301,7 +307,8 @@ export default {
       invalidRestoreDate: "Ungültiges Wiederherstellungsdatum",
       invalidRestoreHeight: "Ungültige Wiederherstellungshöhe",
       invalidSeedLength: "Ungültige Seed Wortlänge",
-      invalidServiceNodeCommand: "Bitte füge den Service Node Registrierungsbefehl ein",
+      invalidServiceNodeCommand:
+        "Bitte füge den Service Node Registrierungsbefehl ein",
       invalidServiceNodeKey: "Service Node Key nicht gültig",
       invalidWalletPath: "Ungültiger Wallet Pfad",
       keyImages: {
@@ -323,7 +330,8 @@ export default {
     },
     warnings: {
       noKeyImageExport: "Keine Key Images zum Exportieren gefunden",
-      usingLocalNode: "Zugang zur Remote Node nicht möglich, wechsle zur lokalen Node",
+      usingLocalNode:
+        "Zugang zur Remote Node nicht möglich, wechsle zur lokalen Node",
       usingRemoteNode: "llokid nicht gefunden, benutze eine Remote Node"
     }
   },
@@ -335,10 +343,12 @@ export default {
     mnemonicSeed: "25 (oder 24) mnemonic Seed Wörter",
     pasteTransactionId: "Paste transaction ID",
     pasteTransactionProof: "Paste transaction proof",
-    proveOptionalMessage: "Optional message against which the signature is signed",
+    proveOptionalMessage:
+      "Optional message against which the signature is signed",
     recipientWalletAddress: "Recipient's wallet address",
     selectAFile: "Bitte Datei auswählen",
-    transactionNotes: "Zusätzliche Notizen die an die Transaktions gehängt werden sollen",
+    transactionNotes:
+      "Zusätzliche Notizen die an die Transaktions gehängt werden sollen",
     walletName: "Ein Name für deine Wallet",
     walletPassword: "Ein optionales Passwort für die Wallet"
   },
@@ -356,7 +366,8 @@ export default {
     },
     advancedOptions: "Erweiterte Optionen",
     bannedPeers: {
-      title: "Blockierte Peers (Blockierungen werden entfernt, wenn Wallet neu gestartet wird)",
+      title:
+        "Blockierte Peers (Blockierungen werden entfernt, wenn Wallet neu gestartet wird)",
       bannedUntil: "Blockieren bis {time}"
     },
     blockHeight: "Höhe",
@@ -415,10 +426,13 @@ export default {
     proveTransactionDescription:
       "Generate a proof of your incoming/outgoing payment by supplying the transaction ID, the recipient address and an optional message.\nFor the case of outgoing payments, you can get a 'Spend Proof' that proves the authorship of a transaction. In this case, you don't need to specify the recipient address.",
     readingWalletList: "Lese Wallet Liste",
-    recentIncomingTransactionsToAddress: "Kürzlich eingegangene Transaktionen zu dieser Adresse",
-    recentTransactionsWithAddress: "Kürzlich durchgeführte Transaktionen mit dieser Adresse",
+    recentIncomingTransactionsToAddress:
+      "Kürzlich eingegangene Transaktionen zu dieser Adresse",
+    recentTransactionsWithAddress:
+      "Kürzlich durchgeführte Transaktionen mit dieser Adresse",
     rescanModalDescription: "Auswahl gesamter Rescan oder nur spent outputs",
-    saveSeedWarning: 'Bitte kopiere und verwahre deinen "Seed" an einem sicheren Ort',
+    saveSeedWarning:
+      'Bitte kopiere und verwahre deinen "Seed" an einem sicheren Ort',
     saveToAddressBook: "In Adressbuch speichern",
     seedWords: "Seed Wörter",
     selectLanguage: "Sprache auswählen",
@@ -458,7 +472,8 @@ export default {
     userNotUsedAddress: "Du hast diese Adresse nicht benutzt",
     userUsedAddress: "Du hast diese Adresse benutzt",
     viewKey: "View Key",
-    viewOnlyMode: "Nur Anzeige Modus. Bitte die volle Wallet laden um Coins zu senden"
+    viewOnlyMode:
+      "Nur Anzeige Modus. Bitte die volle Wallet laden um Coins zu senden"
   },
   titles: {
     addressBook: "Adressbuch",

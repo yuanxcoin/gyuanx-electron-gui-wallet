@@ -53,17 +53,20 @@ export default {
     banPeer: {
       title: "Забанить пира",
       peerDetailsTitle: "Данные пира",
-      message: "Введите время, на которое нужно забанить пира (сек).\nПо-умолчанию 3600 = 1 час.",
+      message:
+        "Введите время, на которое нужно забанить пира (сек).\nПо-умолчанию 3600 = 1 час.",
       ok: "Забанить"
     },
     copyAddress: {
       title: "Копировать адрес",
-      message: "С этим адресом ассоциирован payment id.\nPayment id необходимо скопировать отдельно."
+      message:
+        "С этим адресом ассоциирован payment id.\nPayment id необходимо скопировать отдельно."
     },
     copyPrivateKeys: {
       // Copy {seedWords/viewKey/spendKey}
       title: "Скопировать: {type}",
-      message: "Будьте внимательны, владелец приватных ключей может контролировать ваши средства.",
+      message:
+        "Будьте внимательны, владелец приватных ключей может контролировать ваши средства.",
       seedWords: "Seed-фраза",
       viewKey: "Ключ Просмотра",
       spendKey: "Ключ Отправки"
@@ -101,7 +104,8 @@ export default {
     },
     rescan: {
       title: "Пересканировать кошелек",
-      message: "Внимание: Часть информации о предыдущих тразакциях\n(например, адрес получателя) будет потеряна.",
+      message:
+        "Внимание: Часть информации о предыдущих тразакциях\n(например, адрес получателя) будет потеряна.",
       ok: "ПЕРЕСКАНИРОВАТЬ"
     },
     restart: {
@@ -169,7 +173,6 @@ export default {
     confirmPassword: "ПОДТВЕРЖДЕНИЕ ПАРОЛЯ",
     daemonLogLevel: "УРОВЕНЬ ЛОГА ДЕМОНА",
     daemonP2pPort: "P2P ПОРТ ДЕМОНА",
-    daemonZMQPort: "ZMQ ПОРТ ДЕМОНА",
     dataStoragePath: "ПАПКА ХРАНИЛИЩА ДАННЫХ",
     filter: "FILTER",
     filterTransactionType: "ТИП ТРАНЗАКЦИИ",
@@ -274,7 +277,8 @@ export default {
     },
     errors: {
       banningPeer: "Ошибка бана пира",
-      cannotAccessRemoteNode: "Не удалось подключиться к удаленной ноде, пожалуйста выберите другую ноду",
+      cannotAccessRemoteNode:
+        "Не удалось подключиться к удаленной ноде, пожалуйста выберите другую ноду",
       changingPassword: "Ошибка смены пароля",
       copyWalletFail: "Не удалось скопировать кошелек",
       copyingPrivateKeys: "Не удалось скопировать приватные ключи",
@@ -300,7 +304,8 @@ export default {
       invalidRestoreDate: "Неверная дата восстановления",
       invalidRestoreHeight: "Неверная высота блока восстановления",
       invalidSeedLength: "Неверная длина seed-фразы",
-      invalidServiceNodeCommand: "Пожалуйста введите команду регистрации сервисной ноды",
+      invalidServiceNodeCommand:
+        "Пожалуйста введите команду регистрации сервисной ноды",
       invalidServiceNodeKey: "Ключ сервисной ноды указан неверно",
       invalidWalletPath: "Неверный путь к кошельку",
       keyImages: {
@@ -322,7 +327,8 @@ export default {
     },
     warnings: {
       noKeyImageExport: "Не найдено ключевых образов для экспорта",
-      usingLocalNode: "Не удалось подключиться к удаленной ноде, переключаемся на локальную ноду",
+      usingLocalNode:
+        "Не удалось подключиться к удаленной ноде, переключаемся на локальную ноду",
       usingRemoteNode: "Не найден файл lokid, используется удаленная нода"
     }
   },
@@ -334,7 +340,8 @@ export default {
     mnemonicSeed: "Seed-фраза, состоящая из 25 или 24 слов",
     pasteTransactionId: "Paste transaction ID",
     pasteTransactionProof: "Paste transaction proof",
-    proveOptionalMessage: "Optional message against which the signature is signed",
+    proveOptionalMessage:
+      "Optional message against which the signature is signed",
     recipientWalletAddress: "Recipient's wallet address",
     selectAFile: "Пожалуйста, выберите файл",
     transactionNotes: "Дополнительные заметки для приосединения к транзакции",
@@ -389,7 +396,8 @@ export default {
       },
       remote: {
         title: "Только Удаленная Нода",
-        description: "Меньшая безопасность, кошелек подключится к удаленной ноде для проведения всех транзакций."
+        description:
+          "Меньшая безопасность, кошелек подключится к удаленной ноде для проведения всех транзакций."
       }
     },
     destinationUnknown: "Назначение Неизвестно",
@@ -413,10 +421,13 @@ export default {
       fastest: "Очень быстро"
     },
     readingWalletList: "Получение списка кошельков",
-    recentIncomingTransactionsToAddress: "Недавние входящие транзакции на этот адрес",
+    recentIncomingTransactionsToAddress:
+      "Недавние входящие транзакции на этот адрес",
     recentTransactionsWithAddress: "Недавние транзакции с этим адресом",
-    rescanModalDescription: "Выберите полное пересканирование или персканирование только потраченных выходов.",
-    saveSeedWarning: "Пожалуйста, скопируйте фразу и храните ее в безопасном месте!",
+    rescanModalDescription:
+      "Выберите полное пересканирование или персканирование только потраченных выходов.",
+    saveSeedWarning:
+      "Пожалуйста, скопируйте фразу и храните ее в безопасном месте!",
     saveToAddressBook: "Сохранить в адресной книге",
     seedWords: "Seed-фраза",
     selectLanguage: "Выберите язык",
@@ -456,7 +467,8 @@ export default {
     userNotUsedAddress: "Вы не использовали этот адрес",
     userUsedAddress: "Вы использовали этот адрес",
     viewKey: "Ключ Просмотра",
-    viewOnlyMode: "Режим просмотра. Пожалуйста загрузите полный кошелек, чтобы отправлять монеты."
+    viewOnlyMode:
+      "Режим просмотра. Пожалуйста загрузите полный кошелек, чтобы отправлять монеты."
   },
   titles: {
     addressBook: "Адресная книга",

@@ -202,7 +202,6 @@ export default {
       const all_pending = ["pending", "pool"];
       this.tx_list_filtered = this.tx_list.filter(tx => {
         let valid = true;
-
         if (this.type === "all_in" && !all_in.includes(tx.type)) {
           return false;
         }

@@ -312,26 +312,6 @@
             dense
           />
         </LokiField>
-        <LokiField
-          class="col-3"
-          :label="$t('fieldLabels.daemonZMQPort')"
-          :disable="is_remote"
-        >
-          <q-input
-            v-model="config_daemon.zmq_rpc_bind_port"
-            :placeholder="toString(daemon_defaults.zmq_rpc_bind_port)"
-            :disable="is_remote"
-            :dark="theme == 'dark'"
-            float-
-            type="number"
-            :decimals="0"
-            :step="1"
-            min="1024"
-            max="65535"
-            borderless
-            dense
-          />
-        </LokiField>
         <LokiField class="col-3" :label="$t('fieldLabels.internalWalletPort')">
           <q-input
             v-model="config.app.ws_bind_port"

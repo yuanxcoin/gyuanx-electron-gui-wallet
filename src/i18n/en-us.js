@@ -202,7 +202,6 @@ export default {
     confirmPassword: "CONFIRM PASSWORD",
     daemonLogLevel: "DAEMON LOG LEVEL",
     daemonP2pPort: "DAEMON P2P PORT",
-    daemonZMQPort: "DAEMON ZMQ PORT",
     dataStoragePath: "DATA STORAGE PATH",
     decryptRecord: "DECRYPT RECORD",
     filter: "FILTER",

@@ -917,7 +917,7 @@ export class WalletRPC {
             this.wallet_state.balance == n.result.balance &&
             this.wallet_state.unlocked_balance == n.result.unlocked_balance
           ) {
-            // continue
+            continue;
           }
 
           this.wallet_state.balance = wallet.info.balance = n.result.balance;

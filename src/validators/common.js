@@ -54,8 +54,8 @@ export const lokinet_name = (input, lokiExt = false) => {
   );
 };
 
-export const session_id_or_lokinet_name = input => {
-  return session_id(input) || lokinet_name(input, true);
+export const session_name_or_lokinet_name = input => {
+  return session_name(input) || lokinet_name(input, true);
 };
 
 // Full lokinet address

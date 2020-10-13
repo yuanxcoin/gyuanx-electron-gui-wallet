@@ -53,7 +53,8 @@ export default {
     banPeer: {
       title: "Banir pares",
       peerDetailsTitle: "Detalhes dos pares",
-      message: "Introduzir duração para banir pares, em segundos.\nDefault 3600 = 1 hora.",
+      message:
+        "Introduzir duração para banir pares, em segundos.\nDefault 3600 = 1 hora.",
       ok: "Banir par"
     },
     copyAddress: {
@@ -64,7 +65,8 @@ export default {
     copyPrivateKeys: {
       // Copy {seedWords/viewKey/spendKey}
       title: "Copiar {type}",
-      message: "Tenha cuidado a quem envia as suas chaves privadas, pois elas controlam os seus fundos.",
+      message:
+        "Tenha cuidado a quem envia as suas chaves privadas, pois elas controlam os seus fundos.",
       seedWords: "Palavras Semente",
       viewKey: "Chave de Visualização",
       spendKey: "Chave de Gasto"
@@ -171,7 +173,6 @@ export default {
     confirmPassword: "CONFIRMAR PALAVRA-PASSE",
     daemonLogLevel: "NÍVEL DE LOG PARA O SERVIÇO",
     daemonP2pPort: "PORTA P2P DO SERVIÇO",
-    daemonZMQPort: "PORTA ZMQ DO SERVIÇO",
     dataStoragePath: "DIRECTÓRIO DE ARMAZENAMENTO DOS DADOS",
     filter: "FILTER",
     filterTransactionType: "FILTRAR POR TIPO DE TRANSAÇÃO",
@@ -276,7 +277,8 @@ export default {
     },
     errors: {
       banningPeer: "Erro ao banir par",
-      cannotAccessRemoteNode: "Não foi possível aceder ao nódulo remoto, por favor experimente outro nódulo remoto",
+      cannotAccessRemoteNode:
+        "Não foi possível aceder ao nódulo remoto, por favor experimente outro nódulo remoto",
       changingPassword: "Erro ao alterar palabra-passe",
       copyWalletFail: "Cópia da carteira falhou",
       copyingPrivateKeys: "Erro ao copiar as chaves privadas",
@@ -302,7 +304,8 @@ export default {
       invalidRestoreDate: "Data de restauro inválido",
       invalidRestoreHeight: "Altura de restauro inválido",
       invalidSeedLength: "Comprimento da palavra semente inválido",
-      invalidServiceNodeCommand: "Por favor introduza o comando de registro do nódulo de serviço",
+      invalidServiceNodeCommand:
+        "Por favor introduza o comando de registro do nódulo de serviço",
       invalidServiceNodeKey: "Chave do nódulo de serviço inválido",
       invalidWalletPath: "Caminho da carteira inválido",
       keyImages: {
@@ -319,12 +322,14 @@ export default {
       selectWalletFile: "Seleccione um ficheiro de carteira",
       unknownError: "Ocorreu um error desconhecido",
       walletAlreadyExists: "Carteira com esse nome já existe",
-      walletPathNotFound: "Caminho de armazenamento dos dados da carteira não encontrado",
+      walletPathNotFound:
+        "Caminho de armazenamento dos dados da carteira não encontrado",
       zeroAmount: "Quantidade tem de ser superior a zero"
     },
     warnings: {
       noKeyImageExport: "Nenhuma chave de imagem encontrada para exportar",
-      usingLocalNode: "Não foi possível aceder ao nódulo remoto, mudando para nódulo local apenas",
+      usingLocalNode:
+        "Não foi possível aceder ao nódulo remoto, mudando para nódulo local apenas",
       usingRemoteNode: "lokid não encontrado, utilizando nódulo remoto"
     }
   },
@@ -336,7 +341,8 @@ export default {
     mnemonicSeed: "25 (or 24) palavras semente mnemónicas",
     pasteTransactionId: "Paste transaction ID",
     pasteTransactionProof: "Paste transaction proof",
-    proveOptionalMessage: "Optional message against which the signature is signed",
+    proveOptionalMessage:
+      "Optional message against which the signature is signed",
     recipientWalletAddress: "Recipient's wallet address",
     selectAFile: "Por favor selecione um ficheiro",
     transactionNotes: "Notas adicionais para anexar à transação",
@@ -391,7 +397,8 @@ export default {
       },
       remote: {
         title: "Serviço Remoto Apenas",
-        description: "Menos segurança, a carteira irá conectar a um nódulo remoto para todas as transações."
+        description:
+          "Menos segurança, a carteira irá conectar a um nódulo remoto para todas as transações."
       }
     },
     destinationUnknown: "Destino Desconhecido",
@@ -417,7 +424,8 @@ export default {
     readingWalletList: "Lendo lista da carteira",
     recentIncomingTransactionsToAddress: "Transações de entrada neste endereço",
     recentTransactionsWithAddress: "Transações recentes neste endereço",
-    rescanModalDescription: "Seleccione examinação completa ou examinação de outputs gastos apenas.",
+    rescanModalDescription:
+      "Seleccione examinação completa ou examinação de outputs gastos apenas.",
     saveSeedWarning: "Por favor copie e salve estes num lugar seguro!",
     saveToAddressBook: "Salvar para o livro de endereço",
     seedWords: "Palavras semente",
@@ -458,7 +466,8 @@ export default {
     userNotUsedAddress: "Não utilizou este endereço",
     userUsedAddress: "Já utilizou este endereço",
     viewKey: "Chave de visualização",
-    viewOnlyMode: "Modo de visualização apenas. Por favor carregue a carteira completa para poder enviar moedas."
+    viewOnlyMode:
+      "Modo de visualização apenas. Por favor carregue a carteira completa para poder enviar moedas."
   },
   titles: {
     addressBook: "Livro de endereços",
@@ -490,7 +499,8 @@ export default {
       createNew: "Criar nova carteira",
       createdOrRestored: "Carteira criada/restaurada",
       importFromFile: "Importar carteira a partir de ficheiro",
-      importFromLegacyGUI: "Importar carteira a partir da antiga carteira GUI (legado)",
+      importFromLegacyGUI:
+        "Importar carteira a partir da antiga carteira GUI (legado)",
       importFromOldGUI: "Importar carteira a partir da antiga carteira GUI",
       restoreFromSeed: "Restaurar carteira a partir de semente",
       restoreViewOnly: "Restaurar carteira visualização-apenas"

@@ -144,7 +144,7 @@ export default {
         return;
       }
 
-      const name = this.name.trim();
+      const name = this.name.trim().toLowerCase();
 
       this.$gateway.once("decrypt_record_result", data => {
         if (data.decrypted) {

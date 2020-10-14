@@ -390,7 +390,6 @@ export class WalletRPC {
       case "add_address_book":
         this.addAddressBook(
           params.address,
-          params.payment_id,
           params.description,
           params.name,
           params.starred,
@@ -917,7 +916,6 @@ export class WalletRPC {
             this.wallet_state.balance == n.result.balance &&
             this.wallet_state.unlocked_balance == n.result.unlocked_balance
           ) {
-            this.backend.log.info("Your balance is unchanged");
             continue;
           }
 
@@ -931,7 +929,6 @@ export class WalletRPC {
           // if balance has recently changed, get updated list of transactions and used addresses
           let actions = [this.getTransactions(), this.getAddressList()];
           actions.push(this.getAddressBook());
-          this.backend.log.info("Begin to get transactions and address list");
           Promise.all(actions).then(data => {
             for (let n of data) {
               Object.keys(n).map(key => {
@@ -1489,11 +1486,9 @@ export class WalletRPC {
   async relayTransaction(metadataList, isBlink, addressSave, note, isSweepAll) {
     // for a sweep these don't exist
     let address = "";
-    let payment_id = "";
     let address_book = "";
     if (addressSave) {
       address = addressSave.address;
-      payment_id = addressSave.payment_id;
       address_book = addressSave.address_book;
     }
 
@@ -1545,7 +1540,6 @@ export class WalletRPC {
       if (address_book.hasOwnProperty("save") && address_book.save) {
         this.addAddressBook(
           address,
-          payment_id,
           address_book.description,
           address_book.name
         );
@@ -2062,12 +2056,7 @@ export class WalletRPC {
         failed: true,
         pool: true
       }).then(data => {
-        this.backend.log.info("get_transfers callback running");
         if (data.hasOwnProperty("error") || !data.hasOwnProperty("result")) {
-          this.backend.log.info(
-            "get_transfers did not return a result, or returned an error"
-          );
-          this.backend.log.info(data);
           resolve({});
           return;
         }
@@ -2090,10 +2079,6 @@ export class WalletRPC {
         ];
         types.forEach(type => {
           if (data.result.hasOwnProperty(type)) {
-            const txs_of_type_len = data.result[type].length;
-            this.backend.log.info(
-              `Number of txs of type ${type}: ${txs_of_type_len}`
-            );
             wallet.transactions.tx_list = wallet.transactions.tx_list.concat(
               data.result[type]
             );
@@ -2157,12 +2142,6 @@ export class WalletRPC {
             entry.description = "";
           }
 
-          if (/^0*$/.test(entry.payment_id)) {
-            entry.payment_id = "";
-          } else if (/^0*$/.test(entry.payment_id.substring(16))) {
-            entry.payment_id = entry.payment_id.substring(0, 16);
-          }
-
           return entry;
         });
 
@@ -2171,11 +2150,7 @@ export class WalletRPC {
             ? wallet.address_list.address_book_starred
             : wallet.address_list.address_book;
           const hasAddress = list.find(a => {
-            return (
-              a.address === entry.address &&
-              a.name === entry.name &&
-              a.payment_id === entry.payment_id
-            );
+            return a.address === entry.address && a.name === entry.name;
           });
           if (!hasAddress) {
             list.push(entry);
@@ -2201,7 +2176,6 @@ export class WalletRPC {
 
   addAddressBook(
     address,
-    payment_id = null,
     description = "",
     name = "",
     starred = false,
@@ -2209,7 +2183,7 @@ export class WalletRPC {
   ) {
     if (index !== false) {
       this.sendRPC("delete_address_book", { index: index }).then(() => {
-        this.addAddressBook(address, payment_id, description, name, starred);
+        this.addAddressBook(address, description, name, starred);
       });
       return;
     }
@@ -2217,9 +2191,6 @@ export class WalletRPC {
     let params = {
       address
     };
-    if (payment_id != null) {
-      params.payment_id = payment_id;
-    }
 
     let desc = [];
     if (starred) {

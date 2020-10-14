@@ -476,9 +476,6 @@ export class Daemon {
       if (!data.hasOwnProperty("result")) return;
       const nodes = data.result.service_node_states;
 
-      this.backend.log.info(
-        "Number of service nodes returned from RPC: " + nodes.length
-      );
       const service_nodes = {
         nodes,
         fetching: false

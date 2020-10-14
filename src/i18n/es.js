@@ -53,17 +53,20 @@ export default {
     banPeer: {
       title: "Vetar pares",
       peerDetailsTitle: "Detalles del par",
-      message: "Introduzca el periodo de veto del par en segundos.\nPor defecto 3600 = 1 hora.",
+      message:
+        "Introduzca el periodo de veto del par en segundos.\nPor defecto 3600 = 1 hora.",
       ok: "Vetar par"
     },
     copyAddress: {
       title: "Copiar dirección",
-      message: "Hay un id de pago asociado a esta dirección.\nAsegúrese de copiar también el id de pago por separado."
+      message:
+        "Hay un id de pago asociado a esta dirección.\nAsegúrese de copiar también el id de pago por separado."
     },
     copyPrivateKeys: {
       // Copy {seedWords/viewKey/spendKey}
       title: "Copiar {type}",
-      message: "Tenga cuidado si comparte sus claves privadas ya que estas permiten controlar sus fondos.",
+      message:
+        "Tenga cuidado si comparte sus claves privadas ya que estas permiten controlar sus fondos.",
       seedWords: "Palabras Semilla",
       viewKey: "Clave de Visualización",
       spendKey: "Clave de Gasto"
@@ -107,7 +110,8 @@ export default {
     },
     restart: {
       title: "Reiniciar",
-      message: "Los cambios requieren reiniciar la aplicación ¿Desea reiniciar ahora?",
+      message:
+        "Los cambios requieren reiniciar la aplicación ¿Desea reiniciar ahora?",
       ok: "REINICIAR"
     },
     showPrivateKeys: {
@@ -170,7 +174,6 @@ export default {
     confirmPassword: "CONFIRMAR CONTRASEÑA",
     daemonLogLevel: "NIVEL LOG PARA EL SERVICIO",
     daemonP2pPort: "PUERTO P2P SERVICIO",
-    daemonZMQPort: "PUERTO ZMQ SERVICIO",
     dataStoragePath: "RUTA DE ALMACENAMIENTO DE DATOS",
     filter: "FILTRO",
     filterTransactionType: "FILTRAR POR TIPO DE TRANSACCIÓN",
@@ -275,7 +278,8 @@ export default {
     },
     errors: {
       banningPeer: "Error al vetar el par",
-      cannotAccessRemoteNode: "No ha sido posible acceder al nodo remoto. Tenga la amabilidad de probar con otro",
+      cannotAccessRemoteNode:
+        "No ha sido posible acceder al nodo remoto. Tenga la amabilidad de probar con otro",
       changingPassword: "Error al cambiar la contraseña",
       copyWalletFail: "Error al copiar el monedero",
       copyingPrivateKeys: "Error al copiar las claves privadas",
@@ -301,7 +305,8 @@ export default {
       invalidRestoreDate: "Fecha de restauración no válida",
       invalidRestoreHeight: "Altura de bloque no válida",
       invalidSeedLength: "Cantidad de palabras en la semilla incorrecta",
-      invalidServiceNodeCommand: "Por favor, introduzca el comando para registrar el nodo de servicio",
+      invalidServiceNodeCommand:
+        "Por favor, introduzca el comando para registrar el nodo de servicio",
       invalidServiceNodeKey: "Clave de nodo de servicio no válida",
       invalidWalletPath: "Ruta del monedero no válida",
       keyImages: {
@@ -323,7 +328,8 @@ export default {
     },
     warnings: {
       noKeyImageExport: "No se han encontrado claves para exportar",
-      usingLocalNode: "No se ha podido acceder al nodo remoto, volviendo al modo local",
+      usingLocalNode:
+        "No se ha podido acceder al nodo remoto, volviendo al modo local",
       usingRemoteNode: "lokid no encontrado, utilizando nodo remoto"
     }
   },
@@ -390,7 +396,8 @@ export default {
       },
       remote: {
         title: "Solo Servicio Remoto",
-        description: "Menor seguridad. El monedero se conectará a un nodo remoto para realizar cualquier operación."
+        description:
+          "Menor seguridad. El monedero se conectará a un nodo remoto para realizar cualquier operación."
       }
     },
     destinationUnknown: "Destino Desconocido",
@@ -414,9 +421,11 @@ export default {
     proveTransactionDescription:
       "Generar una prueba de sus pagos recibidos/emitidos proporcionando el ID de la transacción, la dirección destinataria y un mensaje opcional.\nPara pagos emitidos, puede obtener una 'Pueba de Gasto' que certifica la autoría de la transacción. En este caso, no es necesario indicar la dirección destinataria.",
     readingWalletList: "Leyendo el listado de monederos",
-    recentIncomingTransactionsToAddress: "Transacciones recientes recibidas en esta dirección",
+    recentIncomingTransactionsToAddress:
+      "Transacciones recientes recibidas en esta dirección",
     recentTransactionsWithAddress: "Transacciones recientes con esta dirección",
-    rescanModalDescription: "Escoja entre un examen completo o examinar solo las salidas gastadas.",
+    rescanModalDescription:
+      "Escoja entre un examen completo o examinar solo las salidas gastadas.",
     saveSeedWarning: "¡Por favor, cópielas y guárdelas en un sitio seguro!",
     saveToAddressBook: "Guardar en la libreta de direcciones",
     seedWords: "Palabras semilla",

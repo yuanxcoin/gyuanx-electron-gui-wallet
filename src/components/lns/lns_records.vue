@@ -52,7 +52,7 @@
 <script>
 import { mapState } from "vuex";
 import LokiField from "components/loki_field";
-import { session_id_or_lokinet_name } from "src/validators/common";
+import { session_name_or_lokinet_name } from "src/validators/common";
 import LNSRecordList from "./lns_record_list";
 
 export default {
@@ -144,7 +144,7 @@ export default {
         return;
       }
 
-      const name = this.name.trim();
+      const name = this.name.trim().toLowerCase();
 
       this.$gateway.once("decrypt_record_result", data => {
         if (data.decrypted) {
@@ -182,7 +182,7 @@ export default {
 
   validations: {
     name: {
-      session_id_or_lokinet_name
+      session_name_or_lokinet_name
     }
   }
 };

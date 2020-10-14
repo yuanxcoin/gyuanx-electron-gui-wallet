@@ -1,24 +1,31 @@
 <template>
   <q-page class="address-book">
-    <div class="header row q-pt-md q-pb-xs q-mx-md q-mb-none items-center non-selectable">
+    <div
+      class="header row q-pt-md q-pb-xs q-mx-md q-mb-none items-center non-selectable"
+    >
       {{ $t("titles.addressBook") }}
     </div>
 
     <template v-if="address_book_combined.length">
       <q-list link no-border :dark="theme == 'dark'" class="loki-list">
         <q-item
-          v-for="entry in address_book_combined"
-          :key="`${entry.address}-${entry.name}-${entry.payment_id}`"
+          v-for="(entry, index) in address_book_combined"
+          :key="`${entry.address}-${entry.name}-${index}`"
           class="loki-list-item"
           @click.native="details(entry)"
         >
           <q-item-section>
             <q-item-label class="ellipsis">{{ entry.address }}</q-item-label>
-            <q-item-label class="non-selectable" caption>{{ entry.name }}</q-item-label>
+            <q-item-label class="non-selectable" caption>{{
+              entry.name
+            }}</q-item-label>
           </q-item-section>
           <q-item-section side>
             <q-item-label>
-              <q-icon size="24px" :name="entry.starred ? 'star' : 'star_border'" />
+              <q-icon
+                size="24px"
+                :name="entry.starred ? 'star' : 'star_border'"
+              />
               <q-btn
                 color="secondary"
                 style="margin-left: 10px;"
@@ -72,7 +79,8 @@ export default {
     theme: state => state.gateway.app.config.appearance.theme,
     view_only: state => state.gateway.wallet.info.view_only,
     address_book: state => state.gateway.wallet.address_list.address_book,
-    address_book_starred: state => state.gateway.wallet.address_list.address_book_starred,
+    address_book_starred: state =>
+      state.gateway.wallet.address_list.address_book_starred,
     address_book_combined() {
       const starred = this.address_book_starred.map(a => ({
         ...a,
@@ -97,38 +105,17 @@ export default {
       this.$router.replace({
         path: "send",
         query: {
-          address: address.address,
-          payment_id: address.payment_id
+          address: address.address
         }
       });
     },
     copyAddress(entry) {
       clipboard.writeText(entry.address);
-      if (entry.payment_id) {
-        this.$q
-          .dialog({
-            title: this.$t("dialog.copyAddress.title"),
-            message: this.$t("dialog.copyAddress.message"),
-            ok: {
-              label: this.$t("dialog.buttons.ok")
-            }
-          })
-          .onDismiss(() => null)
-          .onCancel(() => null)
-          .onOk(() => {
-            this.$q.notify({
-              type: "positive",
-              timeout: 1000,
-              message: this.$t("notification.positive.addressCopied")
-            });
-          });
-      } else {
-        this.$q.notify({
-          type: "positive",
-          timeout: 1000,
-          message: this.$t("notification.positive.addressCopied")
-        });
-      }
+      this.$q.notify({
+        type: "positive",
+        timeout: 1000,
+        message: this.$t("notification.positive.addressCopied")
+      });
     }
   }
 };

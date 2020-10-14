@@ -121,8 +121,6 @@ export class Daemon {
         daemon.rpc_bind_port,
         "--zmq-rpc-bind-ip",
         daemon.zmq_rpc_bind_ip,
-        "--zmq-rpc-bind-port",
-        daemon.zmq_rpc_bind_port,
         "--out-peers",
         daemon.out_peers,
         "--in-peers",
@@ -477,6 +475,7 @@ export class Daemon {
     this.getRPC("service_nodes").then(data => {
       if (!data.hasOwnProperty("result")) return;
       const nodes = data.result.service_node_states;
+
       const service_nodes = {
         nodes,
         fetching: false

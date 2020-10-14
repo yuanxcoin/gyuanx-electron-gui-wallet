@@ -53,7 +53,8 @@ export default {
     banPeer: {
       title: "Pair exclu",
       peerDetailsTitle: "Détails du pair",
-      message: "Entrez le temps en secondes pour exclure un pair.\nDefaut 3600 = 1 heure.",
+      message:
+        "Entrez le temps en secondes pour exclure un pair.\nDefaut 3600 = 1 heure.",
       ok: "Pair exclu"
     },
     copyAddress: {
@@ -64,7 +65,8 @@ export default {
     copyPrivateKeys: {
       // Copy {seedWords/viewKey/spendKey}
       title: "Copier {type}",
-      message: "Faites attention à qui vous envoyez vos clés privées, car ils peuvent contrôler vos fonds.",
+      message:
+        "Faites attention à qui vous envoyez vos clés privées, car ils peuvent contrôler vos fonds.",
       seedWords: "mots-clés",
       viewKey: "Clé d’affichage",
       spendKey: "Clé de dépenses"
@@ -88,7 +90,8 @@ export default {
     },
     noPassword: {
       title: "Aucun mot de passe défini",
-      message: "Êtes-vous sûr de vouloir créer un portefeuille sans mot de passe ?",
+      message:
+        "Êtes-vous sûr de vouloir créer un portefeuille sans mot de passe ?",
       ok: "OUI"
     },
     password: {
@@ -108,7 +111,8 @@ export default {
     },
     restart: {
       title: "REDÉMARRER",
-      message: "Les modifications nécessitent un redémarrage. Voulez-vous redémarrer maintenant ?",
+      message:
+        "Les modifications nécessitent un redémarrage. Voulez-vous redémarrer maintenant ?",
       ok: "REDÉMARRER"
     },
     showPrivateKeys: {
@@ -172,7 +176,6 @@ export default {
     confirmPassword: "CONFIRMER LE MOT DE PASSE",
     daemonLogLevel: "NIVEAU D'IMPORTANCE DU DÉMON",
     daemonP2pPort: "PORT P2P DU DÉMON",
-    daemonZMQPort: "PORT ZMQ DU DÉMON",
     dataStoragePath: "CHEMIN DE STOCKAGE DE DONNÉES",
     filter: "FILTER",
     filterTransactionType: "FILTRER PAR TYPE DE TRANSACTION",
@@ -277,7 +280,8 @@ export default {
     },
     errors: {
       banningPeer: "Erreur d'exclusion d'un pair",
-      cannotAccessRemoteNode: "Impossible d'accéder au nœud distant, veuillez essayer un autre nœud distant",
+      cannotAccessRemoteNode:
+        "Impossible d'accéder au nœud distant, veuillez essayer un autre nœud distant",
       changingPassword: "Erreur de changement de mot de passe",
       copyWalletFail: "Echec de la copie du portefeuille",
       copyingPrivateKeys: "Erreur de la copie des clés privées",
@@ -291,7 +295,8 @@ export default {
       failedServiceNodeUnlock: "Erreur de déverrouillage du nœud de service",
       failedToSetLanguage: "Impossible de définir la langue : {lang}",
       failedWalletImport: "Echec d'import du portefeuille",
-      failedWalletOpen: "Echec de l'ouverture du portefeuille : veuillez essayer de nouveau.",
+      failedWalletOpen:
+        "Echec de l'ouverture du portefeuille : veuillez essayer de nouveau.",
       internalError: "Erreur interne",
       invalidAddress: "Adresse non valide",
       invalidAmount: "Montant non valide",
@@ -303,7 +308,8 @@ export default {
       invalidRestoreDate: "Date de restauration non valide",
       invalidRestoreHeight: "Hauteur de restauration non valide",
       invalidSeedLength: "Longueur de mot clé non valide",
-      invalidServiceNodeCommand: "Veuillez entrer la commande d'inscription d'un nœud de service",
+      invalidServiceNodeCommand:
+        "Veuillez entrer la commande d'inscription d'un nœud de service",
       invalidServiceNodeKey: "Clé du nœud de service non valide",
       invalidWalletPath: "Chemin du portefeuille non valide",
       keyImages: {
@@ -320,12 +326,14 @@ export default {
       selectWalletFile: "Select a wallet file",
       unknownError: "Une erreur inconnue s'est produite",
       walletAlreadyExists: "Un portefeuille avec ce nom existe déjà",
-      walletPathNotFound: "Chemin de stockage des données du portefeuille introuvable",
+      walletPathNotFound:
+        "Chemin de stockage des données du portefeuille introuvable",
       zeroAmount: "Le montant doit être supérieur à zéro"
     },
     warnings: {
       noKeyImageExport: "Aucune clé image n'a été trouvé pour l'export",
-      usingLocalNode: "Impossible d'accéder au nœud distant, basculement en local uniquement",
+      usingLocalNode:
+        "Impossible d'accéder au nœud distant, basculement en local uniquement",
       usingRemoteNode: "lokid introuvable, utilisation du nœud distant"
     }
   },
@@ -337,7 +345,8 @@ export default {
     mnemonicSeed: "25 (ou 24) mot mnémonique",
     pasteTransactionId: "Paste transaction ID",
     pasteTransactionProof: "Paste transaction proof",
-    proveOptionalMessage: "Optional message against which the signature is signed",
+    proveOptionalMessage:
+      "Optional message against which the signature is signed",
     recipientWalletAddress: "Recipient's wallet address",
     selectAFile: "Veuillez sélectionner un fichier",
     transactionNotes: "Notes additionnelles attachées à la transaction",
@@ -359,7 +368,8 @@ export default {
     },
     advancedOptions: "Options avancées",
     bannedPeers: {
-      title: "Les pairs exclus (les exclusions seront effacées si le portefeuille est redémarré)",
+      title:
+        "Les pairs exclus (les exclusions seront effacées si le portefeuille est redémarré)",
       bannedUntil: "Exclu jusqu'au {time}"
     },
     blockHeight: "Hauteur",
@@ -418,11 +428,13 @@ export default {
       fastest: "Le plus rapide"
     },
     readingWalletList: "Liste des portefeuilles lisibles",
-    recentIncomingTransactionsToAddress: "Transactions récentes entrantes vers cette adresse",
+    recentIncomingTransactionsToAddress:
+      "Transactions récentes entrantes vers cette adresse",
     recentTransactionsWithAddress: "Transactions récentes avec cette adresse",
     rescanModalDescription:
       "Sélectionnez une nouvelle analyse complète ou une nouvelle analyse des sorties dépensées seulement.",
-    saveSeedWarning: "Veuillez copier et enregistrer cela dans un lieu sécurisé !",
+    saveSeedWarning:
+      "Veuillez copier et enregistrer cela dans un lieu sécurisé !",
     saveToAddressBook: "Enregistrez dans le carnet d'adresses",
     seedWords: "Mots clés",
     selectLanguage: "Sélectionnez une langue",
@@ -462,7 +474,8 @@ export default {
     userNotUsedAddress: "Vous n'avez pas utilisé cette adresse",
     userUsedAddress: "Vous avez utilisé cette adresse",
     viewKey: "Clé de visibilité",
-    viewOnlyMode: "Mode d'affichage seulement. Veuillez charger le portefeuille complet pour envoyer des pièces."
+    viewOnlyMode:
+      "Mode d'affichage seulement. Veuillez charger le portefeuille complet pour envoyer des pièces."
   },
   titles: {
     addressBook: "Carnet d'adresses",
@@ -494,7 +507,8 @@ export default {
       createNew: "Créer un nouveau portefeuille",
       createdOrRestored: "Créer ou restaurer un portefeuille",
       importFromFile: "Importer un portefeuille à partir d'un fichier",
-      importFromLegacyGUI: "Importer un portefeuille à partir d'un héritage GUI",
+      importFromLegacyGUI:
+        "Importer un portefeuille à partir d'un héritage GUI",
       importFromOldGUI: "Importer un portefeuille à partir d'un ancien GUI",
       restoreFromSeed: "Restaurer un portefeuille à partir de mots clés",
       restoreViewOnly: "Restaurer un portefeuille en mode d'affichage seulement"

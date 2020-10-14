@@ -1971,9 +1971,6 @@ var cnUtilGen = function(initConfig) {
         NONCE: '02',
         MERGE_MINING: '03'
     };
-    var TX_EXTRA_NONCE_TAGS = {
-        PAYMENT_ID: '00'
-    };
     var KEY_SIZE = 32;
     var STRUCT_SIZES = {
         GE_P3: 160,

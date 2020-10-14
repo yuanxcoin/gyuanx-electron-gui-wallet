@@ -390,7 +390,6 @@ export class WalletRPC {
       case "add_address_book":
         this.addAddressBook(
           params.address,
-          params.payment_id,
           params.description,
           params.name,
           params.starred,
@@ -917,7 +916,7 @@ export class WalletRPC {
             this.wallet_state.balance == n.result.balance &&
             this.wallet_state.unlocked_balance == n.result.unlocked_balance
           ) {
-            // continue
+            continue;
           }
 
           this.wallet_state.balance = wallet.info.balance = n.result.balance;
@@ -1487,11 +1486,9 @@ export class WalletRPC {
   async relayTransaction(metadataList, isBlink, addressSave, note, isSweepAll) {
     // for a sweep these don't exist
     let address = "";
-    let payment_id = "";
     let address_book = "";
     if (addressSave) {
       address = addressSave.address;
-      payment_id = addressSave.payment_id;
       address_book = addressSave.address_book;
     }
 
@@ -1543,7 +1540,6 @@ export class WalletRPC {
       if (address_book.hasOwnProperty("save") && address_book.save) {
         this.addAddressBook(
           address,
-          payment_id,
           address_book.description,
           address_book.name
         );
@@ -2146,12 +2142,6 @@ export class WalletRPC {
             entry.description = "";
           }
 
-          if (/^0*$/.test(entry.payment_id)) {
-            entry.payment_id = "";
-          } else if (/^0*$/.test(entry.payment_id.substring(16))) {
-            entry.payment_id = entry.payment_id.substring(0, 16);
-          }
-
           return entry;
         });
 
@@ -2160,11 +2150,7 @@ export class WalletRPC {
             ? wallet.address_list.address_book_starred
             : wallet.address_list.address_book;
           const hasAddress = list.find(a => {
-            return (
-              a.address === entry.address &&
-              a.name === entry.name &&
-              a.payment_id === entry.payment_id
-            );
+            return a.address === entry.address && a.name === entry.name;
           });
           if (!hasAddress) {
             list.push(entry);
@@ -2190,7 +2176,6 @@ export class WalletRPC {
 
   addAddressBook(
     address,
-    payment_id = null,
     description = "",
     name = "",
     starred = false,
@@ -2198,7 +2183,7 @@ export class WalletRPC {
   ) {
     if (index !== false) {
       this.sendRPC("delete_address_book", { index: index }).then(() => {
-        this.addAddressBook(address, payment_id, description, name, starred);
+        this.addAddressBook(address, description, name, starred);
       });
       return;
     }
@@ -2206,9 +2191,6 @@ export class WalletRPC {
     let params = {
       address
     };
-    if (payment_id != null) {
-      params.payment_id = payment_id;
-    }
 
     let desc = [];
     if (starred) {

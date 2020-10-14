@@ -59,7 +59,6 @@ export class Backend {
       rpc_bind_ip: "127.0.0.1",
       rpc_bind_port: 22023,
       zmq_rpc_bind_ip: "127.0.0.1",
-      zmq_rpc_bind_port: 22024,
       out_peers: -1,
       in_peers: -1,
       limit_rate_up: -1,
@@ -77,15 +76,13 @@ export class Backend {
         ...daemon,
         type: "local",
         p2p_bind_port: 38153,
-        rpc_bind_port: 38154,
-        zmq_rpc_bind_port: 38155
+        rpc_bind_port: 38154
       },
       testnet: {
         ...daemon,
         type: "local",
         p2p_bind_port: 38156,
-        rpc_bind_port: 38157,
-        zmq_rpc_bind_port: 38158
+        rpc_bind_port: 38157
       }
     };
 

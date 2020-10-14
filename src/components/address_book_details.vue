@@ -11,13 +11,27 @@
             {{ $t("strings.editAddressBookEntry") }}
           </q-toolbar-title>
 
-          <q-btn v-if="mode == 'edit'" flat no-ripple :label="$t('buttons.cancel')" @click="cancelEdit()" />
-          <q-btn class="q-ml-sm" color="primary" :label="$t('buttons.save')" @click="save()" />
+          <q-btn
+            v-if="mode == 'edit'"
+            flat
+            no-ripple
+            :label="$t('buttons.cancel')"
+            @click="cancelEdit()"
+          />
+          <q-btn
+            class="q-ml-sm"
+            color="primary"
+            :label="$t('buttons.save')"
+            @click="save()"
+          />
         </q-toolbar>
       </q-header>
       <q-page-container>
         <div class="address-book-modal q-mx-md">
-          <LokiField :label="$t('fieldLabels.address')" :error="$v.newEntry.address.$error">
+          <LokiField
+            :label="$t('fieldLabels.address')"
+            :error="$v.newEntry.address.$error"
+          >
             <q-input
               v-model.trim="newEntry.address"
               :placeholder="address_placeholder"
@@ -35,21 +49,11 @@
             />
           </LokiField>
           <LokiField :label="$t('fieldLabels.name')">
-            <q-input v-model.trim="newEntry.name" :dark="theme == 'dark'" borderless dense />
-          </LokiField>
-          <LokiField :label="$t('fieldLabels.paymentId')" :error="$v.newEntry.payment_id.$error" optional>
-            <!-- TODO: count should be 16 or 64 after rpc updated -->
             <q-input
-              v-model.trim="newEntry.payment_id"
-              :placeholder="
-                $t('placeholders.hexCharacters', {
-                  count: '64'
-                })
-              "
+              v-model.trim="newEntry.name"
               :dark="theme == 'dark'"
               borderless
               dense
-              @blur="$v.newEntry.payment_id.$touch"
             />
           </LokiField>
           <LokiField :label="$t('fieldLabels.notes')" optional>
@@ -82,8 +86,20 @@
           <q-toolbar-title>
             {{ $t("strings.addressBookDetails") }}
           </q-toolbar-title>
-          <q-btn class="q-mr-sm" flat no-ripple :disable="!is_ready" :label="$t('buttons.edit')" @click="edit()" />
-          <q-btn color="primary" :disabled="view_only" :label="$t('buttons.sendCoins')" @click="sendToAddress" />
+          <q-btn
+            class="q-mr-sm"
+            flat
+            no-ripple
+            :disable="!is_ready"
+            :label="$t('buttons.edit')"
+            @click="edit()"
+          />
+          <q-btn
+            color="primary"
+            :disabled="view_only"
+            :label="$t('buttons.sendCoins')"
+            @click="sendToAddress"
+          />
         </q-toolbar>
       </q-header>
       <q-page-container>
@@ -92,16 +108,26 @@
             <AddressHeader
               :address="entry.address"
               :title="entry.name"
-              :payment_id="entry.payment_id"
-              :extra="entry.description ? $t('strings.notes') + ': ' + entry.description : ''"
+              :extra="
+                entry.description
+                  ? $t('strings.notes') + ': ' + entry.description
+                  : ''
+              "
             />
 
             <div class="q-mt-lg">
               <div class="non-selectable">
                 <q-icon name="history" size="24px" />
-                <span class="vertical-middle q-ml-xs">{{ $t("strings.recentTransactionsWithAddress") }}</span>
+                <span class="vertical-middle q-ml-xs">{{
+                  $t("strings.recentTransactionsWithAddress")
+                }}</span>
               </div>
-              <TxList :key="entry.address" type="all_in" :limit="5" :to-outgoing-address="entry.address" />
+              <TxList
+                :key="entry.address"
+                type="all_in"
+                :limit="5"
+                :to-outgoing-address="entry.address"
+              />
             </div>
           </template>
         </div>
@@ -115,7 +141,7 @@ import { mapState } from "vuex";
 import AddressHeader from "components/address_header";
 import TxList from "components/tx_list";
 import LokiField from "components/loki_field";
-import { payment_id, address } from "src/validators/common";
+import { address } from "src/validators/common";
 import { required } from "vuelidate/lib/validators";
 export default {
   name: "AddressBookDetails",
@@ -132,7 +158,6 @@ export default {
       newEntry: {
         index: false,
         address: "",
-        payment_id: "",
         name: "",
         description: "",
         starred: false
@@ -164,8 +189,7 @@ export default {
               .catch(() => resolve(false));
           });
         }
-      },
-      payment_id: { payment_id }
+      }
     }
   },
   methods: {
@@ -177,15 +201,6 @@ export default {
           type: "negative",
           timeout: 1000,
           message: this.$t("notification.errors.invalidAddress")
-        });
-        return;
-      }
-
-      if (this.$v.newEntry.payment_id.$error) {
-        this.$q.notify({
-          type: "negative",
-          timeout: 1000,
-          message: this.$t("notification.errors.invalidPaymentId")
         });
         return;
       }
@@ -202,8 +217,7 @@ export default {
       this.$router.replace({
         path: "send",
         query: {
-          address: this.entry.address,
-          payment_id: this.entry.payment_id
+          address: this.entry.address
         }
       });
     },
@@ -217,7 +231,6 @@ export default {
       this.newEntry = {
         index: false,
         address: "",
-        payment_id: "",
         name: "",
         description: "",
         starred: false
@@ -233,7 +246,6 @@ export default {
       this.newEntry = {
         index: false,
         address: "",
-        payment_id: "",
         name: "",
         description: "",
         starred: false

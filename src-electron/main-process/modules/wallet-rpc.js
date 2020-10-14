@@ -2061,6 +2061,10 @@ export class WalletRPC {
         pool: true
       }).then(data => {
         if (data.hasOwnProperty("error") || !data.hasOwnProperty("result")) {
+          console.log(
+            "get_transfers did not return a result, or returned an error"
+          );
+          console.log(data);
           resolve({});
           return;
         }
@@ -2083,6 +2087,8 @@ export class WalletRPC {
         ];
         types.forEach(type => {
           if (data.result.hasOwnProperty(type)) {
+            const txs_of_type_len = data.result[type].length;
+            console.log(`Number of txs of type ${type}: ${txs_of_type_len}`);
             wallet.transactions.tx_list = wallet.transactions.tx_list.concat(
               data.result[type]
             );

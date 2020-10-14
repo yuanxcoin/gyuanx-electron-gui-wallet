@@ -917,6 +917,7 @@ export class WalletRPC {
             this.wallet_state.balance == n.result.balance &&
             this.wallet_state.unlocked_balance == n.result.unlocked_balance
           ) {
+            this.backend.log.info("Your balance is unchanged");
             continue;
           }
 
@@ -930,6 +931,7 @@ export class WalletRPC {
           // if balance has recently changed, get updated list of transactions and used addresses
           let actions = [this.getTransactions(), this.getAddressList()];
           actions.push(this.getAddressBook());
+          this.backend.log.info("Begin to get transactions and address list");
           Promise.all(actions).then(data => {
             for (let n of data) {
               Object.keys(n).map(key => {
@@ -2060,11 +2062,12 @@ export class WalletRPC {
         failed: true,
         pool: true
       }).then(data => {
+        this.backend.log.info("get_transfers callback running");
         if (data.hasOwnProperty("error") || !data.hasOwnProperty("result")) {
-          console.log(
+          this.backend.log.info(
             "get_transfers did not return a result, or returned an error"
           );
-          console.log(data);
+          this.backend.log.info(data);
           resolve({});
           return;
         }
@@ -2088,7 +2091,9 @@ export class WalletRPC {
         types.forEach(type => {
           if (data.result.hasOwnProperty(type)) {
             const txs_of_type_len = data.result[type].length;
-            console.log(`Number of txs of type ${type}: ${txs_of_type_len}`);
+            this.backend.log.info(
+              `Number of txs of type ${type}: ${txs_of_type_len}`
+            );
             wallet.transactions.tx_list = wallet.transactions.tx_list.concat(
               data.result[type]
             );

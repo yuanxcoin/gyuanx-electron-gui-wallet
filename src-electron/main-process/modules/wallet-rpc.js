@@ -1577,16 +1577,17 @@ export class WalletRPC {
 
       amount = (parseFloat(amount) * 1e9).toFixed(0);
 
-      // if sending "All" the funds, then we need to send all - fee (sweep_all)
-      // To be amended after the hardfork, v8.
-      // https://github.com/loki-project/loki-electron-gui-wallet/issues/181
       const isSweepAllRPC = amount == this.wallet_state.unlocked_balance;
       const rpc_endpoint = isSweepAllRPC ? "sweep_all" : "transfer_split";
 
+      // the call coming from the SN page will have address = wallet primary address
       const rpcSpecificParams = isSweepAllRPC
         ? {
             address,
-            account_index: 0
+            // gui wallet only supports one account currently
+            account_index: 0,
+            // sweep *all* funds from all subaddresses to the address specified
+            subaddr_indices_all: true
           }
         : {
             destinations: [{ amount: amount, address: address }]

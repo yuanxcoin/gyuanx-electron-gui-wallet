@@ -336,7 +336,6 @@ export class WalletRPC {
           params.password,
           params.amount,
           params.address,
-          params.payment_id,
           params.priority,
           !!params.isSweepAll
         );
@@ -1557,7 +1556,7 @@ export class WalletRPC {
   // prepares params and provides a "confirm" popup to allow the user to check
   // send address and tx fees before sending
   // isSweepAll refers to if it's the sweep from service nodes page
-  transfer(password, amount, address, payment_id, priority, isSweepAll) {
+  transfer(password, amount, address, priority, isSweepAll) {
     const cryptoCallback = (err, password_hash) => {
       if (err) {
         this.sendGateway("set_tx_status", {
@@ -1598,10 +1597,6 @@ export class WalletRPC {
         do_not_relay: true,
         get_tx_metadata: true
       };
-
-      if (payment_id) {
-        params.payment_id = payment_id;
-      }
 
       // for updating state on the correct page
       const gatewayEndpoint = isSweepAll
@@ -2084,21 +2079,6 @@ export class WalletRPC {
             );
           }
         });
-
-        for (let i = 0; i < wallet.transactions.tx_list.length; i++) {
-          if (/^0*$/.test(wallet.transactions.tx_list[i].payment_id)) {
-            wallet.transactions.tx_list[i].payment_id = "";
-          } else if (
-            /^0*$/.test(wallet.transactions.tx_list[i].payment_id.substring(16))
-          ) {
-            wallet.transactions.tx_list[
-              i
-            ].payment_id = wallet.transactions.tx_list[i].payment_id.substring(
-              0,
-              16
-            );
-          }
-        }
 
         wallet.transactions.tx_list.sort(function(a, b) {
           if (a.timestamp < b.timestamp) return 1;

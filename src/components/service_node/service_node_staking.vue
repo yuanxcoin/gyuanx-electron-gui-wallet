@@ -256,7 +256,6 @@ export default {
             this.newTx = {
               amount: 0,
               address: "",
-              payment_id: "",
               // blink
               priority: 5,
               address_book: {

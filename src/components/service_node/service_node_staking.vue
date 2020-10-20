@@ -124,7 +124,6 @@ export default {
         maxStakeAmount: this.unlocked_balance / 1e9
       },
       confirmFields: {
-        metadataList: [],
         isBlink: false,
         totalAmount: -1,
         destination: "",
@@ -325,11 +324,9 @@ export default {
         sending: true
       });
 
-      const metadataList = this.confirmFields.metadataList;
       const isBlink = this.confirmFields.isBlink;
 
       const relayTxData = {
-        metadataList,
         isBlink,
         isSweepAll: true
       };

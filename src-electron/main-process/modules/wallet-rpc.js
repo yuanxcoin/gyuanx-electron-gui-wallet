@@ -31,6 +31,10 @@ export class WalletRPC {
     this.dirs = null;
     this.last_height_send_time = Date.now();
 
+    // save a pending tx here, so we don't have to send the
+    // whole thing to the renderer
+    this.pending_tx = null;
+
     // A mapping of name => type
     this.purchasedNames = {};
 
@@ -342,7 +346,6 @@ export class WalletRPC {
         break;
       case "relay_tx":
         this.relayTransaction(
-          params.metadataList,
           params.isBlink,
           params.addressSave,
           params.note,
@@ -1482,7 +1485,7 @@ export class WalletRPC {
   }
 
   // submits the transaction to the blockchain, irreversible from here
-  async relayTransaction(metadataList, isBlink, addressSave, note, isSweepAll) {
+  async relayTransaction(isBlink, addressSave, note, isSweepAll) {
     // for a sweep these don't exist
     let address = "";
     let address_book = "";
@@ -1495,15 +1498,16 @@ export class WalletRPC {
     let errorMessage = "Failed to relay transaction";
 
     // submit each transaction individually
-    for (const hex of metadataList) {
+    for (let hex of this.pending_tx.metadataList) {
       const params = {
         hex,
         blink: isBlink
       };
+
       // don't try submit more txs if a prev one failed
       if (failed) break;
       try {
-        const data = await this.sendRPC("relay_tx", params);
+        let data = await this.sendRPC("relay_tx", params);
         if (data.hasOwnProperty("error")) {
           errorMessage = data.error.message || errorMessage;
           failed = true;
@@ -1543,9 +1547,13 @@ export class WalletRPC {
           address_book.name
         );
       }
+      // no more pending txs, clear it out.
+      this.pending_tx = null;
       return;
     }
 
+    // no more pending txs, clear it out.
+    this.pending_tx = null;
     this.sendGateway(gatewayEndpoint, {
       code: -1,
       message: errorMessage,
@@ -1623,6 +1631,11 @@ export class WalletRPC {
             return;
           }
 
+          this.pending_tx = {
+            metadataList: data.result.tx_metadata_list
+          };
+
+          // async relayTransaction(metadataList, isBlink, addressSave, note, isSweepAll)
           // update state to show a confirm popup
           this.sendGateway(gatewayEndpoint, {
             code: 1,
@@ -1633,7 +1646,6 @@ export class WalletRPC {
               address: data.params.address,
               isSweepAll: isSweepAllRPC,
               amountList: data.result.amount_list,
-              metadataList: data.result.tx_metadata_list,
               feeList: data.result.fee_list,
               priority: data.params.priority,
               // for a "send" tx

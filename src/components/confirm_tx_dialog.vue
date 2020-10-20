@@ -7,7 +7,9 @@
       <q-card-section>
         <div class="confirm-list">
           <div>
-            <span class="label">{{ $t("dialog.confirmTransaction.sendTo") }}: </span>
+            <span class="label"
+              >{{ $t("dialog.confirmTransaction.sendTo") }}:
+            </span>
             <br />
             <span class="address-value">{{ sendTo }}</span>
           </div>
@@ -15,15 +17,28 @@
           <span class="label">{{ $t("strings.transactions.amount") }}: </span>
           {{ amount }} Loki
           <br />
-          <span class="label">{{ $t("strings.transactions.fee") }}: </span> {{ fee }} Loki
+          <span class="label">{{ $t("strings.transactions.fee") }}: </span>
+          {{ fee }} Loki
           <br />
-          <span class="label">{{ $t("dialog.confirmTransaction.priority") }}: </span>
+          <span class="label"
+            >{{ $t("dialog.confirmTransaction.priority") }}:
+          </span>
           {{ isBlinkToTranslatedLabel(isBlink) }}
         </div>
       </q-card-section>
       <q-card-actions align="right">
-        <q-btn flat :label="$t('dialog.buttons.cancel')" color="negative" @click="onCancelTransaction" />
-        <q-btn class="confirm-send-btn" flat :label="$t('buttons.send')" @click="onConfirmTransaction" />
+        <q-btn
+          flat
+          :label="$t('dialog.buttons.cancel')"
+          color="negative"
+          @click="onCancelTransaction"
+        />
+        <q-btn
+          class="confirm-send-btn"
+          flat
+          :label="$t('buttons.send')"
+          @click="onConfirmTransaction"
+        />
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -65,7 +80,9 @@ export default {
   },
   methods: {
     isBlinkToTranslatedLabel(isBlink) {
-      const blinkOrSlow = isBlink ? "strings.priorityOptions.blink" : "strings.priorityOptions.slow";
+      const blinkOrSlow = isBlink
+        ? "strings.priorityOptions.blink"
+        : "strings.priorityOptions.slow";
       return this.$t(blinkOrSlow);
     }
   }

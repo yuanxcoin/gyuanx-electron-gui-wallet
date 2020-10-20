@@ -183,7 +183,6 @@ export default {
       },
       priorityOptions: priorityOptions,
       confirmFields: {
-        metadataList: [],
         isBlink: false,
         totalAmount: -1,
         destination: "",
@@ -313,14 +312,15 @@ export default {
       };
 
       const note = this.newTx.note;
-      const metadataList = this.confirmFields.metadataList;
       const isBlink = this.confirmFields.isBlink;
 
       const relayTxData = {
-        metadataList,
         isBlink,
         addressSave,
-        note
+        note,
+        // you may be sending all (which calls sweep_all RPC), but this refers to
+        // if the relay is coming from "sweep all" on the SN tab
+        isSweepAll: false
       };
 
       // Commit the transaction

@@ -89,9 +89,8 @@ export class WalletRPC {
           options.wallet.rpc_bind_port,
           "--daemon-address",
           daemon_address,
-          // "--log-level", options.wallet.log_level,
           "--log-level",
-          "*:WARNING,net*:FATAL,net.http:DEBUG,global:INFO,verify:FATAL,stacktrace:INFO"
+          options.wallet.log_level
         ];
 
         const { net_type, wallet_data_dir, data_dir } = options.app;

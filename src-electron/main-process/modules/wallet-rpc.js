@@ -31,6 +31,10 @@ export class WalletRPC {
     this.dirs = null;
     this.last_height_send_time = Date.now();
 
+    // save a pending tx here, so we don't have to send the
+    // whole thing to the renderer
+    this.pending_tx = null;
+
     // A mapping of name => type
     this.purchasedNames = {};
 
@@ -85,9 +89,8 @@ export class WalletRPC {
           options.wallet.rpc_bind_port,
           "--daemon-address",
           daemon_address,
-          // "--log-level", options.wallet.log_level,
           "--log-level",
-          "*:WARNING,net*:FATAL,net.http:DEBUG,global:INFO,verify:FATAL,stacktrace:INFO"
+          options.wallet.log_level
         ];
 
         const { net_type, wallet_data_dir, data_dir } = options.app;
@@ -336,14 +339,12 @@ export class WalletRPC {
           params.password,
           params.amount,
           params.address,
-          params.payment_id,
           params.priority,
           !!params.isSweepAll
         );
         break;
       case "relay_tx":
         this.relayTransaction(
-          params.metadataList,
           params.isBlink,
           params.addressSave,
           params.note,
@@ -1155,7 +1156,19 @@ export class WalletRPC {
       const isOurRecord = currentRecords.find(
         c => c.name_hash === record.name_hash
       );
-      if (!isOurRecord) return null;
+      if (!isOurRecord) {
+        return null;
+      } else {
+        // if it's our record, we can cache it
+        const _record = {
+          type: record.type,
+          name: record.name
+        };
+        const params = {
+          names: [_record]
+        };
+        this.sendRPC("lns_add_known_names", params);
+      }
 
       const newRecords = currentRecords.map(current => {
         if (current.name_hash === record.name_hash) {
@@ -1167,7 +1180,7 @@ export class WalletRPC {
       this.sendGateway("set_wallet_data", { lnsRecords: newRecords });
       return record;
     } catch (e) {
-      console.debug("Something went wrong when updating lns record: ", e);
+      console.debug("Something went wrong decrypting lns record: ", e);
       return null;
     }
   }
@@ -1483,7 +1496,7 @@ export class WalletRPC {
   }
 
   // submits the transaction to the blockchain, irreversible from here
-  async relayTransaction(metadataList, isBlink, addressSave, note, isSweepAll) {
+  async relayTransaction(isBlink, addressSave, note, isSweepAll) {
     // for a sweep these don't exist
     let address = "";
     let address_book = "";
@@ -1496,15 +1509,16 @@ export class WalletRPC {
     let errorMessage = "Failed to relay transaction";
 
     // submit each transaction individually
-    for (const hex of metadataList) {
+    for (let hex of this.pending_tx.metadataList) {
       const params = {
         hex,
         blink: isBlink
       };
+
       // don't try submit more txs if a prev one failed
       if (failed) break;
       try {
-        const data = await this.sendRPC("relay_tx", params);
+        let data = await this.sendRPC("relay_tx", params);
         if (data.hasOwnProperty("error")) {
           errorMessage = data.error.message || errorMessage;
           failed = true;
@@ -1544,9 +1558,13 @@ export class WalletRPC {
           address_book.name
         );
       }
+      // no more pending txs, clear it out.
+      this.pending_tx = null;
       return;
     }
 
+    // no more pending txs, clear it out.
+    this.pending_tx = null;
     this.sendGateway(gatewayEndpoint, {
       code: -1,
       message: errorMessage,
@@ -1557,7 +1575,7 @@ export class WalletRPC {
   // prepares params and provides a "confirm" popup to allow the user to check
   // send address and tx fees before sending
   // isSweepAll refers to if it's the sweep from service nodes page
-  transfer(password, amount, address, payment_id, priority, isSweepAll) {
+  transfer(password, amount, address, priority, isSweepAll) {
     const cryptoCallback = (err, password_hash) => {
       if (err) {
         this.sendGateway("set_tx_status", {
@@ -1578,16 +1596,17 @@ export class WalletRPC {
 
       amount = (parseFloat(amount) * 1e9).toFixed(0);
 
-      // if sending "All" the funds, then we need to send all - fee (sweep_all)
-      // To be amended after the hardfork, v8.
-      // https://github.com/loki-project/loki-electron-gui-wallet/issues/181
       const isSweepAllRPC = amount == this.wallet_state.unlocked_balance;
       const rpc_endpoint = isSweepAllRPC ? "sweep_all" : "transfer_split";
 
+      // the call coming from the SN page will have address = wallet primary address
       const rpcSpecificParams = isSweepAllRPC
         ? {
             address,
-            account_index: 0
+            // gui wallet only supports one account currently
+            account_index: 0,
+            // sweep *all* funds from all subaddresses to the address specified
+            subaddr_indices_all: true
           }
         : {
             destinations: [{ amount: amount, address: address }]
@@ -1598,10 +1617,6 @@ export class WalletRPC {
         do_not_relay: true,
         get_tx_metadata: true
       };
-
-      if (payment_id) {
-        params.payment_id = payment_id;
-      }
 
       // for updating state on the correct page
       const gatewayEndpoint = isSweepAll
@@ -1627,6 +1642,11 @@ export class WalletRPC {
             return;
           }
 
+          this.pending_tx = {
+            metadataList: data.result.tx_metadata_list
+          };
+
+          // async relayTransaction(metadataList, isBlink, addressSave, note, isSweepAll)
           // update state to show a confirm popup
           this.sendGateway(gatewayEndpoint, {
             code: 1,
@@ -1637,7 +1657,6 @@ export class WalletRPC {
               address: data.params.address,
               isSweepAll: isSweepAllRPC,
               amountList: data.result.amount_list,
-              metadataList: data.result.tx_metadata_list,
               feeList: data.result.fee_list,
               priority: data.params.priority,
               // for a "send" tx
@@ -2084,21 +2103,6 @@ export class WalletRPC {
             );
           }
         });
-
-        for (let i = 0; i < wallet.transactions.tx_list.length; i++) {
-          if (/^0*$/.test(wallet.transactions.tx_list[i].payment_id)) {
-            wallet.transactions.tx_list[i].payment_id = "";
-          } else if (
-            /^0*$/.test(wallet.transactions.tx_list[i].payment_id.substring(16))
-          ) {
-            wallet.transactions.tx_list[
-              i
-            ].payment_id = wallet.transactions.tx_list[i].payment_id.substring(
-              0,
-              16
-            );
-          }
-        }
 
         wallet.transactions.tx_list.sort(function(a, b) {
           if (a.timestamp < b.timestamp) return 1;

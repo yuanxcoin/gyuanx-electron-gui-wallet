@@ -7,8 +7,18 @@
           <q-toolbar-title>
             {{ $t("titles.transactionDetails") }}
           </q-toolbar-title>
-          <q-btn flat class="q-mr-sm" :label="$t('buttons.showTxDetails')" @click="showTxDetails" />
-          <q-btn v-if="can_open" color="primary" :label="$t('buttons.viewOnExplorer')" @click="openExplorer" />
+          <q-btn
+            flat
+            class="q-mr-sm"
+            :label="$t('buttons.showTxDetails')"
+            @click="showTxDetails"
+          />
+          <q-btn
+            v-if="can_open"
+            color="primary"
+            :label="$t('buttons.viewOnExplorer')"
+            @click="openExplorer"
+          />
         </q-toolbar>
       </q-header>
       <q-page-container>
@@ -111,6 +121,7 @@
           </h6>
           <p class="monospace break-all">{{ tx.txid }}</p>
 
+          <!-- Deprecated, but leave this for old transactions -->
           <h6 class="q-mt-xs q-mb-none text-weight-light">
             {{ $t("strings.paymentID") }}
           </h6>
@@ -129,10 +140,17 @@
               </q-item>
               <q-item class="q-px-none">
                 <q-item-label>
-                  <q-item-label class="non-selectable">{{ in_tx_address_used.address_index_text }}</q-item-label>
-                  <q-item-label class="monospace ellipsis">{{ in_tx_address_used.address }}</q-item-label>
+                  <q-item-label class="non-selectable">{{
+                    in_tx_address_used.address_index_text
+                  }}</q-item-label>
+                  <q-item-label class="monospace ellipsis">{{
+                    in_tx_address_used.address
+                  }}</q-item-label>
                 </q-item-label>
-                <ContextMenu :menu-items="menuItems" @copyAddress="copyAddress(in_tx_address_used.address)" />
+                <ContextMenu
+                  :menu-items="menuItems"
+                  @copyAddress="copyAddress(in_tx_address_used.address)"
+                />
               </q-item>
             </q-list>
           </div>
@@ -147,19 +165,32 @@
                 }}:
               </q-item>
               <template v-if="out_destinations">
-                <q-item v-for="destination in out_destinations" :key="destination.address" class="q-px-none">
+                <q-item
+                  v-for="destination in out_destinations"
+                  :key="destination.address"
+                  class="q-px-none"
+                >
                   <q-item-label>
                     <q-item-label>{{ destination.name }}</q-item-label>
-                    <q-item-label class="monospace ellipsis">{{ destination.address }}</q-item-label>
-                    <q-item-label><FormatLoki :amount="destination.amount"/></q-item-label>
+                    <q-item-label class="monospace ellipsis">{{
+                      destination.address
+                    }}</q-item-label>
+                    <q-item-label
+                      ><FormatLoki :amount="destination.amount"
+                    /></q-item-label>
                   </q-item-label>
-                  <ContextMenu :menu-items="menuItems" @copyAddress="copyAddress(destination.address)" />
+                  <ContextMenu
+                    :menu-items="menuItems"
+                    @copyAddress="copyAddress(destination.address)"
+                  />
                 </q-item>
               </template>
               <template v-else>
                 <q-item class="q-px-none">
                   <q-item-label>
-                    <q-item-label header>{{ $t("strings.destinationUnknown") }}</q-item-label>
+                    <q-item-label header>{{
+                      $t("strings.destinationUnknown")
+                    }}</q-item-label>
                   </q-item-label>
                 </q-item>
               </template>
@@ -204,7 +235,9 @@ export default {
     ContextMenu
   },
   data() {
-    const menuItems = [{ action: "copyAddress", i18n: "menuItems.copyAddress" }];
+    const menuItems = [
+      { action: "copyAddress", i18n: "menuItems.copyAddress" }
+    ];
     return {
       isVisible: false,
       txNotes: "",
@@ -215,6 +248,7 @@ export default {
         fee: 0,
         height: 0,
         note: "",
+        // deprecated, but leave for older txs
         payment_id: "",
         subaddr_index: { major: 0, minor: 0 },
         timestamp: 0,
@@ -233,7 +267,9 @@ export default {
     },
     in_tx_address_used(state) {
       let i;
-      let used_addresses = state.gateway.wallet.address_list.primary.concat(state.gateway.wallet.address_list.used);
+      let used_addresses = state.gateway.wallet.address_list.primary.concat(
+        state.gateway.wallet.address_list.used
+      );
       for (i = 0; i < used_addresses.length; i++) {
         if (used_addresses[i].address_index == this.tx.subaddr_index.minor) {
           let address_index_text = "";

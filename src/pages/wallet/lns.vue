@@ -56,7 +56,14 @@ export default {
       });
     },
     onUpdate(record) {
-      this.purchasePageAction(record, "startUpdating");
+      let updateRecord = {
+        ...record,
+        // Don't pre-fill these fields on update
+        value: "",
+        owner: "",
+        backup_owner: ""
+      };
+      this.purchasePageAction(updateRecord, "startUpdating");
     },
     onRenew(record) {
       this.purchasePageAction(record, "startRenewing");

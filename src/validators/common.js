@@ -3,13 +3,6 @@ export const greater_than_zero = input => {
   return input > 0;
 };
 
-export const payment_id = input => {
-  return (
-    input.length === 0 ||
-    (/^[0-9A-Fa-f]+$/.test(input) && (input.length == 64 || input.length == 16))
-  );
-};
-
 export const privkey = input => {
   return (
     input.length === 0 || (/^[0-9A-Fa-f]+$/.test(input) && input.length == 64)

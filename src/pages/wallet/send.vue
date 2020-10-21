@@ -75,28 +75,6 @@
           </LokiField>
         </div>
 
-        <!-- Payment ID -->
-        <div class="col q-mt-sm">
-          <LokiField
-            :label="$t('fieldLabels.paymentId')"
-            :error="$v.newTx.payment_id.$error"
-            optional
-          >
-            <q-input
-              v-model.trim="newTx.payment_id"
-              :dark="theme == 'dark'"
-              :placeholder="
-                $t('placeholders.hexCharacters', {
-                  count: '16 or 64'
-                })
-              "
-              borderless
-              dense
-              @blur="$v.newTx.payment_id.$touch"
-            />
-          </LokiField>
-        </div>
-
         <!-- Notes -->
         <div class="col q-mt-sm">
           <LokiField :label="$t('fieldLabels.notes')" optional>
@@ -171,7 +149,7 @@
 <script>
 import { mapState } from "vuex";
 import { required, decimal } from "vuelidate/lib/validators";
-import { payment_id, address, greater_than_zero } from "src/validators/common";
+import { address, greater_than_zero } from "src/validators/common";
 import LokiField from "components/loki_field";
 import WalletPassword from "src/mixins/wallet_password";
 import ConfirmDialogMixin from "src/mixins/confirm_dialog_mixin";
@@ -196,7 +174,6 @@ export default {
       newTx: {
         amount: 0,
         address: "",
-        payment_id: "",
         priority: priorityOptions[0].value,
         address_book: {
           save: false,
@@ -206,7 +183,6 @@ export default {
       },
       priorityOptions: priorityOptions,
       confirmFields: {
-        metadataList: [],
         isBlink: false,
         totalAmount: -1,
         destination: "",
@@ -250,8 +226,7 @@ export default {
               .catch(() => resolve(false));
           });
         }
-      },
-      payment_id: { payment_id }
+      }
     }
   },
   watch: {
@@ -277,7 +252,6 @@ export default {
             this.newTx = {
               amount: 0,
               address: "",
-              payment_id: "",
               priority: this.priorityOptions[0].value,
               address_book: {
                 save: false,
@@ -315,7 +289,6 @@ export default {
   methods: {
     autoFill: function(info) {
       this.newTx.address = info.address;
-      this.newTx.payment_id = info.payment_id;
     },
     buildDialogFieldsSend(txData) {
       // build using mixin method
@@ -331,7 +304,6 @@ export default {
       const { name, description, save } = this.newTx.address_book;
       const addressSave = {
         address: this.newTx.address,
-        payment_id: this.newTx.payment_id,
         address_book: {
           description,
           name,
@@ -340,14 +312,15 @@ export default {
       };
 
       const note = this.newTx.note;
-      const metadataList = this.confirmFields.metadataList;
       const isBlink = this.confirmFields.isBlink;
 
       const relayTxData = {
-        metadataList,
         isBlink,
         addressSave,
-        note
+        note,
+        // you may be sending all (which calls sweep_all RPC), but this refers to
+        // if the relay is coming from "sweep all" on the SN tab
+        isSweepAll: false
       };
 
       // Commit the transaction
@@ -399,15 +372,6 @@ export default {
           type: "negative",
           timeout: 1000,
           message: this.$t("notification.errors.invalidAddress")
-        });
-        return;
-      }
-
-      if (this.$v.newTx.payment_id.$error) {
-        this.$q.notify({
-          type: "negative",
-          timeout: 1000,
-          message: this.$t("notification.errors.invalidPaymentId")
         });
         return;
       }

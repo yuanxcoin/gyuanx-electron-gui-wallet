@@ -5,7 +5,6 @@ export default {
         feeList,
         amountList,
         destinations,
-        metadataList,
         priority,
         isSweepAll,
         address
@@ -18,7 +17,6 @@ export default {
       let destination = isSweepAll ? address : destinations[0].address;
       const isBlink = [0, 2, 3, 4, 5].includes(priority) ? true : false;
       const confirmFields = {
-        metadataList,
         isBlink,
         destination,
         totalAmount,

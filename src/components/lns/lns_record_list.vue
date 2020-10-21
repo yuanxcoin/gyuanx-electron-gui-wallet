@@ -40,7 +40,9 @@
         <span v-if="record.type === 'session'">{{
           record.update_height | blockHeight
         }}</span>
-        <span v-else>{{ record.expiration_height | expirationHeight }}</span>
+        <span v-else class="lokinet-expiration">{{
+          record.expiration_height | expirationHeight
+        }}</span>
       </q-item-section>
       <ContextMenu
         :menu-items="validMenuItems(record)"
@@ -160,6 +162,10 @@ export default {
 </script>
 
 <style lang="scss">
+.lokinet-expiration {
+  width: 180px;
+}
+
 .lns-record-list {
   .q-item {
     cursor: pointer;

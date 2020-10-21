@@ -330,8 +330,14 @@ export default {
         });
         return;
       }
+      // The validators validate on lowercase, need to submit as lowercase too
+      const submitRecord = {
+        ...this.record,
+        name: this.record.name.toLowerCase(),
+        value: this.record.value.toLowerCase()
+      };
       // Send up the submission with the record
-      this.$emit("onSubmit", this.record);
+      this.$emit("onSubmit", submitRecord);
     },
     clear() {
       this.$emit("onClear");
@@ -343,15 +349,16 @@ export default {
         required,
         maxLength: maxLength(64),
         hyphen: function(value) {
-          const str = value || "";
+          let str = value || "";
           return !(str.startsWith("-") || str.endsWith("-"));
         },
         validate: function(value) {
+          const _value = value.toLowerCase();
           if (this.record.type === "session") {
-            return session_name(value);
+            return session_name(_value);
           } else {
             // shortened lokinet LNS name
-            return lokinet_name(value);
+            return lokinet_name(_value);
           }
         }
       },
@@ -363,11 +370,12 @@ export default {
       value: {
         required,
         validate: function(value) {
+          const _value = value.toLowerCase();
           if (this.record.type === "session") {
-            return session_id(value);
+            return session_id(_value);
           } else {
             // full lokinet address
-            return lokinet_address(value);
+            return lokinet_address(_value);
           }
         }
       },

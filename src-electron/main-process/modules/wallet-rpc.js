@@ -1156,7 +1156,19 @@ export class WalletRPC {
       const isOurRecord = currentRecords.find(
         c => c.name_hash === record.name_hash
       );
-      if (!isOurRecord) return null;
+      if (!isOurRecord) {
+        return null;
+      } else {
+        // if it's our record, we can cache it
+        const _record = {
+          type: record.type,
+          name: record.name
+        };
+        const params = {
+          names: [_record]
+        };
+        this.sendRPC("lns_add_known_names", params);
+      }
 
       const newRecords = currentRecords.map(current => {
         if (current.name_hash === record.name_hash) {
@@ -1168,7 +1180,7 @@ export class WalletRPC {
       this.sendGateway("set_wallet_data", { lnsRecords: newRecords });
       return record;
     } catch (e) {
-      console.debug("Something went wrong when updating lns record: ", e);
+      console.debug("Something went wrong decrypting lns record: ", e);
       return null;
     }
   }

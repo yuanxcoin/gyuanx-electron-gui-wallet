@@ -89,6 +89,8 @@ export class WalletRPC {
           options.wallet.rpc_bind_port,
           "--daemon-address",
           daemon_address,
+          "--rpc-bind-ip",
+          "127.0.0.1",
           "--log-level",
           options.wallet.log_level
         ];

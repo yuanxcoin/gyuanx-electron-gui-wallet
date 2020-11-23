@@ -61,6 +61,12 @@
             :disable="!signatureToVerify || !unsignedData || !address"
             @click="verify()"
           />
+          <q-btn
+            v-if="canClear"
+            :label="$t('buttons.clear')"
+            color="secondary"
+            @click="clear"
+          />
         </div>
         <SignatureDialog
           :on-copy="copySignature"
@@ -98,7 +104,14 @@ export default {
   computed: mapState({
     theme: state => state.gateway.app.config.appearance.theme,
     sign_status: state => state.gateway.sign_status,
-    verify_status: state => state.gateway.verify_status
+    verify_status: state => state.gateway.verify_status,
+    canClear() {
+      const canClear =
+        this.signatureToVerify !== "" ||
+        this.address !== "" ||
+        this.unsignedData !== "";
+      return canClear;
+    }
   }),
   watch: {
     sign_status: {
@@ -167,6 +180,11 @@ export default {
     },
     closeDialog() {
       this.signature = "";
+    },
+    clear() {
+      this.signatureToVerify = "";
+      this.unsignedData = "";
+      this.address = "";
     }
   }
 };

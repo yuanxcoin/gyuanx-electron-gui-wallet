@@ -93,8 +93,6 @@ export default {
   data() {
     return {
       toSign: "",
-      // returned from the RPC
-      signature: "",
       // entered by the user to verify
       signatureToVerify: "",
       unsignedData: "",
@@ -105,6 +103,7 @@ export default {
     theme: state => state.gateway.app.config.appearance.theme,
     sign_status: state => state.gateway.sign_status,
     verify_status: state => state.gateway.verify_status,
+    signature: state => state.gateway.sign_status.signature,
     canClear() {
       const canClear =
         this.signatureToVerify !== "" ||
@@ -117,7 +116,7 @@ export default {
     sign_status: {
       handler(val, old) {
         if (val.code == old.code) return;
-        const { code, message, signature } = val;
+        const { code, message } = val;
         switch (code) {
           case -1:
             this.$q.notify({
@@ -126,8 +125,6 @@ export default {
               message
             });
             break;
-          case 1:
-            this.showSignature(signature);
         }
       },
       deep: true
@@ -167,9 +164,6 @@ export default {
         signature: this.signatureToVerify
       });
     },
-    showSignature(signature) {
-      this.signature = signature;
-    },
     copySignature() {
       clipboard.writeText(this.signature);
       this.$q.notify({
@@ -179,7 +173,9 @@ export default {
       });
     },
     closeDialog() {
-      this.signature = "";
+      this.$store.commit("gateway/set_sign_status", {
+        signature: ""
+      });
     },
     clear() {
       this.signatureToVerify = "";

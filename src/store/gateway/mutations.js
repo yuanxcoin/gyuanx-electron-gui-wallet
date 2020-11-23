@@ -39,6 +39,21 @@ export const set_check_transaction_status = (state, data) => {
     ...data
   };
 };
+
+export const set_sign_status = (state, data) => {
+  state.sign_status = {
+    ...state.sign_status,
+    ...data
+  };
+};
+
+export const set_verify_status = (state, data) => {
+  state.verify_status = {
+    ...state.verify_status,
+    ...data
+  };
+};
+
 export const set_lns_status = (state, data) => {
   state.lns_status = data;
 };

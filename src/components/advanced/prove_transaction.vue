@@ -5,7 +5,10 @@
         {{ $t("strings.proveTransactionDescription") }}
       </div>
       <div>
-        <LokiField :label="$t('fieldLabels.transactionId')" :error="$v.txid.$error">
+        <LokiField
+          :label="$t('fieldLabels.transactionId')"
+          :error="$v.txid.$error"
+        >
           <q-input
             v-model.trim="txid"
             :dark="theme == 'dark'"
@@ -15,7 +18,12 @@
             @blur="$v.txid.$touch"
           />
         </LokiField>
-        <LokiField class="q-mt-md" :label="$t('fieldLabels.address')" :error="$v.address.$error" optional>
+        <LokiField
+          class="q-mt-md"
+          :label="$t('fieldLabels.address')"
+          :error="$v.address.$error"
+          optional
+        >
           <q-input
             v-model.trim="address"
             :dark="theme == 'dark'"
@@ -35,9 +43,23 @@
           />
         </LokiField>
         <div class="buttons submit-button">
-          <q-btn color="primary" :label="$t('buttons.generate')" @click="generate" />
-          <q-btn v-if="canClear" color="secondary" :label="$t('buttons.clear')" @click="clear" />
-          <q-btn v-if="status.state.signature" color="secondary" :label="$t('buttons.copySignature')" @click="copy" />
+          <q-btn
+            color="primary"
+            :label="$t('buttons.generate')"
+            @click="generate"
+          />
+          <q-btn
+            v-if="canClear"
+            color="secondary"
+            :label="$t('buttons.clear')"
+            @click="clear"
+          />
+          <q-btn
+            v-if="status.state.signature"
+            color="secondary"
+            :label="$t('buttons.copySignature')"
+            @click="copy"
+          />
         </div>
       </div>
       <div v-if="status.state.signature" class="signature-wrapper">

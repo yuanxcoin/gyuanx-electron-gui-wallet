@@ -390,6 +390,14 @@ export class WalletRPC {
         );
         break;
 
+      case "sign":
+        this.sign(params.data);
+        break;
+
+      case "verify":
+        this.verify(params.data, params.address, params.signature);
+        break;
+
       case "add_address_book":
         this.addAddressBook(
           params.address,
@@ -1278,6 +1286,104 @@ export class WalletRPC {
     } catch (e) {
       console.debug("Failed to decrypt lns value: ", e);
       return null;
+    }
+  }
+
+  async sign(data) {
+    // set to loading
+    this.sendGateway("set_sign_status", {
+      code: 0,
+      sending: true
+    });
+    try {
+      const rpcData = await this.sendRPC("sign", { data });
+      if (
+        !rpcData ||
+        rpcData.hasOwnProperty("error") ||
+        !rpcData.hasOwnProperty("result")
+      ) {
+        const error = rpcData?.error?.message || "Unknown error";
+        this.sendGateway("set_sign_status", {
+          code: -1,
+          message: error,
+          sending: false
+        });
+        return;
+      }
+      const signature = rpcData.result.signature;
+
+      this.sendGateway("set_sign_status", {
+        code: 1,
+        sending: false,
+        signature: signature
+      });
+      return;
+    } catch (err) {
+      console.debug(`Failed to sign data: ${data} with error: ${err}`);
+      this.sendGateway("set_sign_status", {
+        code: -1,
+        message: err,
+        sending: false
+      });
+    }
+  }
+
+  async verify(data, address, signature) {
+    this.sendGateway("set_verify_status", {
+      code: 0,
+      sending: true
+    });
+    try {
+      const rpcData = await this.sendRPC("verify", {
+        data,
+        address,
+        signature
+      });
+      if (
+        !rpcData ||
+        rpcData.hasOwnProperty("error") ||
+        !rpcData.hasOwnProperty("result")
+      ) {
+        let errorI18n = "";
+        const error = rpcData.error.message || "Unknown error";
+        if (error && error.includes("Invalid address")) {
+          errorI18n = "notification.errors.invalidAddress";
+        }
+        this.sendGateway("set_verify_status", {
+          code: -1,
+          message: "",
+          i18n: errorI18n || "Unknown error",
+          sending: false
+        });
+        return;
+      }
+      const good = rpcData.result.good;
+      if (good) {
+        // success
+        this.sendGateway("set_verify_status", {
+          code: 1,
+          sending: false,
+          i18n: "notification.positive.signatureVerified",
+          message: ""
+        });
+      } else {
+        // error
+        this.sendGateway("set_verify_status", {
+          code: -1,
+          sending: false,
+          i18n: "notification.errors.invalidSignature",
+          message: ""
+        });
+      }
+
+      return;
+    } catch (err) {
+      this.sendGateway("set_verify_status", {
+        code: -1,
+        message: err.toString(),
+        i18n: "",
+        sending: false
+      });
     }
   }
 

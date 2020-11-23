@@ -237,6 +237,14 @@ export class Gateway extends EventEmitter {
         this.app.store.commit("gateway/set_check_transaction_status", data);
         break;
       }
+      case "set_sign_status": {
+        this.app.store.commit("gateway/set_sign_status", decrypted_data.data);
+        break;
+      }
+      case "set_verify_status": {
+        this.app.store.commit("gateway/set_verify_status", decrypted_data.data);
+        break;
+      }
       case "set_old_gui_import_status":
         this.app.store.commit(
           "gateway/set_old_gui_import_status",

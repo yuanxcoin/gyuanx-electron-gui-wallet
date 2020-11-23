@@ -96,6 +96,19 @@ export default {
     i18n: "",
     state: {}
   },
+  sign_status: {
+    code: 0,
+    message: "",
+    i18n: "",
+    signature: "",
+    sending: false
+  },
+  verify_status: {
+    code: 0,
+    message: "",
+    i18n: "",
+    sending: false
+  },
   lns_status: {
     code: 0,
     message: "",

@@ -12,6 +12,7 @@ export default {
     close: "CLOSE",
     contacts: "CONTACTS",
     copyAddress: "COPY ADDRESS",
+    copyData: "COPY DATA",
     copySignature: "COPY SIGNATURE",
     createWallet: "CREATE WALLET",
     decrypt: "DECRYPT",
@@ -42,10 +43,12 @@ export default {
     settings: "SETTINGS",
     showQRCode: "SHOW QR CODE",
     showTxDetails: "SHOW TX DETAILS",
+    sign: "SIGN",
     stake: "STAKE",
     sweepAll: "SWEEP ALL",
     unlock: "UNLOCK",
     update: "UPDATE",
+    verify: "VERIFY",
     viewOnExplorer: "VIEW ON EXPLORER"
   },
   dialog: {
@@ -139,6 +142,11 @@ export default {
       message: "Do you want to view your private keys?",
       ok: "SHOW"
     },
+    signature: {
+      title: "Signature",
+      message:
+        "Copy the data signed by your primary address's private key below"
+    },
     stake: {
       title: "Stake",
       message: "Do you want to stake?",
@@ -202,6 +210,7 @@ export default {
     confirmPassword: "CONFIRM PASSWORD",
     daemonLogLevel: "DAEMON LOG LEVEL",
     daemonP2pPort: "DAEMON P2P PORT",
+    data: "DATA",
     dataStoragePath: "DATA STORAGE PATH",
     decryptRecord: "DECRYPT RECORD",
     filter: "FILTER",
@@ -324,6 +333,7 @@ export default {
       serviceNodeInfoFilled: "Service node key and min amount filled",
       sessionIdCopied: "Session ID copied to clipboard",
       signatureCopied: "Signature copied to clipboard",
+      signatureVerified: "Signature verified",
       stakeSuccess: "Successfully staked",
       transactionNotesSaved: "Transaction notes saved"
     },
@@ -370,6 +380,7 @@ export default {
         "Please enter the service node registration command",
       invalidServiceNodeKey: "Service node key not valid",
       invalidSessionId: "Session ID not valid",
+      invalidSignature: "Invalid signature",
       invalidWalletPath: "Invalid wallet path",
       keyImages: {
         exporting: "Error exporting key images",
@@ -397,6 +408,8 @@ export default {
   placeholders: {
     additionalNotes: "Additional notes",
     addressBookName: "Name that belongs to this address",
+    addressOfSigner: "Public wallet address of signer",
+    dataToSign: "Data you want to sign with your primary address's private key",
     filterTx: "Enter an ID, name, address or amount",
     hexCharacters: "{count} hexadecimal characters",
     lnsName: "The name to purchase via Loki Name Service",
@@ -412,7 +425,9 @@ export default {
     recipientWalletAddress: "Recipient's wallet address",
     selectAFile: "Please select a file",
     sessionId: "The Session ID to link to Loki Name Service",
+    signature: "Signature to verify",
     transactionNotes: "Additional notes to locally attach to the transaction",
+    unsignedData: "The data as it should look before it was signed",
     walletName: "A name for your wallet",
     walletPassword: "An optional password for the wallet"
   },
@@ -435,6 +450,7 @@ export default {
       bannedUntil: "Banned until {time}"
     },
     blockHeight: "Height",
+    cannotSign: "You cannot sign with a view only wallet.",
     checkTransaction: {
       description:
         "Verify that funds were paid to an address by supplying the transaction ID, the recipient address, the message used for signing and the signature.\nFor a 'Spend Proof' you dont need to provide the recipient address.",
@@ -540,6 +556,8 @@ export default {
       stakingRequirement: "Staking requirement",
       totalContributed: "Total contributed"
     },
+    signAndVerifyDescription:
+      "Sign data with your primary address's private key or verify a signature against a public address.",
     spendKey: "Spend key",
     startingDaemon: "Starting daemon",
     startingWallet: "Starting wallet",
@@ -585,7 +603,10 @@ export default {
     addressDetails: "Address details",
     advanced: {
       checkTransaction: "CHECK TRANSACTION",
-      prove: "PROVE"
+      prove: "PROVE",
+      signAndVerify: "SIGN/VERIFY",
+      sign: "Sign",
+      verify: "Verify"
     },
     availableForContribution: "Service nodes available for contribution",
     changePassword: "Change password",

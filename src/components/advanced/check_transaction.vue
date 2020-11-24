@@ -1,9 +1,14 @@
 <template>
   <div class="check-transaction">
     <div class="q-pa-md">
-      <div class="q-mb-lg description">{{ $t("strings.checkTransaction.description") }}</div>
+      <div class="q-mb-lg description">
+        {{ $t("strings.checkTransaction.description") }}
+      </div>
       <div>
-        <LokiField :label="$t('fieldLabels.transactionId')" :error="$v.txid.$error">
+        <LokiField
+          :label="$t('fieldLabels.transactionId')"
+          :error="$v.txid.$error"
+        >
           <q-input
             v-model.trim="txid"
             :dark="theme == 'dark'"
@@ -13,7 +18,12 @@
             @blur="$v.txid.$touch"
           />
         </LokiField>
-        <LokiField class="q-mt-md" :label="$t('fieldLabels.address')" :error="$v.address.$error" optional>
+        <LokiField
+          class="q-mt-md"
+          :label="$t('fieldLabels.address')"
+          :error="$v.address.$error"
+          optional
+        >
           <q-input
             v-model.trim="address"
             :dark="theme == 'dark'"
@@ -32,7 +42,11 @@
             dense
           />
         </LokiField>
-        <LokiField class="q-mt-md" :label="$t('fieldLabels.signature')" :error="$v.signature.$error">
+        <LokiField
+          class="q-mt-md"
+          :label="$t('fieldLabels.signature')"
+          :error="$v.signature.$error"
+        >
           <q-input
             v-model.trim="signature"
             :dark="theme == 'dark'"
@@ -43,7 +57,12 @@
         </LokiField>
         <div class="submit-button">
           <q-btn color="primary" :label="$t('buttons.check')" @click="check" />
-          <q-btn v-if="canClear" color="secondary" :label="$t('buttons.clear')" @click="clear" />
+          <q-btn
+            v-if="canClear"
+            color="secondary"
+            :label="$t('buttons.clear')"
+            @click="clear"
+          />
         </div>
       </div>
       <div v-if="status.state.txid">
@@ -52,21 +71,31 @@
           <div>{{ status.state.txid }}</div>
         </div>
         <div class="q-mb-sm">
-          <div class="title">{{ $t("strings.checkTransaction.infoTitles.validTransaction") }}</div>
-          <div :class="status.state.good ? 'good' : 'bad'">{{ validTransaction }}</div>
+          <div class="title">
+            {{ $t("strings.checkTransaction.infoTitles.validTransaction") }}
+          </div>
+          <div :class="status.state.good ? 'good' : 'bad'">
+            {{ validTransaction }}
+          </div>
         </div>
         <div v-if="status.state.received != null" class="q-mb-sm">
-          <div class="title">{{ $t("strings.checkTransaction.infoTitles.received") }}</div>
+          <div class="title">
+            {{ $t("strings.checkTransaction.infoTitles.received") }}
+          </div>
           <div>
             <FormatLoki :amount="status.state.received" raw-value />
           </div>
         </div>
         <div v-if="status.state.in_pool != null" class="q-mb-sm">
-          <div class="title">{{ $t("strings.checkTransaction.infoTitles.inPool") }}</div>
+          <div class="title">
+            {{ $t("strings.checkTransaction.infoTitles.inPool") }}
+          </div>
           <div>{{ status.state.in_pool }}</div>
         </div>
         <div v-if="status.state.confirmations != null" class="q-mb-sm">
-          <div class="title">{{ $t("strings.checkTransaction.infoTitles.confirmations") }}</div>
+          <div class="title">
+            {{ $t("strings.checkTransaction.infoTitles.confirmations") }}
+          </div>
           <div>{{ status.state.confirmations }}</div>
         </div>
       </div>
@@ -100,7 +129,12 @@ export default {
     theme: state => state.gateway.app.config.appearance.theme,
     status: state => state.gateway.check_transaction_status,
     canClear() {
-      return this.txid !== "" || this.address !== "" || this.message !== "" || this.signature != "";
+      return (
+        this.txid !== "" ||
+        this.address !== "" ||
+        this.message !== "" ||
+        this.signature != ""
+      );
     },
     validTransaction() {
       let key = this.status.state.good ? "yes" : "no";

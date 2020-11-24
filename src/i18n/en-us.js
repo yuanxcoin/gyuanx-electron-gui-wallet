@@ -12,6 +12,7 @@ export default {
     close: "CLOSE",
     contacts: "CONTACTS",
     copyAddress: "COPY ADDRESS",
+    copyData: "COPY DATA",
     copySignature: "COPY SIGNATURE",
     createWallet: "CREATE WALLET",
     decrypt: "DECRYPT",
@@ -407,7 +408,7 @@ export default {
   placeholders: {
     additionalNotes: "Additional notes",
     addressBookName: "Name that belongs to this address",
-    address: "Public address",
+    addressOfSigner: "Public wallet address of signer",
     dataToSign: "Data you want to sign with your primary address's private key",
     filterTx: "Enter an ID, name, address or amount",
     hexCharacters: "{count} hexadecimal characters",
@@ -449,6 +450,7 @@ export default {
       bannedUntil: "Banned until {time}"
     },
     blockHeight: "Height",
+    cannotSign: "You cannot sign with a view only wallet.",
     checkTransaction: {
       description:
         "Verify that funds were paid to an address by supplying the transaction ID, the recipient address, the message used for signing and the signature.\nFor a 'Spend Proof' you dont need to provide the recipient address.",
@@ -602,7 +604,9 @@ export default {
     advanced: {
       checkTransaction: "CHECK TRANSACTION",
       prove: "PROVE",
-      signAndVerify: "SIGN/VERIFY"
+      signAndVerify: "SIGN/VERIFY",
+      sign: "Sign",
+      verify: "Verify"
     },
     availableForContribution: "Service nodes available for contribution",
     changePassword: "Change password",

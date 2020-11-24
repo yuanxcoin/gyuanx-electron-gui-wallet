@@ -4,28 +4,35 @@
       <div class="q-mb-lg description">
         {{ $t("strings.signAndVerifyDescription") }}
       </div>
-      <div class="text-h6">Sign</div>
-      <div class="row justify-between items-end">
-        <LokiField :label="$t('fieldLabels.data')">
-          <q-input
-            v-model.trim="toSign"
-            :dark="theme == 'dark'"
-            borderless
-            dense
-            :placeholder="$t('placeholders.dataToSign')"
-          />
-        </LokiField>
-        <div class="btn-wrapper q-ml-md q-py-sm">
-          <q-btn
-            color="primary"
-            :label="$t('buttons.sign')"
-            :loading="sign_status.sending"
-            :disable="!toSign"
-            @click="sign()"
-          />
+      <div v-if="is_view_only">
+        {{ $t("strings.cannotSign") }}
+      </div>
+      <div v-else>
+        <div class="text-h6">{{ $t("titles.advanced.sign") }}</div>
+        <div class="row justify-between items-end">
+          <LokiField :label="$t('fieldLabels.data')">
+            <q-input
+              v-model.trim="toSign"
+              :dark="theme == 'dark'"
+              borderless
+              dense
+              :placeholder="$t('placeholders.dataToSign')"
+            />
+          </LokiField>
+          <div class="btn-wrapper q-ml-md q-py-sm">
+            <q-btn
+              color="primary"
+              :label="$t('buttons.sign')"
+              :loading="sign_status.sending"
+              :disable="!toSign"
+              @click="sign()"
+            />
+          </div>
         </div>
       </div>
-      <div class="verify-heading text-h6">Verify</div>
+      <div class="verify-heading text-h6">
+        {{ $t("titles.advanced.verify") }}
+      </div>
       <div class="justify-between items-end">
         <LokiField class="q-mt-md" :label="$t('fieldLabels.signature')">
           <q-input
@@ -51,7 +58,7 @@
             :dark="theme == 'dark'"
             borderless
             dense
-            :placeholder="$t('placeholders.address')"
+            :placeholder="$t('placeholders.addressOfSigner')"
           />
         </LokiField>
         <div class="submit-button">
@@ -69,9 +76,13 @@
           />
         </div>
         <SignatureDialog
-          :on-copy="copySignature"
+          :on-copy-signature="copySignature"
+          :on-copy-unsigned-data="copyUnsignedData"
+          :on-copy-address="copyAddress"
           :on-close="closeDialog"
           :signature="signature"
+          :unsigned-data="toSign"
+          :address="primary_address"
           :show="!!signature"
         />
       </div>
@@ -104,6 +115,8 @@ export default {
     sign_status: state => state.gateway.sign_status,
     verify_status: state => state.gateway.verify_status,
     signature: state => state.gateway.sign_status.signature,
+    primary_address: state => state.gateway.wallet.info.address,
+    is_view_only: state => state.gateway.wallet.info.view_only,
     canClear() {
       const canClear =
         this.signatureToVerify !== "" ||
@@ -170,6 +183,23 @@ export default {
         type: "positive",
         timeout: 2000,
         message: this.$t("notification.positive.signatureCopied")
+      });
+    },
+    // copy from the dialog
+    copyUnsignedData() {
+      clipboard.writeText(this.toSign);
+      this.$q.notify({
+        type: "positive",
+        timeout: 2000,
+        message: this.$t("notification.positive.copied", { item: "Data" })
+      });
+    },
+    copyAddress() {
+      clipboard.writeText(this.primary_address);
+      this.$q.notify({
+        type: "positive",
+        timeout: 2000,
+        message: this.$t("notification.positive.addressCopied")
       });
     },
     closeDialog() {

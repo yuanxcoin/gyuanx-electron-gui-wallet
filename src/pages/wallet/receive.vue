@@ -1,7 +1,9 @@
 <template>
   <q-page class="receive">
-    <q-list link no-border :dark="theme == 'dark'" class="loki-list">
-      <q-item-label header>{{ $t("strings.addresses.myPrimaryAddress") }}</q-item-label>
+    <q-list link no-border :dark="theme == 'dark'" class="oxen-list">
+      <q-item-label header class="list-header">{{
+        $t("strings.addresses.myPrimaryAddress")
+      }}</q-item-label>
       <ReceiveItem
         v-for="address in address_list.primary"
         :key="address.address"
@@ -15,15 +17,20 @@
       />
 
       <template v-if="address_list.used.length">
-        <q-item-label header>{{ $t("strings.addresses.myUsedAddresses") }}</q-item-label>
+        <q-item-label header class="list-header">{{
+          $t("strings.addresses.myUsedAddresses")
+        }}</q-item-label>
         <ReceiveItem
           v-for="address in address_list.used"
           :key="address.address"
           :address="address"
           :sublabel="
-            `${$t('strings.addresses.subAddress')} (${$t('strings.addresses.subAddressIndex', {
-              index: address.address_index
-            })})`
+            `${$t('strings.addresses.subAddress')} (${$t(
+              'strings.addresses.subAddressIndex',
+              {
+                index: address.address_index
+              }
+            )})`
           "
           :show-q-r="showQR"
           :copy-address="copyAddress"
@@ -32,15 +39,20 @@
       </template>
 
       <template v-if="address_list.unused.length">
-        <q-item-label header>{{ $t("strings.addresses.myUnusedAddresses") }}</q-item-label>
+        <q-item-label header class="list-header">{{
+          $t("strings.addresses.myUnusedAddresses")
+        }}</q-item-label>
         <ReceiveItem
           v-for="address in address_list.unused"
           :key="address.address"
           :address="address"
           :sublabel="
-            `${$t('strings.addresses.subAddress')} (${$t('strings.addresses.subAddressIndex', {
-              index: address.address_index
-            })})`
+            `${$t('strings.addresses.subAddress')} (${$t(
+              'strings.addresses.subAddressIndex',
+              {
+                index: address.address_index
+              }
+            )})`
           "
           :show-q-r="showQR"
           :copy-address="copyAddress"
@@ -57,10 +69,18 @@
         <q-card class="qr-code-card">
           <div class="text-center q-mb-sm q-pa-md" style="background: white;">
             <QrcodeVue ref="qr" :value="QR.address" size="240"> </QrcodeVue>
-            <ContextMenu :menu-items="menuItems" @copyQR="copyQR()" @saveQR="saveQR()" />
+            <ContextMenu
+              :menu-items="menuItems"
+              @copyQR="copyQR()"
+              @saveQR="saveQR()"
+            />
           </div>
           <q-card-actions>
-            <q-btn color="primary" :label="$t('buttons.close')" @click="QR.visible = false" />
+            <q-btn
+              color="primary"
+              :label="$t('buttons.close')"
+              @click="QR.visible = false"
+            />
           </q-card-actions>
         </q-card>
       </q-dialog>
@@ -161,7 +181,7 @@ export default {
     font-weight: 400;
   }
 
-  .loki-list-item {
+  .oxen-list-item {
     cursor: pointer;
 
     .q-item-section {

@@ -7,11 +7,11 @@
     </div>
 
     <template v-if="address_book_combined.length">
-      <q-list link no-border :dark="theme == 'dark'" class="loki-list">
+      <q-list link no-border :dark="theme == 'dark'" class="oxen-list">
         <q-item
           v-for="(entry, index) in address_book_combined"
           :key="`${entry.address}-${entry.name}-${index}`"
-          class="loki-list-item"
+          class="oxen-list-item"
           @click.native="details(entry)"
         >
           <q-item-section>
@@ -27,7 +27,7 @@
                 :name="entry.starred ? 'star' : 'star_border'"
               />
               <q-btn
-                color="secondary"
+                color="primary"
                 style="margin-left: 10px;"
                 :label="$t('buttons.send')"
                 :disabled="view_only"
@@ -45,7 +45,7 @@
       </q-list>
     </template>
     <template v-else>
-      <p class="q-ma-md">{{ $t("strings.addressBookIsEmpty") }}</p>
+      <p class="q-ma-md tab-desc">{{ $t("strings.addressBookIsEmpty") }}</p>
     </template>
 
     <q-page-sticky position="bottom-right" :offset="[18, 18]">
@@ -126,9 +126,10 @@ export default {
   .header {
     font-size: 14px;
     font-weight: 500;
+    color: #1f1c47;
   }
 
-  .loki-list-item {
+  .oxen-list-item {
     cursor: pointer;
     padding-top: 12px;
     padding-bottom: 12px;

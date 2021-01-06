@@ -1,7 +1,7 @@
 <template>
   <div class="lns-purchase">
     <div class="q-mb-lg q-px-md q-pt-md">
-      <div class="description">
+      <div class="tab-desc">
         {{ $t("strings.lnsPurchaseDescription") }}
       </div>
       <div class="prices">
@@ -9,23 +9,23 @@
         <table>
           <tr>
             <td>{{ $t("strings.lns.sessionID") }}:</td>
-            <td>15 LOKI</td>
+            <td>15 OXEN</td>
           </tr>
           <tr>
             <td>{{ $t("strings.lns.lokinetName1Year") }}:</td>
-            <td>15 LOKI</td>
+            <td>15 OXEN</td>
           </tr>
           <tr>
             <td>{{ $t("strings.lns.lokinetNameXYears", { years: 2 }) }}:</td>
-            <td>30 LOKI</td>
+            <td>30 OXEN</td>
           </tr>
           <tr>
             <td>{{ $t("strings.lns.lokinetNameXYears", { years: 5 }) }}:</td>
-            <td>60 LOKI</td>
+            <td>60 OXEN</td>
           </tr>
           <tr>
             <td>{{ $t("strings.lns.lokinetNameXYears", { years: 10 }) }}:</td>
-            <td>90 LOKI</td>
+            <td>90 OXEN</td>
           </tr>
         </table>
       </div>
@@ -55,12 +55,14 @@ export default {
 .lns-purchase {
   .description {
     white-space: pre-line;
-    color: #cecece;
-    margin-bottom: 20px;
+    // oxen-navy
+    color: #1f1c47;
   }
 
   .prices {
-    color: #cecece;
+    // oxen-navy
+    margin-top: 20px;
+    color: #1f1c47;
   }
 }
 </style>

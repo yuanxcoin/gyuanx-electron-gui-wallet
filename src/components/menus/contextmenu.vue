@@ -2,7 +2,11 @@
   <q-menu context-menu>
     <q-list separator class="context-menu-list">
       <div v-for="(item, index) in menuItems" :key="index">
-        <ContextMenuItem :action="item.action" :i18n="item.i18n" @clicked="clickedMenu(item, $event)" />
+        <ContextMenuItem
+          :action="item.action"
+          :i18n="item.i18n"
+          @clicked="clickedMenu(item, $event)"
+        />
       </div>
     </q-list>
   </q-menu>
@@ -30,10 +34,4 @@ export default {
 };
 </script>
 
-<style>
-.context-menu-list {
-  min-width: 150px;
-  max-height: 300px;
-  color: white;
-}
-</style>
+<style></style>

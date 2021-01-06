@@ -1,7 +1,7 @@
 <template>
   <q-page class="create-wallet">
     <div class="fields q-mx-md q-mt-md">
-      <LokiField
+      <OxenField
         :label="$t('fieldLabels.walletName')"
         :error="$v.wallet.name.$error"
       >
@@ -14,21 +14,20 @@
           @keyup.enter="create"
           @blur="$v.wallet.name.$touch"
         />
-      </LokiField>
+      </OxenField>
 
-      <LokiField :label="$t('fieldLabels.seedLanguage')">
+      <OxenField :label="$t('fieldLabels.seedLanguage')">
         <q-select
           v-model="wallet.language"
           :options="languageOptions"
-          :dark="theme == 'dark'"
           borderless
           dense
           emit-value
           map-options
         />
-      </LokiField>
+      </OxenField>
 
-      <LokiField :label="$t('fieldLabels.password')" optional>
+      <OxenField :label="$t('fieldLabels.password')" optional>
         <q-input
           v-model="wallet.password"
           type="password"
@@ -38,9 +37,9 @@
           dense
           @keyup.enter="create"
         />
-      </LokiField>
+      </OxenField>
 
-      <LokiField :label="$t('fieldLabels.confirmPassword')">
+      <OxenField :label="$t('fieldLabels.confirmPassword')">
         <q-input
           v-model="wallet.password_confirm"
           type="password"
@@ -49,7 +48,7 @@
           dense
           @keyup.enter="create"
         />
-      </LokiField>
+      </OxenField>
 
       <q-btn
         class="submit-button"
@@ -64,10 +63,10 @@
 <script>
 import { required } from "vuelidate/lib/validators";
 import { mapState } from "vuex";
-import LokiField from "components/loki_field";
+import OxenField from "components/oxen_field";
 export default {
   components: {
-    LokiField
+    OxenField
   },
   data() {
     const languageOptions = [

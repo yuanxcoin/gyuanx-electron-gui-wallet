@@ -1,16 +1,16 @@
 {
-  "name": "loki-electron-wallet",
-  "version": "1.5.4",
-  "description": "Modern GUI interface for Loki Currency",
-  "productName": "Loki Electron Wallet",
+  "name": "oxen-electron-wallet",
+  "version": "1.5.5",
+  "description": "Modern GUI interface for Oxen Currency",
+  "productName": "Oxen Electron Wallet",
   "repository": {
     "type": "git",
     "url": "https://github.com/loki-project/loki-electron-gui-wallet.git"
   },
-  "cordovaId": "com.lokinetwork.wallet",
+  "cordovaId": "com.oxen.wallet",
   "author": {
-    "name": "Loki Project",
-    "email": "team@loki.network"
+    "name": "Oxen",
+    "email": "oxen@oxen.io"
   },
   "private": true,
   "scripts": {

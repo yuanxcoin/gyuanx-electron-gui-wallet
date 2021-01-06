@@ -34,16 +34,27 @@ export class Backend {
   }
 
   init(config) {
+    let configDir;
+    let legacyLokiConfigDir;
     if (os.platform() === "win32") {
-      this.config_dir = "C:\\ProgramData\\loki";
-      this.wallet_dir = `${os.homedir()}\\Documents\\Loki`;
+      configDir = "C:\\ProgramData\\oxen";
+      legacyLokiConfigDir = "C:\\ProgramData\\loki\\";
+      this.wallet_dir = `${os.homedir()}\\Documents\\Oxen`;
     } else {
-      this.config_dir = path.join(os.homedir(), ".loki");
-      this.wallet_dir = path.join(os.homedir(), "Loki");
+      configDir = path.join(os.homedir(), ".oxen");
+      legacyLokiConfigDir = path.join(os.homedir(), ".loki/");
+      this.wallet_dir = path.join(os.homedir(), "Oxen");
     }
 
-    if (!fs.existsSync(this.config_dir)) {
-      fs.mkdirpSync(this.config_dir);
+    // if the user has used loki before, just keep the same stuff
+    if (fs.existsSync(legacyLokiConfigDir)) {
+      this.config_dir = legacyLokiConfigDir;
+    } else {
+      // create the new, Oxen location
+      this.config_dir = configDir;
+      if (!fs.existsSync(configDir)) {
+        fs.mkdirpSync(configDir);
+      }
     }
 
     if (!fs.existsSync(path.join(this.config_dir, "gui"))) {

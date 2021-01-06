@@ -1,7 +1,7 @@
 <template>
   <div class="lns-record-list">
     <div v-if="needsDecryption" class="decrypt row justify-between items-end">
-      <LokiField
+      <OxenField
         :label="$t('fieldLabels.decryptRecord')"
         :disable="decrypting"
         :error="$v.name.$error"
@@ -15,7 +15,7 @@
           :disable="decrypting"
           @blur="$v.name.$touch"
         />
-      </LokiField>
+      </OxenField>
       <div class="btn-wrapper q-ml-md row items-center">
         <q-btn
           color="primary"
@@ -51,14 +51,14 @@
 
 <script>
 import { mapState } from "vuex";
-import LokiField from "components/loki_field";
+import OxenField from "components/oxen_field";
 import { session_name_or_lokinet_name } from "src/validators/common";
 import LNSRecordList from "./lns_record_list";
 
 export default {
   name: "LNSRecords",
   components: {
-    LokiField,
+    OxenField,
     LNSRecordList
   },
   data() {
@@ -197,7 +197,7 @@ export default {
     cursor: default;
   }
 
-  .loki-field {
+  .oxen-field {
     flex: 1;
   }
 
@@ -208,15 +208,5 @@ export default {
       height: 46px;
     }
   }
-}
-
-.record-type-title {
-  font-weight: bold;
-  margin-bottom: 40px;
-  padding-bottom: 40px;
-}
-
-.records-group {
-  padding-bottom: 40px;
 }
 </style>

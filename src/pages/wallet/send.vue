@@ -10,13 +10,12 @@
         <div class="row gutter-md">
           <!-- Amount -->
           <div class="col-6 amount">
-            <LokiField
+            <OxenField
               :label="$t('fieldLabels.amount')"
               :error="$v.newTx.amount.$error"
             >
               <q-input
                 v-model="newTx.amount"
-                :dark="theme == 'dark'"
                 type="number"
                 min="0"
                 :max="unlocked_balance / 1e9"
@@ -26,100 +25,88 @@
                 @blur="$v.newTx.amount.$touch"
               />
               <q-btn
-                color="secondary"
-                :text-color="theme == 'dark' ? 'white' : 'dark'"
+                color="primary"
                 @click="newTx.amount = unlocked_balance / 1e9"
               >
                 {{ $t("buttons.all") }}
               </q-btn>
-            </LokiField>
+            </OxenField>
           </div>
 
           <!-- Priority -->
           <div class="col-6 priority">
-            <LokiField :label="$t('fieldLabels.priority')">
+            <OxenField :label="$t('fieldLabels.priority')">
               <q-select
                 v-model="newTx.priority"
                 emit-value
                 map-options
-                :dark="theme == 'dark'"
                 :options="priorityOptions"
                 borderless
                 dense
               />
-            </LokiField>
+            </OxenField>
           </div>
         </div>
 
         <!-- Address -->
         <div class="col q-mt-sm">
-          <LokiField
+          <OxenField
             :label="$t('fieldLabels.address')"
             :error="$v.newTx.address.$error"
           >
             <q-input
               v-model.trim="newTx.address"
-              :dark="theme == 'dark'"
               :placeholder="address_placeholder"
               borderless
               dense
               @blur="$v.newTx.address.$touch"
             />
-            <q-btn
-              color="secondary"
-              :text-color="theme == 'dark' ? 'white' : 'dark'"
-              to="addressbook"
-            >
+            <q-btn color="primary" to="addressbook">
               {{ $t("buttons.contacts") }}
             </q-btn>
-          </LokiField>
+          </OxenField>
         </div>
 
         <!-- Notes -->
         <div class="col q-mt-sm">
-          <LokiField :label="$t('fieldLabels.notes')" optional>
+          <OxenField :label="$t('fieldLabels.notes')" optional>
             <q-input
               v-model="newTx.note"
-              class="full-width text-area-loki"
+              class="full-width text-area-oxen"
               type="textarea"
-              :dark="theme == 'dark'"
               :placeholder="$t('placeholders.transactionNotes')"
               borderless
               dense
             />
-          </LokiField>
+          </OxenField>
         </div>
 
         <q-checkbox
           v-model="newTx.address_book.save"
           :label="$t('strings.saveToAddressBook')"
-          :dark="theme == 'dark'"
-          color="dark"
         />
         <div v-if="newTx.address_book.save">
-          <LokiField :label="$t('fieldLabels.name')" optional>
+          <OxenField :label="$t('fieldLabels.name')" optional>
             <q-input
               v-model="newTx.address_book.name"
-              :dark="theme == 'dark'"
               :placeholder="$t('placeholders.addressBookName')"
               borderless
               dense
             />
-          </LokiField>
-          <LokiField class="q-mt-sm" :label="$t('fieldLabels.notes')" optional>
+          </OxenField>
+          <OxenField class="q-mt-sm" :label="$t('fieldLabels.notes')" optional>
             <q-input
               v-model="newTx.address_book.description"
               type="textarea"
-              class="full-width text-area-loki"
+              class="full-width text-area-oxen"
               rows="2"
-              :dark="theme == 'dark'"
               :placeholder="$t('placeholders.additionalNotes')"
               borderless
               dense
             />
-          </LokiField>
+          </OxenField>
         </div>
-        <!-- div required so button below checkbox -->
+        <!-- div required so the button falls below the checkbox -->
         <div>
           <q-btn
             class="send-btn"
@@ -139,7 +126,7 @@
         :on-confirm-transaction="onConfirmTransaction"
         :on-cancel-transaction="onCancelTransaction"
       />
-      <q-inner-loading :showing="tx_status.sending" :dark="theme == 'dark'">
+      <q-inner-loading :showing="tx_status.sending">
         <q-spinner color="primary" size="30" />
       </q-inner-loading>
     </template>
@@ -150,7 +137,7 @@
 import { mapState } from "vuex";
 import { required, decimal } from "vuelidate/lib/validators";
 import { address, greater_than_zero } from "src/validators/common";
-import LokiField from "components/loki_field";
+import OxenField from "components/oxen_field";
 import WalletPassword from "src/mixins/wallet_password";
 import ConfirmDialogMixin from "src/mixins/confirm_dialog_mixin";
 import ConfirmTransactionDialog from "components/confirm_tx_dialog";
@@ -161,7 +148,7 @@ const DO_NOTHING = 10;
 
 export default {
   components: {
-    LokiField,
+    OxenField,
     ConfirmTransactionDialog
   },
   mixins: [WalletPassword, ConfirmDialogMixin],
@@ -383,9 +370,7 @@ export default {
         ok: {
           label: this.$t("dialog.transfer.ok"),
           color: "primary"
-        },
-        dark: this.theme == "dark",
-        color: this.theme == "dark" ? "white" : "dark"
+        }
       });
       passwordDialog
         .onOk(password => {

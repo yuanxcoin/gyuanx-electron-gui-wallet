@@ -243,7 +243,7 @@ export default {
     copyViewKey: "View Key kopieren",
     createNewWallet: "Neue Wallet erstellen",
     deleteWallet: "Wallet löschen",
-    exit: "Loki GUI Wallet schliessen",
+    exit: "Oxen GUI Wallet schliessen",
     importOldGUIWallet: "Wallets von alter GUI importieren",
     manageKeyImages: "Key Images verwalten",
     openWallet: "Wallet öffnen",
@@ -332,7 +332,7 @@ export default {
       noKeyImageExport: "Keine Key Images zum Exportieren gefunden",
       usingLocalNode:
         "Zugang zur Remote Node nicht möglich, wechsle zur lokalen Node",
-      usingRemoteNode: "llokid nicht gefunden, benutze eine Remote Node"
+      usingRemoteNode: "loxend nicht gefunden, benutze eine Remote Node"
     }
   },
   placeholders: {
@@ -408,9 +408,9 @@ export default {
     destinationUnknown: "Ziel unbekannt",
     editAddressBookEntry: "Adressbucheintrag bearbeiten",
     loadingSettings: "Einstellungen werden geladen",
-    lokiBalance: "Guthaben",
-    lokiUnlockedBalance: "frei verfügbares Guthaben",
-    lokiUnlockedShort: "frei verfügbar",
+    oxenBalance: "Guthaben",
+    oxenUnlockedBalance: "frei verfügbares Guthaben",
+    oxenUnlockedShort: "frei verfügbar",
     noTransactionsFound: "Keine Transaktionen gefunden",
     notes: "Notizen",
     numberOfUnspentOutputs: "Anzahl der unspent outputs",

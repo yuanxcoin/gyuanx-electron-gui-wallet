@@ -21,7 +21,10 @@ async function canAutoUpdate() {
 
   // Taken from: https://github.com/electron-userland/electron-builder/blob/d4feb6d3c8b008f8b455c761d654c8088f90d8fa/packages/electron-updater/src/ElectronAppAdapter.ts#L25
   const updateFile = isPackaged ? "app-update.yml" : "dev-app-update.yml";
-  const basePath = isPackaged && process.resourcesPath ? process.resourcesPath : app.getAppPath();
+  const basePath =
+    isPackaged && process.resourcesPath
+      ? process.resourcesPath
+      : app.getAppPath();
   const appUpdateConfigPath = path.join(basePath, updateFile);
 
   return new Promise(resolve => {
@@ -96,8 +99,8 @@ async function showUpdateDialog(mainWindow) {
   const options = {
     type: "info",
     buttons: ["Restart Wallet", "Later"],
-    title: "Loki Electron Wallet update available",
-    message: "There is a new version of Loki Electron Wallet available.",
+    title: "Oxen Electron Wallet update available",
+    message: "There is a new version of Oxen Electron Wallet available.",
     detail: "Press Restart Wallet to apply the update",
     defaultId: LATER_BUTTON,
     cancelId: RESTART_BUTTON
@@ -115,7 +118,7 @@ async function showCannotUpdateDialog(mainWindow) {
     buttons: ["Ok"],
     title: "Cannot update",
     message:
-      "Loki Electron Wallet failed to update but there is a new version available. Please go to https://loki.network/ and install the new version manually."
+      "Oxen Electron Wallet failed to update but there is a new version available. Please go to https://oxen.io/ and install the new version manually."
   };
 
   return new Promise(resolve => {

@@ -1,9 +1,9 @@
 <template>
-  <q-list link no-border :dark="theme == 'dark'" class="lns-record-list">
+  <q-list link no-border class="lns-record-list">
     <q-item
       v-for="record in recordList"
       :key="record.name_hash"
-      class="loki-list-item"
+      class="oxen-list-item"
     >
       <q-item-section class="type" avatar>
         <q-icon :name="isLocked(record) ? 'lock' : 'lock_open'" size="24px" />
@@ -22,13 +22,13 @@
           <q-item-section>
             <div class="row update-renew-buttons">
               <q-btn
-                color="secondary"
+                color="primary"
                 :label="$t('buttons.update')"
                 @click="onUpdate(record)"
               />
               <q-btn
                 v-if="isLokinet"
-                color="secondary"
+                color="primary"
                 :label="$t('buttons.renew')"
                 @click="onRenew(record)"
               />
@@ -169,26 +169,36 @@ export default {
 .lns-record-list {
   .q-item {
     cursor: pointer;
-    background: #313131;
+    color: #1f1c47;
+    background: white;
     -webkit-transition: background-color 0.2s ease-in;
     transition: background-color 0.2s ease-in;
 
     border-radius: 3px;
+
+    .height {
+      color: #1f1c47;
+    }
+
+    // we don't want to select button text (also a span) as well
+    // this is the height text
+    div > span {
+      color: #1f1c47;
+    }
 
     + .q-item {
       margin-top: 10px;
     }
   }
 
-  .q-item-sublabel {
-    color: #313131;
-  }
-
   .q-item:hover {
-    background: rgba(117, 117, 117, 0.3);
+    background: #12c7ba;
   }
 }
 .update-renew-buttons {
+  .q-btn {
+    color: red;
+  }
   .q-btn:not(:first-child) {
     margin-left: 8px;
   }

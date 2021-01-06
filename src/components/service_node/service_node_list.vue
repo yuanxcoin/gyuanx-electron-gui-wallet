@@ -16,7 +16,7 @@
               <span v-if="getRole(node)">{{ getRole(node) }} •</span>
               <span>
                 {{ $t("strings.contribution") }}:
-                <FormatLoki :amount="node.ourContributionAmount" />
+                <FormatOxen :amount="node.ourContributionAmount" />
               </span>
             </span>
             <!-- you only have a contribution amount of 0 if you are a "contributor"
@@ -28,18 +28,16 @@
             >
               {{ $t("strings.serviceNodeDetails.reserved") }} •
             </span>
-            <span v-if="node.awaitingContribution">
+            <span v-if="node.awaitingContribution" class="contrib-amounts">
               {{ $t("strings.serviceNodeDetails.minContribution") }}:
-              {{ getMinContribution(node) }} LOKI •
+              {{ getMinContribution(node) }} OXEN •
               {{ $t("strings.serviceNodeDetails.maxContribution") }}:
-              {{ openForContributionLoki(node) }} LOKI
+              {{ openForContriubtionOxen(node) }} OXEN
             </span>
           </q-item-label>
         </q-item-section>
         <q-item-section side>
-          <span style="font-size: 16px; color: #cecece">{{
-            getFee(node)
-          }}</span>
+          <span class="fee">{{ getFee(node) }}</span>
         </q-item-section>
         <q-item-section side>
           <q-btn
@@ -72,7 +70,7 @@
 <script>
 import { clipboard } from "electron";
 import ContextMenu from "components/menus/contextmenu";
-import FormatLoki from "components/format_loki";
+import FormatOxen from "components/format_oxen";
 import ServiceNodeMixin from "src/mixins/service_node_mixin";
 import { mapState } from "vuex";
 
@@ -80,7 +78,7 @@ export default {
   name: "ServiceNodeList",
   components: {
     ContextMenu,
-    FormatLoki
+    FormatOxen
   },
   mixins: [ServiceNodeMixin],
   props: {
@@ -168,4 +166,16 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="scss">
+.fee {
+  color: #1f1c47;
+}
+
+.service-node-list {
+  .q-item:hover {
+    .fee {
+      color: white;
+    }
+  }
+}
+</style>

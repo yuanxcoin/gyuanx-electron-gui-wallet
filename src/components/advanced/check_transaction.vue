@@ -1,11 +1,11 @@
 <template>
   <div class="check-transaction">
     <div class="q-pa-md">
-      <div class="q-mb-lg description">
+      <div class="q-mb-lg tab-desc">
         {{ $t("strings.checkTransaction.description") }}
       </div>
       <div>
-        <LokiField
+        <OxenField
           :label="$t('fieldLabels.transactionId')"
           :error="$v.txid.$error"
         >
@@ -17,8 +17,8 @@
             dense
             @blur="$v.txid.$touch"
           />
-        </LokiField>
-        <LokiField
+        </OxenField>
+        <OxenField
           class="q-mt-md"
           :label="$t('fieldLabels.address')"
           :error="$v.address.$error"
@@ -32,8 +32,8 @@
             dense
             @blur="$v.address.$touch"
           />
-        </LokiField>
-        <LokiField class="q-mt-md" :label="$t('fieldLabels.message')" optional>
+        </OxenField>
+        <OxenField class="q-mt-md" :label="$t('fieldLabels.message')" optional>
           <q-input
             v-model.trim="message"
             :dark="theme == 'dark'"
@@ -41,8 +41,8 @@
             borderless
             dense
           />
-        </LokiField>
-        <LokiField
+        </OxenField>
+        <OxenField
           class="q-mt-md"
           :label="$t('fieldLabels.signature')"
           :error="$v.signature.$error"
@@ -54,12 +54,12 @@
             borderless
             dense
           />
-        </LokiField>
+        </OxenField>
         <div class="submit-button">
           <q-btn color="primary" :label="$t('buttons.check')" @click="check" />
           <q-btn
             v-if="canClear"
-            color="secondary"
+            color="secondsary="
             :label="$t('buttons.clear')"
             @click="clear"
           />
@@ -83,7 +83,7 @@
             {{ $t("strings.checkTransaction.infoTitles.received") }}
           </div>
           <div>
-            <FormatLoki :amount="status.state.received" raw-value />
+            <FormatOxen :amount="status.state.received" raw-value />
           </div>
         </div>
         <div v-if="status.state.in_pool != null" class="q-mb-sm">
@@ -108,14 +108,14 @@ import { mapState } from "vuex";
 import { required } from "vuelidate/lib/validators";
 import { address } from "src/validators/common";
 import { i18n } from "boot/i18n";
-import LokiField from "components/loki_field";
-import FormatLoki from "components/format_loki";
+import OxenField from "components/oxen_field";
+import FormatOxen from "components/format_oxen";
 
 export default {
   name: "CheckTransaction",
   components: {
-    LokiField,
-    FormatLoki
+    OxenField,
+    FormatOxen
   },
   data() {
     return {

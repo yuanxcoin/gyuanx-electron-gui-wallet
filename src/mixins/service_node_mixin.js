@@ -9,9 +9,9 @@ export default {
           ? openContributionRemaining /
             (MAX_NUMBER_OF_CONTRIBUTORS - node.contributors.length)
           : 0;
-      const minContributionLoki = minContributionAtomicUnits / 1e9;
+      const minContributionOxen = minContributionAtomicUnits / 1e9;
       // ceiling to 4 decimal places
-      return minContributionLoki.toFixed(4);
+      return minContributionOxen.toFixed(4);
     },
     openForContribution(node) {
       const openContributionRemaining =
@@ -20,7 +20,7 @@ export default {
           : 0;
       return openContributionRemaining;
     },
-    openForContributionLoki(node) {
+    openForContriubtionOxen(node) {
       return (this.openForContribution(node) / 1e9).toFixed(4);
     }
   }

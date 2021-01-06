@@ -1,15 +1,15 @@
 <template>
   <div class="service-node-staking">
     <div class="q-px-md q-pt-md">
-      <p style="color: #cecece">
+      <p class="tab-desc">
         {{ $t("strings.serviceNodeContributionDescription") }}
         <span
           style="cursor: pointer; text-decoration: underline;"
-          @click="lokiWebsite"
+          @click="oxenWebsite"
           >Loki {{ $t("strings.website") }}.</span
         >
       </p>
-      <LokiField
+      <OxenField
         :label="$t('fieldLabels.serviceNodeKey')"
         :error="$v.service_node.key.$error"
       >
@@ -21,8 +21,8 @@
           dense
           @blur="$v.service_node.key.$touch"
         />
-      </LokiField>
-      <LokiField
+      </OxenField>
+      <OxenField
         :label="$t('fieldLabels.amount')"
         class="q-mt-md"
         :error="$v.service_node.amount.$error"
@@ -39,20 +39,20 @@
           @blur="$v.service_node.amount.$touch"
         />
         <q-btn
-          color="secondary"
+          color="primary"
           :text-color="theme == 'dark' ? 'white' : 'dark'"
           :label="$t('buttons.min')"
           :disable="!areButtonsEnabled()"
           @click="service_node.amount = minStake(service_node.key)"
         />
         <q-btn
-          color="secondary"
+          color="primary"
           :text-color="theme == 'dark' ? 'white' : 'dark'"
           :label="$t('buttons.max')"
           :disable="!areButtonsEnabled()"
           @click="service_node.amount = maxStake(service_node.key)"
         />
-      </LokiField>
+      </OxenField>
       <div class="submit-button">
         <q-btn
           :disable="!is_able_to_send"
@@ -62,7 +62,7 @@
         />
         <q-btn
           :disable="!is_able_to_send"
-          color="secondary"
+          color="accent"
           :label="$t('buttons.sweepAll')"
           @click="sweepAllWarning()"
         />
@@ -84,7 +84,6 @@
     />
     <q-inner-loading
       :showing="stake_status.sending || sweep_all_status.sending"
-      :dark="theme == 'dark'"
     >
       <q-spinner color="primary" size="30" />
     </q-inner-loading>
@@ -96,7 +95,7 @@ const objectAssignDeep = require("object-assign-deep");
 import { mapState } from "vuex";
 import { required, decimal } from "vuelidate/lib/validators";
 import { service_node_key, greater_than_zero } from "src/validators/common";
-import LokiField from "components/loki_field";
+import OxenField from "components/oxen_field";
 import WalletPassword from "src/mixins/wallet_password";
 import ConfirmDialogMixin from "src/mixins/confirm_dialog_mixin";
 import ServiceNodeContribute from "./service_node_contribute";
@@ -108,7 +107,7 @@ const DO_NOTHING = 10;
 export default {
   name: "ServiceNodeStaking",
   components: {
-    LokiField,
+    OxenField,
     ServiceNodeContribute,
     ConfirmTransactionDialog
   },
@@ -278,7 +277,7 @@ export default {
     }
   },
   methods: {
-    lokiWebsite() {
+    oxenWebsite() {
       const url = "https://loki.network/service-nodes/";
       this.$gateway.send("core", "open_url", {
         url
@@ -294,7 +293,7 @@ export default {
     },
     maxStake() {
       const node = this.getNodeWithPubKey();
-      return this.openForContributionLoki(node);
+      return this.openForContriubtionOxen(node);
     },
     getFeeDecimal(node) {
       const operatorPortion = node.portions_for_operator;
@@ -353,9 +352,8 @@ export default {
           cancel: {
             flat: true,
             label: this.$t("dialog.buttons.cancel"),
-            color: this.theme === "dark" ? "white" : "dark"
-          },
-          dark: this.theme === "dark"
+            color: "negative"
+          }
         })
         .onOk(() => {
           this.sweepAll();
@@ -387,10 +385,8 @@ export default {
         noPasswordMessage: this.$t("dialog.sweepAll.message"),
         ok: {
           label: this.$t("dialog.sweepAll.ok"),
-          color: "primary"
-        },
-        dark: this.theme == "dark",
-        color: this.theme == "dark" ? "white" : "dark"
+          color: "#12C7BA"
+        }
       });
       passwordDialog
         .onOk(password => {

@@ -89,7 +89,7 @@ export class Gateway extends EventEmitter {
       message: msg,
       ok: {
         label: i18n.t(`dialog.${key}.ok`),
-        color: "positive"
+        color: "primary"
       },
       cancel: {
         flat: true,
@@ -98,8 +98,7 @@ export class Gateway extends EventEmitter {
           this.app.store.state.gateway.app.config.appearance.theme === "dark"
             ? "white"
             : "dark"
-      },
-      dark: this.app.store.state.gateway.app.config.appearance.theme === "dark"
+      }
     })
       .onOk(() => {
         this.closeDialog = false;

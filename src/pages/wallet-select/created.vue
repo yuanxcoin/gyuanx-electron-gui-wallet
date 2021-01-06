@@ -7,8 +7,18 @@
           {{ info.address }}
         </div>
         <div class="q-item-side">
-          <q-btn color="primary" padding="xs" size="sm" icon="file_copy" @click="copyAddress">
-            <q-tooltip anchor="center left" self="center right" :offset="[5, 10]">
+          <q-btn
+            color="primary"
+            padding="xs"
+            size="sm"
+            icon="file_copy"
+            @click="copyAddress"
+          >
+            <q-tooltip
+              anchor="center left"
+              self="center right"
+              :offset="[5, 10]"
+            >
               {{ $t("menuItems.copyAddress") }}
             </q-tooltip>
           </q-btn>
@@ -37,7 +47,10 @@
       </div>
     </template>
 
-    <q-expansion-item label="Advanced" header-class="q-mt-sm non-selectable row reverse advanced-options-label">
+    <q-expansion-item
+      label="Advanced"
+      header-class="q-mt-sm non-selectable row reverse advanced-options-label"
+    >
       <template v-if="secret.view_key != secret.spend_key">
         <h6 class="q-mb-xs title">{{ $t("strings.viewKey") }}</h6>
         <div class="row">
@@ -45,8 +58,18 @@
             {{ secret.view_key }}
           </div>
           <div class="q-item-side">
-            <q-btn color="primary" padding="xs" size="sm" icon="file_copy" @click="copyPrivateKey('view_key', $event)">
-              <q-tooltip anchor="center left" self="center right" :offset="[5, 10]">
+            <q-btn
+              color="primary"
+              padding="xs"
+              size="sm"
+              icon="file_copy"
+              @click="copyPrivateKey('view_key', $event)"
+            >
+              <q-tooltip
+                anchor="center left"
+                self="center right"
+                :offset="[5, 10]"
+              >
                 {{ $t("menuItems.copyViewKey") }}
               </q-tooltip>
             </q-btn>
@@ -61,8 +84,18 @@
             {{ secret.spend_key }}
           </div>
           <div class="q-item-side">
-            <q-btn color="primary" padding="xs" size="sm" icon="file_copy" @click="copyPrivateKey('spend_key', $event)">
-              <q-tooltip anchor="center left" self="center right" :offset="[5, 10]">
+            <q-btn
+              color="primary"
+              padding="xs"
+              size="sm"
+              icon="file_copy"
+              @click="copyPrivateKey('spend_key', $event)"
+            >
+              <q-tooltip
+                anchor="center left"
+                self="center right"
+                :offset="[5, 10]"
+              >
                 {{ $t("menuItems.copySpendKey") }}
               </q-tooltip>
             </q-btn>
@@ -71,7 +104,12 @@
       </template>
     </q-expansion-item>
 
-    <q-btn class="q-mt-lg" color="primary" :label="$t('buttons.openWallet')" @click="open" />
+    <q-btn
+      class="q-mt-lg"
+      color="primary"
+      :label="$t('buttons.openWallet')"
+      @click="open"
+    />
   </q-page>
 </template>
 
@@ -137,9 +175,7 @@ export default {
           ok: {
             label: this.$t("dialog.buttons.ok"),
             color: "primary"
-          },
-          color: this.theme === "dark" ? "white" : "dark",
-          dark: this.theme === "dark"
+          }
         })
         .onDismiss(() => null)
         .onCancel(() => null)
@@ -166,45 +202,4 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.created {
-  .wallet h6 {
-    text-align: center;
-  }
-
-  .address {
-    text-align: center;
-    word-break: break-all;
-  }
-
-  .seed-box {
-    border: 1px solid white;
-    border-radius: 3px;
-    margin: 16px;
-    padding: 16px;
-
-    div,
-    h6 {
-      text-align: center;
-    }
-
-    .seed {
-      font-size: 24px;
-      font-weight: 600;
-    }
-
-    .warning {
-      color: goldenrod;
-    }
-  }
-  h6 {
-    font-size: 18px;
-    margin: 8px 0;
-    font-weight: 450;
-  }
-  .advanced-options-label {
-    padding-left: 0;
-    padding-right: 0;
-  }
-}
-</style>
+<style lang="scss"></style>

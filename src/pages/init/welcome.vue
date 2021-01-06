@@ -8,7 +8,7 @@
         class="first-step"
       >
         <div class="welcome-container">
-          <img src="loki.svg" height="100" class="q-mb-md" />
+          <img src="oxen.svg" height="100" class="q-mb-md" />
           <div>Wallet Version: v{{ version }}</div>
           <div>Daemon Version: {{ daemonVersion }}</div>
           <LanguageSelect class="q-mt-lg" @select="onLanguageSelected" />
@@ -105,7 +105,6 @@ export default {
 
   .welcome-stepper {
     height: 100%;
-    // the Loki lighter grey is behind it
     background: transparent;
   }
 

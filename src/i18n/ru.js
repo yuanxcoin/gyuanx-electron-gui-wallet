@@ -241,7 +241,7 @@ export default {
     copyViewKey: "Копировать Ключ Просмотра",
     createNewWallet: "Создать новый кошелек",
     deleteWallet: "Удалить Кошелек",
-    exit: "Закрыть Кошелек Loki",
+    exit: "Закрыть Кошелек Oxen",
     importOldGUIWallet: "Импортировать кошельки из старого GUI",
     manageKeyImages: "Управлять Ключевыми Образами",
     openWallet: "Открыть кошелек",
@@ -329,7 +329,7 @@ export default {
       noKeyImageExport: "Не найдено ключевых образов для экспорта",
       usingLocalNode:
         "Не удалось подключиться к удаленной ноде, переключаемся на локальную ноду",
-      usingRemoteNode: "Не найден файл lokid, используется удаленная нода"
+      usingRemoteNode: "Не найден файл oxend, используется удаленная нода"
     }
   },
   placeholders: {
@@ -403,9 +403,9 @@ export default {
     destinationUnknown: "Назначение Неизвестно",
     editAddressBookEntry: "Редактировать запись адресной книги",
     loadingSettings: "Загрузка настроек",
-    lokiBalance: "Баланс",
-    lokiUnlockedBalance: "Разблокированый баланс",
-    lokiUnlockedShort: "Разблокировано",
+    oxenBalance: "Баланс",
+    oxenUnlockedBalance: "Разблокированый баланс",
+    oxenUnlockedShort: "Разблокировано",
     noTransactionsFound: "Транзакции не найдены",
     notes: "Заметки",
     numberOfUnspentOutputs: "Количество непотраченных выходов",

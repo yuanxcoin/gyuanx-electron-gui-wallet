@@ -5,27 +5,25 @@
         {{ $t("titles.transactions") }}
       </div>
 
-      <LokiField class="col-5 q-px-sm" :label="$t('fieldLabels.filter')">
+      <OxenField class="col-5 q-px-sm" :label="$t('fieldLabels.filter')">
         <q-input
           v-model="tx_filter"
-          :dark="theme == 'dark'"
           :placeholder="$t('placeholders.filterTx')"
           borderless
           dense
         />
-      </LokiField>
+      </OxenField>
 
-      <LokiField class="col-2" :label="$t('fieldLabels.filterTransactionType')">
+      <OxenField class="col-2" :label="$t('fieldLabels.filterTransactionType')">
         <q-select
           v-model="tx_type"
-          :dark="theme == 'dark'"
           :options="tx_type_options"
           borderless
           dense
           emit-value
           map-options
         />
-      </LokiField>
+      </OxenField>
     </div>
     <TxList :type="tx_type" :filter="tx_filter" />
   </q-page>
@@ -34,11 +32,11 @@
 <script>
 import { mapState } from "vuex";
 import TxList from "components/tx_list";
-import LokiField from "components/loki_field";
+import OxenField from "components/oxen_field";
 export default {
   components: {
     TxList,
-    LokiField
+    OxenField
   },
   data() {
     return {

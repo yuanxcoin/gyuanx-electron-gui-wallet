@@ -24,19 +24,19 @@
       </div>
     </div>
 
-    <p v-if="config_daemon.type == 'local_remote'">
+    <p v-if="config_daemon.type == 'local_remote'" class="tab-desc">
       {{ $t("strings.daemon.localRemote.description") }}
     </p>
-    <p v-if="config_daemon.type == 'local'">
+    <p v-if="config_daemon.type == 'local'" class="tab-desc">
       {{ $t("strings.daemon.local.description") }}
     </p>
-    <p v-if="is_remote">
+    <p v-if="is_remote" class="tab-desc">
       {{ $t("strings.daemon.remote.description") }}
     </p>
 
     <template v-if="config_daemon.type != 'remote'">
       <div class="row pl-sm">
-        <LokiField
+        <OxenField
           class="col-8"
           :label="$t('fieldLabels.localDaemonIP')"
           disable
@@ -44,13 +44,12 @@
           <q-input
             v-model="config_daemon.rpc_bind_ip"
             :placeholder="daemon_defaults.rpc_bind_ip"
-            :dark="theme == 'dark'"
             disable
             borderless
             dense
           />
-        </LokiField>
-        <LokiField
+        </OxenField>
+        <OxenField
           class="col-4"
           :label="$t('fieldLabels.localDaemonPort') + '(RPC)'"
         >
@@ -62,21 +61,19 @@
             :step="1"
             min="1024"
             max="65535"
-            :dark="theme == 'dark'"
             borderless
             dense
           />
-        </LokiField>
+        </OxenField>
       </div>
     </template>
 
     <template v-if="config_daemon.type != 'local'">
       <div class="row q-mt-md pl-sm">
-        <LokiField class="col-8" :label="$t('fieldLabels.remoteNodeHost')">
+        <OxenField class="col-8" :label="$t('fieldLabels.remoteNodeHost')">
           <q-input
             v-model="config_daemon.remote_host"
             :placeholder="daemon_defaults.remote_host"
-            :dark="theme == 'dark'"
             borderless
             dense
           />
@@ -86,7 +83,7 @@
             class="remote-dropdown"
             flat
           >
-            <q-list link dark no-border>
+            <q-list link no-border>
               <q-item
                 v-for="option in remotes"
                 :key="option.host"
@@ -101,8 +98,8 @@
               </q-item>
             </q-list>
           </q-btn-dropdown>
-        </LokiField>
-        <LokiField class="col-4" :label="$t('fieldLabels.remoteNodePort')">
+        </OxenField>
+        <OxenField class="col-4" :label="$t('fieldLabels.remoteNodePort')">
           <q-input
             v-model="config_daemon.remote_port"
             :placeholder="toString(daemon_defaults.remote_port)"
@@ -115,12 +112,12 @@
             borderless
             dense
           />
-        </LokiField>
+        </OxenField>
       </div>
     </template>
 
     <div class="col q-mt-md pt-sm">
-      <LokiField :label="$t('fieldLabels.dataStoragePath')" disable-hover>
+      <OxenField :label="$t('fieldLabels.dataStoragePath')" disable-hover>
         <q-input
           v-model="config.app.data_dir"
           disable
@@ -138,13 +135,13 @@
           @change="setDataPath"
         />
         <q-btn
-          color="secondary"
+          color="primary"
           :text-color="theme == 'dark' ? 'white' : 'dark'"
           @click="selectPath('data')"
           >{{ $t("buttons.selectLocation") }}</q-btn
         >
-      </LokiField>
-      <LokiField :label="$t('fieldLabels.walletStoragePath')" disable-hover>
+      </OxenField>
+      <OxenField :label="$t('fieldLabels.walletStoragePath')" disable-hover>
         <q-input
           v-model="config.app.wallet_data_dir"
           disable
@@ -162,12 +159,12 @@
           @change="setWalletDataPath"
         />
         <q-btn
-          color="secondary"
+          color="primary"
           :text-color="theme == 'dark' ? 'white' : 'dark'"
           @click="selectPath('wallet')"
           >{{ $t("buttons.selectLocation") }}</q-btn
         >
-      </LokiField>
+      </OxenField>
     </div>
 
     <q-expansion-item
@@ -175,7 +172,7 @@
       header-class="q-mt-sm non-selectable row reverse advanced-options-label"
     >
       <div class="row pl-sm q-mt-sm">
-        <LokiField
+        <OxenField
           class="col-6"
           :label="$t('fieldLabels.daemonLogLevel')"
           :disable="is_remote"
@@ -193,8 +190,8 @@
             borderless
             dense
           />
-        </LokiField>
-        <LokiField class="col-6" :label="$t('fieldLabels.walletLogLevel')">
+        </OxenField>
+        <OxenField class="col-6" :label="$t('fieldLabels.walletLogLevel')">
           <q-input
             v-model="config.wallet.log_level"
             :placeholder="toString(defaults.wallet.log_level)"
@@ -207,12 +204,12 @@
             borderless
             dense
           />
-        </LokiField>
+        </OxenField>
       </div>
 
       <div class="row pl-sm q-mt-md">
         <!-- TODO: Can be generalised to a "port" (or similar) field -->
-        <LokiField
+        <OxenField
           class="col-3"
           :label="$t('fieldLabels.maxIncomingPeers')"
           :disable="is_remote"
@@ -230,8 +227,8 @@
             borderless
             dense
           />
-        </LokiField>
-        <LokiField
+        </OxenField>
+        <OxenField
           class="col-3"
           :label="$t('fieldLabels.maxOutgoingPeers')"
           :disable="is_remote"
@@ -249,8 +246,8 @@
             borderless
             dense
           />
-        </LokiField>
-        <LokiField
+        </OxenField>
+        <OxenField
           class="col-3"
           :label="$t('fieldLabels.limitUploadRate')"
           :disable="is_remote"
@@ -269,8 +266,8 @@
             borderless
             dense
           />
-        </LokiField>
-        <LokiField
+        </OxenField>
+        <OxenField
           class="col-3"
           :label="$t('fieldLabels.limitDownloadRate')"
           :disable="is_remote"
@@ -289,10 +286,10 @@
             borderless
             dense
           />
-        </LokiField>
+        </OxenField>
       </div>
       <div class="row pl-sm q-mt-md">
-        <LokiField
+        <OxenField
           class="col-3"
           :label="$t('fieldLabels.daemonP2pPort')"
           :disable="is_remote"
@@ -311,8 +308,8 @@
             borderless
             dense
           />
-        </LokiField>
-        <LokiField class="col-3" :label="$t('fieldLabels.internalWalletPort')">
+        </OxenField>
+        <OxenField class="col-3" :label="$t('fieldLabels.internalWalletPort')">
           <q-input
             v-model="config.app.ws_bind_port"
             :placeholder="toString(defaults.app.ws_bind_port)"
@@ -326,8 +323,8 @@
             borderless
             dense
           />
-        </LokiField>
-        <LokiField
+        </OxenField>
+        <OxenField
           class="col-3"
           :label="$t('fieldLabels.walletRPCPort')"
           :disable="is_remote"
@@ -346,9 +343,9 @@
             borderless
             dense
           />
-        </LokiField>
+        </OxenField>
       </div>
-      <LokiField
+      <OxenField
         :helper="$t('fieldLabels.chooseNetwork')"
         :label="$t('fieldLabels.network')"
         class="network-group-field"
@@ -362,18 +359,18 @@
             { label: 'Test Net', value: 'testnet' }
           ]"
         />
-      </LokiField>
+      </OxenField>
     </q-expansion-item>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
-import LokiField from "components/loki_field";
+import OxenField from "components/oxen_field";
 export default {
   name: "SettingsGeneral",
   components: {
-    LokiField
+    OxenField
   },
   props: {
     randomiseRemote: {

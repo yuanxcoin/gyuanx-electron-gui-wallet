@@ -1,8 +1,10 @@
 <template>
-  <div class="loki-field" :class="{ disable, 'disable-hover': disableHover }">
+  <div class="oxen-field" :class="{ disable, 'disable-hover': disableHover }">
     <div v-if="label" class="label row items-center" :disabled="disable">
       {{ label }}
-      <span v-if="optional" class="optional">({{ $t("fieldLabels.optional") }})</span>
+      <span v-if="optional" class="optional"
+        >({{ $t("fieldLabels.optional") }})</span
+      >
     </div>
     <div class="content row items-center" :class="{ error }">
       <slot></slot>
@@ -15,7 +17,7 @@
 
 <script>
 export default {
-  name: "LokiField",
+  name: "OxenField",
   props: {
     label: {
       type: String,
@@ -55,7 +57,7 @@ export default {
 </script>
 
 <style lang="scss">
-.loki-field {
+.oxen-field {
   .label {
     margin: 6px 0;
     font-weight: bold;
@@ -90,7 +92,14 @@ export default {
       margin: 0;
 
       * {
-        color: white;
+        // Oxen navy, can't use vars here :(
+        color: #1f1c47;
+      }
+    }
+
+    .q-select {
+      .row {
+        color: red;
       }
     }
 

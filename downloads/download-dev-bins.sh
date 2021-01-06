@@ -29,4 +29,4 @@ curl -sL --fail \
     -o "${RENAME}" \
     "$ASSET_URL"
 
-echo "Loki binaries downloaded"
+echo "Oxen binaries downloaded"

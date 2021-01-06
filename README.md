@@ -3,11 +3,9 @@
 ### Introduction
 
 Oxen (formerly Loki) is a private cryptocurrency based on Monero. Oxen aims to provide a private data transmission layer using a second layer of Service Nodes.
-More information on the project can be found on the [website](https://oxen.io) and in the [whitepaper](https://oxen.io/whitepaper). Oxen is an open source project, and we encourage contributions from anyone with something to offer.
+More information on the project can be found on the [website](https://oxen.io) and in the [whitepaper](https://loki.network/whitepaper). Oxen is an open source project, and we encourage contributions from anyone with something to offer.
 
-<p align="center">
- <img src="https://raw.githubusercontent.com/KeeJef/oxen-electron-gui-wallet/master/src-electron/icons/mrcuug.PNG" width="600">
-</p>
+![Oxen wallet image](src-electron/icons/mrcuug.png)
 
 ### About this project
 
@@ -17,7 +15,7 @@ Please submit any changes as pull requests to the development branch, all change
 
 #### Pre-requisites
 
-- Download latest [oxend](https://github.com/oxen-project/oxen/releases/latest)
+- Download latest [oxend](https://github.com/loki-project/loki-core/releases/latest)
 - Extract the oxend binaries to a folder
 
 #### Commands
@@ -25,8 +23,8 @@ Please submit any changes as pull requests to the development branch, all change
 ```
 nvm use 14.11.0
 npm install -g @quasar/cli
-git clone https://github.com/oxen-project/oxen-electron-gui-wallet
-cd oxen-electron-gui-wallet
+git clone https://github.com/loki-project/loki-electron-gui-wallet
+cd loki-electron-gui-wallet
 cp path_to_oxend_binaries/oxend bin/
 cp path_to_oxend_binaries/oxen-wallet-rpc bin/
 npm install

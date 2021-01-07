@@ -208,7 +208,8 @@ export default {
               flat: true,
               label: this.$t("dialog.buttons.cancel")
             },
-            color: "#1F1C47"
+            color: "#1F1C47",
+            persistent: true
           })
           .onOk(password => {
             this.$q.loading.show({

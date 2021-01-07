@@ -37,7 +37,7 @@
           @change="setWalletPath"
         />
         <q-btn
-          color="secondary"
+          color="primary"
           :label="$t('buttons.selectWalletFile')"
           :text-color="theme == 'dark' ? 'white' : 'dark'"
           @click="selectFile"

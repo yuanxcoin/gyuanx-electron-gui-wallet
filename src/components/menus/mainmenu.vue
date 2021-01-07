@@ -58,12 +58,13 @@
               >Discord</a
             >
             -
-            <a
+            <!-- readded once oxen subreddit is known -->
+            <!-- <a
               href="#"
               @click="openExternal('https://www.reddit.com/r/LokiProject/')"
               >Reddit</a
             >
-            -
+            - -->
             <a
               href="#"
               @click="

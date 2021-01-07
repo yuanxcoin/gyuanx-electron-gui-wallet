@@ -2,13 +2,20 @@
   <q-page>
     <div class="q-mx-md import-old-gui">
       <q-list link dark no-border class="wallet-list">
-        <q-item v-for="state in directory_state" :key="state.directory" :class="{ selected: state.selected }">
+        <q-item
+          v-for="state in directory_state"
+          :key="state.directory"
+          :class="{ selected: state.selected }"
+        >
           <q-item-section>
             <div class="row items-center">
               <q-item-label class="items-center">
                 <q-checkbox v-model="state.selected" dark color="dark" />
               </q-item-label>
-              <q-item-label class="wallet-name" @click.native="state.selected = !state.selected">
+              <q-item-label
+                class="wallet-name"
+                @click.native="state.selected = !state.selected"
+              >
                 {{ state.directory }}
               </q-item-label>
             </div>
@@ -19,7 +26,7 @@
               v-model="state.type"
               hide-underline
               dark
-              class="q-ma-none full-width"
+              class="q-ma-none full-width nettype-select"
               :options="selectOptions"
               emit-value
               map-options
@@ -93,7 +100,9 @@ export default {
               this.$q.notify({
                 type: "negative",
                 timeout: 3000,
-                message: this.$t("notification.errors.failedWalletImport") + `: ${wallet}`
+                message:
+                  this.$t("notification.errors.failedWalletImport") +
+                  `: ${wallet}`
               });
             });
           }
@@ -109,7 +118,9 @@ export default {
   methods: {
     populate_state() {
       // Keep any directories that intersect
-      const new_state = this.directory_state.filter(state => this.directories.includes(state.directory));
+      const new_state = this.directory_state.filter(state =>
+        this.directories.includes(state.directory)
+      );
 
       // Add in new directories
       this.directories

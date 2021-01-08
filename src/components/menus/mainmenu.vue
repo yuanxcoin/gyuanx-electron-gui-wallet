@@ -44,11 +44,7 @@
             >
           </p>
           <p>
-            <a
-              href="#"
-              @click="
-                openExternal('https://t.me/joinchat/DeNvR0JJ4JPn6TVSQjCsZQ')
-              "
+            <a href="#" @click="openExternal('https://t.me/Oxen_Community')"
               >Telegram</a
             >
             -

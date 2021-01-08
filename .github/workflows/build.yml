@@ -31,7 +31,7 @@ jobs:
         run: npm install
 
       - name: Download oxend binaries
-        run: ./download-asset.sh
+        run: ./download-oxen-bins.sh
         env:
           OS: ${{ runner.os }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

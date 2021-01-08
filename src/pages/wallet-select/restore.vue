@@ -57,7 +57,6 @@
                   >
                     <q-date
                       v-model="wallet.refresh_start_date"
-                      :dark="theme == 'dark'"
                       :options="dateRangeOptions"
                     >
                       <div class="row items-center justify-end">

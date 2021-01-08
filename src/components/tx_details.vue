@@ -21,7 +21,7 @@
           />
         </q-toolbar>
       </q-header>
-      <q-page-container>
+      <q-page-container class="detail-page">
         <div class="layout-padding">
           <div class="row items-center non-selectable">
             <div class="q-mr-sm">
@@ -72,7 +72,7 @@
                   <span>{{ $t("strings.transactions.amount") }}</span>
                 </div>
                 <div class="value">
-                  <span><FormatLoki :amount="tx.amount" raw-value/></span>
+                  <span><FormatOxen :amount="tx.amount" raw-value/></span>
                 </div>
               </div>
             </div>
@@ -88,7 +88,7 @@
                   </span>
                 </div>
                 <div class="value">
-                  <span><FormatLoki :amount="tx.fee" raw-value/></span>
+                  <span><FormatOxen :amount="tx.fee" raw-value/></span>
                 </div>
               </div>
             </div>
@@ -176,7 +176,7 @@
                       destination.address
                     }}</q-item-label>
                     <q-item-label
-                      ><FormatLoki :amount="destination.amount"
+                      ><FormatOxen :amount="destination.amount"
                     /></q-item-label>
                   </q-item-label>
                   <ContextMenu
@@ -200,8 +200,6 @@
           <q-input
             v-model="txNotes"
             :label="$t('fieldLabels.transactionNotes')"
-            :dark="theme == 'dark'"
-            :text-color="theme == 'dark' ? 'white' : 'dark'"
             type="textarea"
             rows="2"
             dense
@@ -225,13 +223,13 @@ const { clipboard } = require("electron");
 import { mapState } from "vuex";
 import { date } from "quasar";
 import TxTypeIcon from "components/tx_type_icon";
-import FormatLoki from "components/format_loki";
+import FormatOxen from "components/format_oxen";
 import ContextMenu from "components/menus/contextmenu";
 export default {
   name: "TxDetails",
   components: {
     TxTypeIcon,
-    FormatLoki,
+    FormatOxen,
     ContextMenu
   },
   data() {
@@ -327,8 +325,8 @@ export default {
             label: this.$t("dialog.transactionDetails.ok"),
             color: "primary"
           },
-          dark: this.theme == "dark",
-          style: "min-width: 500px; overflow-wrap: break-word;"
+          style: "min-width: 500px; overflow-wrap: break-word;",
+          color: "#1F1C47"
         })
         .onOk(() => {})
         .onCancel(() => {})

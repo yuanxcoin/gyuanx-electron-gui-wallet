@@ -55,6 +55,7 @@ footer,
     font-family: 'RobotoMono-Light', monospace
 }
 
+
 .break-all {
     word-break: break-all
 }
@@ -72,7 +73,7 @@ footer,
     }
 }
 
-.text-area-loki {
+.text-area-oxen {
   margin-top: 0px;
   margin-bottom: 0px;
 }
@@ -100,7 +101,7 @@ footer,
 }
 
 .q-layout, .app-content {
-    background: $loki-black-80;
+    background: $oxen-light-teal;
     color:white;
 }
 
@@ -138,7 +139,7 @@ footer,
     }
 
     .q-toolbar-inverted {
-        background: none;
+        background: $oxen-navy;
         padding-top: 0;
     }
 
@@ -153,9 +154,9 @@ footer,
         .q-tab {
             text-transform: none;
 
-            &:hover {
-                background-color: rgba(12,12,12,0.15)
-            }
+            // &:hover {
+            //     background-color: rgba(12,12,12,0.15)
+            // }
 
             .q-icon {
                 font-size: 22px;
@@ -196,17 +197,20 @@ footer,
         .text {
             font-size: 14px;
             margin-top: 8px;
-            color: #cecece;
+            color: $oxen-navy;
         }
 
         .value {
             font-size: 24px;
             margin-top: 4px;
-            font-weight: 800;
-            color: #cecece;
-            font-weight:300;
+            font-weight: 300;
+            color: $oxen-navy;
         }
     }
+}
+
+.q-checkbox {
+    color: $oxen-navy    
 }
 
 .q-loading + .modal {
@@ -220,7 +224,7 @@ footer,
 }
 
 .q-footer.status-footer {
-    background: #000000;
+    background: $oxen-navy;
     color: rgba(255, 255, 255, 0.51);
     border-top: 1px solid #333;
     padding-top: 2px;
@@ -242,7 +246,7 @@ footer,
             }
 
             .ready {
-              color: $loki-green-solid;
+              color: $positive;
             }
 
             .scanning, .syncing {
@@ -271,11 +275,12 @@ footer,
         }
 
         div:first-child {
-            background-color: $loki-green-dark-solid;
+            // TODO: should first and last child be different, where even is this?
+            background-color: $positive;
         }
 
         div:last-child {
-            background-color: $loki-green-solid;
+            background-color: $positive;
         }
     }
 
@@ -315,10 +320,10 @@ footer,
     .q-item.tx-snode,
     .q-item.tx-gov {
         .amount span {
-            color: #43bd43;
+            color: $oxen-navy;
             &:before {
                 content: "+";
-                color: #43bd43;
+                color: $oxen-navy;
             }
         }
     }
@@ -332,11 +337,11 @@ footer,
     .q-item.tx-out,
     .q-item.tx-pending {
         .amount span {
-            color: white;
+            // color: white;
             &:before {
                 content: "-";
                 font-weight: bold;
-                color: white;
+                // color: white;
             }
         }
     }
@@ -360,8 +365,12 @@ footer,
 }
 
 .q-menu {
-    background: #222;
-    color:#cecece;
+    background: white;
+    color: $oxen-navy !important;
+
+    * {
+        color: $oxen-navy;
+    }
 
     .q-list-separator > .q-item-division + .q-item-division, .q-item-division + .q-separator {
         border-top: 1px solid #333;
@@ -369,14 +378,24 @@ footer,
 }
 
 .menu-list {
-  .q-item * {
-    color: white;
-  }
+
+    background: white;
+
+    .q-item * {
+        color: $oxen-navy;
+    }
 }
+
+.context-menu-list {
+  min-width: 150px;
+  max-height: 300px;
+}
+
 .confirm-tx-card {
-  color: "primary";
   width: 450px;
   max-width: 450x;
+
+  color: $oxen-navy !important;
 
   .confirm-list {
     .q-item {
@@ -389,7 +408,7 @@ footer,
   }
 
   .label {
-    color: #cecece;
+    color: $oxen-purple;
     padding-right: 6px;
   }
   .address-value {
@@ -398,7 +417,7 @@ footer,
 
   .confirm-send-btn {
     color: white;
-    background: $positive;
+    background: $primary;
   }
 }
 
@@ -407,11 +426,6 @@ footer,
     background: $primary;
     color: white;
     max-width: 250px !important;
-    // padding-top: 4px;
-
-    // .q-list-separator > .q-item-division + .q-item-division, .q-item-division + .q-separator {
-    //     border-top: 1px solid $loki-green-dark-solid;
-    // }
 }
 
 .modal.minimized {
@@ -427,7 +441,6 @@ footer,
 
 .modal {
     color: #cecece;
-    background-color: $dark;
 
     .modal-header {
         margin-top: 6px;
@@ -435,10 +448,6 @@ footer,
         text-align: left;
         font-size: 24px;
         font-weight: bold;
-    }
-    .modal-content,
-    .modal-body {
-        background: $loki-black-80;
     }
 
     .q-header {
@@ -452,9 +461,22 @@ footer,
 
 }
 
+.q-toolbar {
+    background-color: $oxen-navy;
+}
+
+.header {
+    color: $oxen-navy;
+}
+
+.detail-page {
+    color: $oxen-navy;
+}
+
 .q-radio {
+    color: $oxen-navy;
     svg {
-        color: #cecece;
+        color: $oxen-navy;
     }
 }
 
@@ -463,20 +485,30 @@ footer,
   color: white;
 
   .qr-code-card {
-    background-color: $dark;
+    background-color: white;
   }
 }
 
-.loki-green {
-    background: $loki-green;
+.oxen-light-teal {
+    background: $oxen-light-teal;
+    color: white;
+}
+
+.oxen-navy {
+    background: $oxen-navy;
+    color: white;
+}
+
+.oxen-teal {
+    background: $oxen-teal;
     color: white;
 }
 
 .startup-icons {
     .solid {
-        color:$loki-green-solid;
+        color:$oxen-teal;
         g,path {
-            fill: $loki-green-solid;
+            fill: $oxen-teal;
         }
     }
 }
@@ -489,12 +521,21 @@ footer,
 
 .navigation {
     .q-btn {
+        background: $oxen-navy;
         color: white;
-        background: $loki-black-90;
+        
+        .q-icon {
+            color: $oxen-teal;
+        }
     }
 
     .router-link-exact-active > .q-btn {
-        background: $loki-green;
+        color: $oxen-navy
+        background: $oxen-teal;
+
+        .q-icon {
+            color: $oxen-navy;
+        }
     }
 
 }
@@ -504,22 +545,22 @@ footer,
     }
 
     .q-item {
-        background: $secondary;
+        background: $oxen-navy;
         .wallet-icon {
-            color: $tertiary;
+            color: $oxen-teal;
             g,path {
-                fill: $tertiary;
+                fill: $oxen-teal;
             }
         }
     }
 
     .q-item:hover, .q-item.selected {
-        background: $primary !important;
+        background: $oxen-purple !important;
 
         .wallet-icon {
-            color:$loki-green-solid;
+            color: $oxen-teal;
             g,path {
-                fill: $loki-green-solid;
+                fill: $oxen-teal;
             }
         }
 
@@ -530,20 +571,25 @@ footer,
 }
 
 .receive {
-    .q-list-header {
-        color: #FFFFFF;
+
+    .list-header {
+        color: $oxen-navy;
     }
 
     .q-separator-component {
-        background-color: $secondary;
+        background-color: white;
         opacity: 0.4;
     }
 
     .primary-address {
-        background: #3eb13e !important;
+        background: $oxen-teal !important;
 
         .q-item, .q-item-side {
             color: white;
+
+            .text-caption {
+                color: white;
+            }
         }
 
         .q-btn {
@@ -552,46 +598,58 @@ footer,
     }
 
     .primary-address:hover {
-        background: $loki-green-solid !important;
+        background: $oxen-navy !important;
     }
 
 }
 
-.loki-list {
-    .loki-list-item {
-        background: #313131;
+.oxen-list {
+    .oxen-list-item {
+        background: white;
         -webkit-transition: background-color 0.2s ease-in;
         transition: background-color 0.2s ease-in;
 
         font-size: 16px;
-        color: #cecece;
+        color: $oxen-navy;
         padding-top: 6px;
         padding-bottom: 6px;
 
         margin: 0 16px;
         border-radius: 3px;
 
-        + .loki-list-item {
+        + .oxen-list-item {
             margin-top: 10px;
         }
     }
 
-    .loki-list-item:hover {
-        background: rgba(117,117,117,0.3);
+    .text-caption {
+        color: $oxen-navy;
+    }
+
+    .oxen-list-item:hover {
+        background: $oxen-teal;
+
+
     }
 
 }
 
-.lns-record-list {
-    .q-item-label.unlocked {
-        color: white;
-    }
+.record-type-title {
+  font-weight: bold;
+  margin-bottom: 40px;
+  padding-bottom: 40px;
+  color: $oxen-navy;
+}
+
+.records-group {
+  padding-bottom: 40px;
 }
 
 .service-node-list {
     .q-item {
         cursor: pointer;
-        background: #313131;
+        color: $oxen-navy;
+        background: white;
         -webkit-transition: background-color 0.2s ease-in;
         transition: background-color 0.2s ease-in;
 
@@ -600,14 +658,25 @@ footer,
         + .q-item {
             margin-top: 10px;
         }
-    }
 
-    .q-item-sublabel {
-        color: $loki-black-50;
+        .contrib-amounts {
+            color: $oxen-navy;
+        }
+    }
+    
+
+
+    .q-item-label {
+        color: $oxen-navy;
     }
 
     .q-item:hover {
-        background: rgba(117,117,117,0.3);
+        background: $oxen-navy;
+        color: white;
+
+        .contrib-amounts {
+            color: white;
+        }
     }
 
 }
@@ -618,17 +687,26 @@ footer,
     }
 }
 
-.loki-field {
+.tab-desc {
+    color: $oxen-navy;
+    font-style: normal;
+    b {
+        color: $oxen-teal;
+        font-style: italic;
+    }
+}
+
+.oxen-field {
     .content {
         border: 1px solid #484848;
-
+        background: white;
         -webkit-transition: background-color 0.2s ease-in, border-color 0.2s ease-in;
         transition: background-color 0.2s ease-in, border-color 0.2s ease-in;
     }
 
     &:not(.disable):not(.disable-hover) {
         .content:hover {
-            background: #2e2e2e;
+            background: white;
         }
     }
 
@@ -643,21 +721,10 @@ footer,
     }
 
     .label {
-        color: white;
+        color: $oxen-navy;
 
         .optional {
             color: #7C7C7C;
-        }
-    }
-}
-
-.service-node-registration, .prove-transaction, .check-transaction, .sign-and-verify {
-    .description{
-        color: #b7b7b7;
-        font-style: normal;
-        b {
-            color: white;
-            font-style: italic;
         }
     }
 }
@@ -666,6 +733,10 @@ footer,
     .q-footer {
         background: $secondary
     }
+}
+
+.welcome-container {
+    color: $oxen-navy;
 }
 
 .address-book, .address-header {
@@ -681,6 +752,10 @@ footer,
         border-radius: 2px;
         color: #b7b7b7;
     }
+}
+
+.signature-dialog {
+    color: $oxen-navy;    
 }
 
 .check-transaction {
@@ -711,4 +786,47 @@ footer,
 
 .non-selectable {
     color: #979797;
+}
+
+.created {
+    color: $oxen-navy;
+    
+  .wallet h6 {
+    text-align: center;
+  }
+
+  .address {
+    text-align: center;
+    word-break: break-all;
+  }
+
+  .seed-box {
+    border: 1px solid white;
+    border-radius: 3px;
+    margin: 16px;
+    padding: 16px;
+
+    div,
+    h6 {
+      text-align: center;
+    }
+
+    .seed {
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .warning {
+      color: goldenrod;
+    }
+  }
+  h6 {
+    font-size: 18px;
+    margin: 8px 0;
+    font-weight: 450;
+  }
+  .advanced-options-label {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }

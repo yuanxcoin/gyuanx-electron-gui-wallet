@@ -1,15 +1,30 @@
 <template>
   <q-page>
-    <q-list class="wallet-list" no-border :dark="theme == 'dark'">
+    <q-list
+      class="wallet-list oxen-light-teal"
+      no-border
+      :dark="theme == 'dark'"
+    >
       <template v-if="wallets.list.length">
         <div class="header row justify-between items-center">
           <div class="header-title">
             {{ $t("titles.yourWallets") }}
           </div>
-          <q-btn v-if="wallets.list.length" class="add" icon="add" size="md" color="primary">
+          <q-btn
+            v-if="wallets.list.length"
+            class="add"
+            icon="add"
+            size="md"
+            color="primary"
+          >
             <q-menu class="header-popover" :content-class="'header-popover'">
               <q-list separator>
-                <q-item v-for="action in actions" :key="action.name" clickable @click.native="action.handler">
+                <q-item
+                  v-for="action in actions"
+                  :key="action.name"
+                  clickable
+                  @click.native="action.handler"
+                >
                   <q-item-section>
                     {{ action.name }}
                   </q-item-section>
@@ -35,7 +50,12 @@
                 class="si-glyph si-glyph-wallet"
               >
                 <defs class="si-glyph-fill"></defs>
-                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                <g
+                  stroke="none"
+                  stroke-width="1"
+                  fill="none"
+                  fill-rule="evenodd"
+                >
                   <g transform="translate(1.000000, 0.000000)" fill="#434343">
                     <path
                       d="M7.988,10.635 L7.988,8.327 C7.988,7.578 8.561,6.969 9.267,6.969 L13.964,6.969 L13.964,5.531 C13.964,4.849 13.56,4.279 13.007,4.093 L13.007,4.094 L11.356,4.08 L11.336,4.022 L3.925,4.022 L3.784,4.07 L1.17,4.068 L1.165,4.047 C0.529,4.167 0.017,4.743 0.017,5.484 L0.017,13.437 C0.017,14.269 0.665,14.992 1.408,14.992 L12.622,14.992 C13.365,14.992 13.965,14.316 13.965,13.484 L13.965,12.031 L9.268,12.031 C8.562,12.031 7.988,11.384 7.988,10.635 L7.988,10.635 Z"
@@ -55,8 +75,12 @@
             </q-icon>
           </q-item-section>
           <q-item-section>
-            <q-item-label class="wallet-name" caption>{{ wallet.name }}</q-item-label>
-            <q-item-label class="monospace ellipsis" caption>{{ wallet.address }}</q-item-label>
+            <q-item-label class="wallet-name" caption>{{
+              wallet.name
+            }}</q-item-label>
+            <q-item-label class="monospace ellipsis" caption>{{
+              wallet.address
+            }}</q-item-label>
           </q-item-section>
           <ContextMenu
             :menu-items="menuItems"
@@ -67,7 +91,11 @@
         <q-separator />
       </template>
       <template v-else>
-        <q-item v-for="action in actions" :key="action.name" @click.native="action.handler">
+        <q-item
+          v-for="action in actions"
+          :key="action.name"
+          @click.native="action.handler"
+        >
           <q-item-section>
             {{ action.name }}
           </q-item-section>
@@ -173,15 +201,15 @@ export default {
               type: "password"
             },
             ok: {
-              label: this.$t("dialog.buttons.open")
+              label: this.$t("dialog.buttons.open"),
+              color: "primary"
             },
             cancel: {
               flat: true,
-              label: this.$t("dialog.buttons.cancel"),
-              color: this.theme == "dark" ? "white" : "dark"
+              label: this.$t("dialog.buttons.cancel")
             },
-            dark: this.theme == "dark",
-            color: "positive"
+            color: "#1F1C47",
+            persistent: true
           })
           .onOk(password => {
             this.$q.loading.show({

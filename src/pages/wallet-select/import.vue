@@ -1,7 +1,10 @@
 <template>
   <q-page>
     <div class="q-mx-md import-wallet">
-      <LokiField :label="$t('fieldLabels.newWalletName')" :error="$v.wallet.name.$error">
+      <OxenField
+        :label="$t('fieldLabels.newWalletName')"
+        :error="$v.wallet.name.$error"
+      >
         <q-input
           v-model="wallet.name"
           :placeholder="$t('placeholders.walletName')"
@@ -11,9 +14,13 @@
           @keyup.enter="import_wallet"
           @blur="$v.wallet.name.$touch"
         />
-      </LokiField>
+      </OxenField>
 
-      <LokiField :label="$t('fieldLabels.walletFile')" disable-hover :error="$v.wallet.path.$error">
+      <OxenField
+        :label="$t('fieldLabels.walletFile')"
+        disable-hover
+        :error="$v.wallet.path.$error"
+      >
         <q-input
           v-model="wallet.path"
           :placeholder="$t('placeholders.selectAFile')"
@@ -22,16 +29,22 @@
           borderless
           dense
         />
-        <input id="walletPath" ref="fileInput" type="file" hidden @change="setWalletPath" />
+        <input
+          id="walletPath"
+          ref="fileInput"
+          type="file"
+          hidden
+          @change="setWalletPath"
+        />
         <q-btn
-          color="secondary"
+          color="primary"
           :label="$t('buttons.selectWalletFile')"
           :text-color="theme == 'dark' ? 'white' : 'dark'"
           @click="selectFile"
         />
-      </LokiField>
+      </OxenField>
 
-      <LokiField :label="$t('fieldLabels.password')">
+      <OxenField :label="$t('fieldLabels.password')">
         <q-input
           v-model="wallet.password"
           :placeholder="$t('placeholders.walletPassword')"
@@ -41,9 +54,9 @@
           dense
           @keyup.enter="import_wallet"
         />
-      </LokiField>
+      </OxenField>
 
-      <LokiField :label="$t('fieldLabels.confirmPassword')">
+      <OxenField :label="$t('fieldLabels.confirmPassword')">
         <q-input
           v-model="wallet.password_confirm"
           type="password"
@@ -52,8 +65,13 @@
           dense
           @keyup.enter="import_wallet"
         />
-      </LokiField>
-      <q-btn class="submit-button" color="primary" :label="$tc('buttons.importWallet', 1)" @click="import_wallet" />
+      </OxenField>
+      <q-btn
+        class="submit-button"
+        color="primary"
+        :label="$tc('buttons.importWallet', 1)"
+        @click="import_wallet"
+      />
     </div>
   </q-page>
 </template>
@@ -61,10 +79,10 @@
 <script>
 import { required } from "vuelidate/lib/validators";
 import { mapState } from "vuex";
-import LokiField from "components/loki_field";
+import OxenField from "components/oxen_field";
 export default {
   components: {
-    LokiField
+    OxenField
   },
   data() {
     return {
@@ -172,7 +190,7 @@ export default {
     }
   }
 
-  .loki-field {
+  .oxen-field {
     margin-top: 16px;
   }
 }

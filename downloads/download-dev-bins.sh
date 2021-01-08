@@ -12,11 +12,11 @@ if [ -z "$RENAME" ]; then
 fi
 
 if [ "$OS" == "Linux" ]; then
-    ASSET_URL="https://builds.lokinet.dev/loki-project/loki-core/loki-dev-linux-LATEST.tar.xz"
+    ASSET_URL="https://oxen.rocks/loki-project/loki-core/loki-dev-linux-LATEST.tar.xz"
 elif [ "$OS" == "Windows" ]; then
-    ASSET_URL="https://builds.lokinet.dev/loki-project/loki-core/loki-dev-win-LATEST.zip"
+    ASSET_URL="https://oxen.rocks/loki-project/loki-core/loki-dev-win-LATEST.zip"
 elif [ "$OS" == "macOS" ]; then
-    ASSET_URL="https://builds.lokinet.dev/loki-project/loki-core/loki-dev-macos-LATEST.tar.xz"
+    ASSET_URL="https://oxen.rocks/loki-project/loki-core/loki-dev-macos-LATEST.tar.xz"
 else
     echo "OS must be Linux, Windows or macOS"
     exit 1
@@ -29,4 +29,4 @@ curl -sL --fail \
     -o "${RENAME}" \
     "$ASSET_URL"
 
-echo "Loki binaries downloaded"
+echo "Oxen binaries downloaded"

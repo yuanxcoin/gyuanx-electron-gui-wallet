@@ -137,8 +137,8 @@ export class WalletRPC {
 
         const rpcExecutable =
           process.platform === "win32"
-            ? "loki-wallet-rpc.exe"
-            : "loki-wallet-rpc";
+            ? "oxen-wallet-rpc.exe"
+            : "oxen-wallet-rpc";
         // eslint-disable-next-line no-undef
         const rpcPath = path.join(__ryo_bin, rpcExecutable);
 
@@ -146,7 +146,7 @@ export class WalletRPC {
         if (!fs.existsSync(rpcPath)) {
           reject(
             new Error(
-              "Failed to find Loki Wallet RPC. Please make sure you anti-virus has not removed it."
+              "Failed to find Oxen Wallet RPC. Please make sure you anti-virus has not removed it."
             )
           );
           return;
@@ -286,7 +286,7 @@ export class WalletRPC {
         break;
 
       case "restore_view_wallet":
-        // TODO: Decide if we want this for loki
+        // TODO: Decide if we want this for Oxen
         this.restoreViewWallet(
           params.name,
           params.password,

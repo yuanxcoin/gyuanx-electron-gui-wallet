@@ -2,7 +2,7 @@
   <q-page>
     <div class="init-screen-page text-center">
       <div class="absolute-center">
-        <img src="loki.svg" width="400" class="q-mb-md" />
+        <img src="oxen.svg" width="400" class="q-mb-md" />
 
         <div class="startup-icons q-mt-xl q-mb-lg">
           <div ref="backend">
@@ -62,10 +62,34 @@
                     d="M7.494,14.958 C3.361,14.958 0,11.622 0,7.52 C0,3.418 3.361,0.082 7.494,0.082 C11.627,0.082 14.989,3.418 14.989,7.52 C14.989,11.622 11.627,14.958 7.494,14.958 L7.494,14.958 Z M7.51,0.938 C3.887,0.938 0.938,3.886 0.938,7.51 C0.938,11.135 3.887,14.083 7.51,14.083 C11.135,14.083 14.083,11.135 14.083,7.51 C14.083,3.886 11.135,0.938 7.51,0.938 L7.51,0.938 Z"
                     class="si-glyph-fill"
                   ></path>
-                  <rect x="7" y="1" width="0.922" height="14.084" class="si-glyph-fill"></rect>
-                  <rect x="0" y="7" width="13.96" height="0.922" class="si-glyph-fill"></rect>
-                  <rect x="1" y="4" width="12.406" height="0.906" class="si-glyph-fill"></rect>
-                  <rect x="1" y="10" width="12.406" height="0.922" class="si-glyph-fill"></rect>
+                  <rect
+                    x="7"
+                    y="1"
+                    width="0.922"
+                    height="14.084"
+                    class="si-glyph-fill"
+                  ></rect>
+                  <rect
+                    x="0"
+                    y="7"
+                    width="13.96"
+                    height="0.922"
+                    class="si-glyph-fill"
+                  ></rect>
+                  <rect
+                    x="1"
+                    y="4"
+                    width="12.406"
+                    height="0.906"
+                    class="si-glyph-fill"
+                  ></rect>
+                  <rect
+                    x="1"
+                    y="10"
+                    width="12.406"
+                    height="0.922"
+                    class="si-glyph-fill"
+                  ></rect>
                   <path
                     d="M7.317,14.854 C4.72,13.581 3.043,10.662 3.043,7.417 C3.043,4.247 4.666,1.355 7.181,0.05 L7.642,0.937 C5.455,2.074 4.043,4.617 4.043,7.417 C4.043,10.282 5.502,12.849 7.757,13.955 L7.317,14.854 L7.317,14.854 Z"
                     class="si-glyph-fill"
@@ -112,7 +136,9 @@
           {{ message }}
         </div>
 
-        <div v-if="daemonStatus" class="q-mt-xs">{{ $t("strings.syncingDaemon") }}: {{ daemonStatus }}</div>
+        <div v-if="daemonStatus" class="q-mt-xs">
+          {{ $t("strings.syncingDaemon") }}: {{ daemonStatus }}
+        </div>
       </div>
 
       <div class="absolute-bottom">
@@ -144,7 +170,10 @@ export default {
       if (this.status.code < 3 || !this.isLocalDaemon) return null;
 
       const currentHeight = this.daemon.info.height_without_bootstrap;
-      const targetHeight = Math.max(this.daemon.info.height, this.daemon.info.target_height);
+      const targetHeight = Math.max(
+        this.daemon.info.height,
+        this.daemon.info.target_height
+      );
       const percentage = ((100 * currentHeight) / targetHeight).toFixed(1);
 
       if (targetHeight === 0 || currentHeight >= targetHeight) return null;
@@ -200,7 +229,8 @@ export default {
           this.$q.notify({
             type: "warning",
             timeout: 2000,
-            message: "Warning: " + this.$t("notification.warnings.usingRemoteNode")
+            message:
+              "Warning: " + this.$t("notification.warnings.usingRemoteNode")
           });
           break;
         case 6:
@@ -224,6 +254,9 @@ export default {
 </script>
 
 <style lang="scss">
+.message {
+  color: #1f1c47;
+}
 .init-screen-page {
   height: 100vh;
   position: relative;

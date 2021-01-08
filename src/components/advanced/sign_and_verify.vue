@@ -1,16 +1,16 @@
 <template>
   <div class="sign-and-verify">
     <div class="q-pa-md">
-      <div class="q-mb-lg description">
+      <div class="q-mb-lg tab-desc">
         {{ $t("strings.signAndVerifyDescription") }}
       </div>
       <div v-if="is_view_only">
         {{ $t("strings.cannotSign") }}
       </div>
       <div v-else>
-        <div class="text-h6">{{ $t("titles.advanced.sign") }}</div>
+        <div class="text-h6 header">{{ $t("titles.advanced.sign") }}</div>
         <div class="row justify-between items-end">
-          <LokiField :label="$t('fieldLabels.data')">
+          <OxenField :label="$t('fieldLabels.data')">
             <q-input
               v-model.trim="toSign"
               :dark="theme == 'dark'"
@@ -18,7 +18,7 @@
               dense
               :placeholder="$t('placeholders.dataToSign')"
             />
-          </LokiField>
+          </OxenField>
           <div class="btn-wrapper q-ml-md q-py-sm">
             <q-btn
               color="primary"
@@ -30,11 +30,11 @@
           </div>
         </div>
       </div>
-      <div class="verify-heading text-h6">
+      <div class="verify-heading text-h6 header">
         {{ $t("titles.advanced.verify") }}
       </div>
       <div class="justify-between items-end">
-        <LokiField class="q-mt-md" :label="$t('fieldLabels.signature')">
+        <OxenField class="q-mt-md" :label="$t('fieldLabels.signature')">
           <q-input
             v-model.trim="signatureToVerify"
             :dark="theme == 'dark'"
@@ -42,8 +42,8 @@
             dense
             :placeholder="$t('placeholders.signature')"
           />
-        </LokiField>
-        <LokiField class="q-mt-md" :label="$t('fieldLabels.data')">
+        </OxenField>
+        <OxenField class="q-mt-md" :label="$t('fieldLabels.data')">
           <q-input
             v-model.trim="unsignedData"
             :dark="theme == 'dark'"
@@ -51,8 +51,8 @@
             dense
             :placeholder="$t('placeholders.unsignedData')"
           />
-        </LokiField>
-        <LokiField class="q-mt-md" :label="$t('fieldLabels.address')">
+        </OxenField>
+        <OxenField class="q-mt-md" :label="$t('fieldLabels.address')">
           <q-input
             v-model.trim="address"
             :dark="theme == 'dark'"
@@ -60,7 +60,7 @@
             dense
             :placeholder="$t('placeholders.addressOfSigner')"
           />
-        </LokiField>
+        </OxenField>
         <div class="submit-button">
           <q-btn
             color="primary"
@@ -71,7 +71,7 @@
           <q-btn
             v-if="canClear"
             :label="$t('buttons.clear')"
-            color="secondary"
+            color="accent"
             @click="clear"
           />
         </div>
@@ -92,13 +92,13 @@
 
 <script>
 const { clipboard } = require("electron");
-import LokiField from "components/loki_field";
+import OxenField from "components/oxen_field";
 import SignatureDialog from "./signature_dialog";
 import { mapState } from "vuex";
 export default {
   name: "SignAndVerify",
   components: {
-    LokiField,
+    OxenField,
     SignatureDialog
   },
   data() {
@@ -228,7 +228,7 @@ export default {
     cursor: default;
   }
 
-  .loki-field {
+  .oxen-field {
     flex: 1;
   }
 }

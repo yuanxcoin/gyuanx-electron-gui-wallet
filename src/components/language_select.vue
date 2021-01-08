@@ -8,7 +8,7 @@
         v-for="option in options"
         :key="option.value"
         class="row justify-center items-center"
-        :color="lang === option.value ? 'primary' : 'secondary'"
+        :color="lang === option.value ? 'primary' : 'accent'"
         size="md"
         @click="setLanguage(option.value)"
       >

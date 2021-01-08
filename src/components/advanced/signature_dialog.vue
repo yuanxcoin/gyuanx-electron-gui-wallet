@@ -1,6 +1,6 @@
 <template>
   <q-dialog v-model="show" persistent>
-    <q-card dark>
+    <q-card class="signature-dialog">
       <q-card-section>
         <div class="text-h6">{{ $t("dialog.signature.title") }}</div>
         <div>

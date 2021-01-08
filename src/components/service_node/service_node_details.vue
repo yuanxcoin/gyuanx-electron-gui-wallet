@@ -23,7 +23,7 @@
           />
         </q-toolbar>
       </q-header>
-      <q-page-container>
+      <q-page-container class="detail-page">
         <div class="layout-padding">
           <h6 class="q-mt-xs q-mb-none text-weight-light">
             {{ $t("strings.serviceNodeDetails.serviceNodeKey") }}
@@ -40,7 +40,7 @@
                 </div>
                 <div class="value">
                   <span
-                    ><FormatLoki :amount="node.staking_requirement" raw-value
+                    ><FormatOxen :amount="node.staking_requirement" raw-value
                   /></span>
                 </div>
               </div>
@@ -54,7 +54,7 @@
                 </div>
                 <div class="value">
                   <span
-                    ><FormatLoki :amount="node.total_contributed" raw-value
+                    ><FormatOxen :amount="node.total_contributed" raw-value
                   /></span>
                 </div>
               </div>
@@ -120,7 +120,7 @@
               </div>
             </div>
           </div>
-          <q-list no-border :dark="theme == 'dark'" class="loki-list">
+          <q-list no-border :dark="theme == 'dark'" class="oxen-list">
             <q-item-label class="contributors-title"
               >{{
                 $t("strings.serviceNodeDetails.contributors")
@@ -129,7 +129,7 @@
             <q-item
               v-for="contributor in contributors"
               :key="contributor.address"
-              class="loki-list-item"
+              class="oxen-list-item"
               clickable
               @click="openUserWalletInfo(contributor.address)"
             >
@@ -150,7 +150,7 @@
                     >{{ $t("strings.operator") }} •
                   </span>
                   {{ $t("strings.contribution") }}:
-                  <FormatLoki :amount="contributor.amount" raw-value />
+                  <FormatOxen :amount="contributor.amount" raw-value />
                 </q-item-label>
               </q-item-label>
               <ContextMenu
@@ -175,12 +175,12 @@
 const { clipboard } = require("electron");
 import { mapState } from "vuex";
 import { date } from "quasar";
-import FormatLoki from "components/format_loki";
+import FormatOxen from "components/format_oxen";
 import ContextMenu from "components/menus/contextmenu";
 export default {
   name: "ServiceNodeDetails",
   components: {
-    FormatLoki,
+    FormatOxen,
     ContextMenu
   },
   props: {
@@ -280,6 +280,7 @@ export default {
 <style lang="scss">
 .contributors-title {
   margin-bottom: 12px;
+  color: #1f1c47;
 }
 
 .serviceNodeDetails {

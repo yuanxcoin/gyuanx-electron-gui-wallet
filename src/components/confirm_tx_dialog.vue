@@ -1,6 +1,6 @@
 <template>
   <q-dialog v-model="show" persistent>
-    <q-card class="confirm-tx-card" dark>
+    <q-card class="confirm-tx-card">
       <q-card-section>
         <div class="text-h6">{{ $t("dialog.confirmTransaction.title") }}</div>
       </q-card-section>
@@ -15,10 +15,10 @@
           </div>
           <br />
           <span class="label">{{ $t("strings.transactions.amount") }}: </span>
-          {{ amount }} Loki
+          {{ amount }} OXEN
           <br />
           <span class="label">{{ $t("strings.transactions.fee") }}: </span>
-          {{ fee }} Loki
+          {{ fee }} OXEN
           <br />
           <span class="label"
             >{{ $t("dialog.confirmTransaction.priority") }}:

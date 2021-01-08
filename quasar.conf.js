@@ -156,17 +156,16 @@ module.exports = function() {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: "com.loki-project.electron-wallet",
-        productName: "Loki Electron Wallet",
-        copyright:
-          "Copyright © 2018-2020 Loki Project, 2018 Ryo Currency Project",
+        appId: "com.oxen.electron-wallet",
+        productName: "Oxen Electron Wallet",
+        copyright: "Copyright © 2018-2021 Oxen, 2018 Ryo Currency Project",
         afterSign: "build/notarize.js",
-        artifactName: "loki-electron-wallet-${version}-${os}.${ext}",
+        artifactName: "oxen-electron-wallet-${version}-${os}.${ext}",
         publish: "github",
 
         linux: {
           target: ["AppImage", "deb"],
-          icon: "src-electron/icons/icon_512x512.png",
+          icon: "src-electron/icon.png",
           category: "Finance"
         },
 
@@ -184,7 +183,7 @@ module.exports = function() {
         },
 
         dmg: {
-          background: "src-electron/build/loki-dmg.tiff",
+          background: "src-electron/build/oxen-dmg.tiff",
           sign: false
         },
 

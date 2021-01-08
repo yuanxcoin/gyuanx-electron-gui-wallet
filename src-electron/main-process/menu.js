@@ -33,7 +33,7 @@ let template = [
       {
         label: "Learn More",
         click() {
-          require("electron").shell.openExternal("https://loki.network/");
+          require("electron").shell.openExternal("https://oxen.io/");
         }
       }
     ]
@@ -42,7 +42,7 @@ let template = [
 
 if (process.platform === "darwin") {
   template.unshift({
-    label: "Loki Electron Wallet",
+    label: "Oxen Electron Wallet",
     submenu: [
       { role: "about" },
       { type: "separator" },

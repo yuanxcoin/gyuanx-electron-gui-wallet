@@ -1,11 +1,11 @@
 <template>
   <div class="prove-transaction">
     <div class="q-pa-md">
-      <div class="q-mb-lg description">
+      <div class="q-mb-lg tab-desc">
         {{ $t("strings.proveTransactionDescription") }}
       </div>
       <div>
-        <LokiField
+        <OxenField
           :label="$t('fieldLabels.transactionId')"
           :error="$v.txid.$error"
         >
@@ -17,8 +17,8 @@
             dense
             @blur="$v.txid.$touch"
           />
-        </LokiField>
-        <LokiField
+        </OxenField>
+        <OxenField
           class="q-mt-md"
           :label="$t('fieldLabels.address')"
           :error="$v.address.$error"
@@ -32,8 +32,8 @@
             dense
             @blur="$v.address.$touch"
           />
-        </LokiField>
-        <LokiField class="q-mt-md" :label="$t('fieldLabels.message')" optional>
+        </OxenField>
+        <OxenField class="q-mt-md" :label="$t('fieldLabels.message')" optional>
           <q-input
             v-model.trim="message"
             :dark="theme == 'dark'"
@@ -41,7 +41,7 @@
             borderless
             dense
           />
-        </LokiField>
+        </OxenField>
         <div class="buttons submit-button">
           <q-btn
             color="primary"
@@ -50,7 +50,7 @@
           />
           <q-btn
             v-if="canClear"
-            color="secondary"
+            color="accent"
             :label="$t('buttons.clear')"
             @click="clear"
           />
@@ -79,13 +79,13 @@
 import { mapState } from "vuex";
 import { required } from "vuelidate/lib/validators";
 import { address } from "src/validators/common";
-import LokiField from "components/loki_field";
+import OxenField from "components/oxen_field";
 import { clipboard } from "electron";
 
 export default {
   name: "ProveTransaction",
   components: {
-    LokiField
+    OxenField
   },
   data() {
     return {

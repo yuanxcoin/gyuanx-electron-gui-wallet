@@ -12,7 +12,7 @@
             <q-btn-toggle
               v-model="page"
               toggle-color="primary"
-              color="tertiary"
+              color="accent"
               size="md"
               :options="tabs"
             />

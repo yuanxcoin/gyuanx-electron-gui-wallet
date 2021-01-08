@@ -1,7 +1,7 @@
 <template>
   <div class="my-lns">
     <div class="q-px-md q-pt-md">
-      <div class="description">
+      <div class="tab-desc">
         {{ $t("strings.lnsDescription") }}
       </div>
       <LNSRecords @onUpdate="onUpdate" @onRenew="onRenew" />

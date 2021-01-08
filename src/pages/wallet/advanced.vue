@@ -4,7 +4,7 @@
       <q-btn-toggle
         v-model="screen"
         toggle-color="primary"
-        color="secondary"
+        color="accent"
         :options="[
           { label: $t('titles.advanced.prove'), value: 'prove' },
           {

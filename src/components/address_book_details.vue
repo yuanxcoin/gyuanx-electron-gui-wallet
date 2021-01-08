@@ -2,7 +2,7 @@
   <q-dialog v-model="isVisible" maximized class="address-book-details">
     <q-layout v-if="mode == 'edit' || mode == 'new'">
       <q-header>
-        <q-toolbar color="dark" inverted>
+        <q-toolbar inverted>
           <q-btn flat round dense icon="reply" @click="close()" />
           <q-toolbar-title v-if="mode == 'new'">
             {{ $t("strings.addAddressBookEntry") }}
@@ -26,16 +26,15 @@
           />
         </q-toolbar>
       </q-header>
-      <q-page-container>
+      <q-page-container class="detail-page">
         <div class="address-book-modal q-mx-md">
-          <LokiField
+          <OxenField
             :label="$t('fieldLabels.address')"
             :error="$v.newEntry.address.$error"
           >
             <q-input
               v-model.trim="newEntry.address"
               :placeholder="address_placeholder"
-              :dark="theme == 'dark'"
               borderless
               dense
               @blur="$v.newEntry.address.$touch"
@@ -47,26 +46,20 @@
               :icon="newEntry.starred ? 'star' : 'star_border'"
               @click="updateStarred"
             />
-          </LokiField>
-          <LokiField :label="$t('fieldLabels.name')">
-            <q-input
-              v-model.trim="newEntry.name"
-              :dark="theme == 'dark'"
-              borderless
-              dense
-            />
-          </LokiField>
-          <LokiField :label="$t('fieldLabels.notes')" optional>
+          </OxenField>
+          <OxenField :label="$t('fieldLabels.name')">
+            <q-input v-model.trim="newEntry.name" borderless dense />
+          </OxenField>
+          <OxenField :label="$t('fieldLabels.notes')" optional>
             <q-input
               v-model="newEntry.description"
               :placeholder="$t('placeholders.additionalNotes')"
               type="textarea"
-              class="full-width text-area-loki"
-              :dark="theme == 'dark'"
+              class="full-width text-area-oxen"
               borderless
               dense
             />
-          </LokiField>
+          </OxenField>
 
           <q-btn
             v-if="mode == 'edit'"
@@ -81,7 +74,7 @@
 
     <q-layout v-else>
       <q-header>
-        <q-toolbar color="dark" inverted>
+        <q-toolbar inverted>
           <q-btn flat round dense icon="reply" @click="close()" />
           <q-toolbar-title>
             {{ $t("strings.addressBookDetails") }}
@@ -106,6 +99,7 @@
         <div class="layout-padding">
           <template v-if="entry != null">
             <AddressHeader
+              class="address-details"
               :address="entry.address"
               :title="entry.name"
               :extra="
@@ -140,7 +134,7 @@
 import { mapState } from "vuex";
 import AddressHeader from "components/address_header";
 import TxList from "components/tx_list";
-import LokiField from "components/loki_field";
+import OxenField from "components/oxen_field";
 import { address } from "src/validators/common";
 import { required } from "vuelidate/lib/validators";
 export default {
@@ -148,7 +142,7 @@ export default {
   components: {
     AddressHeader,
     TxList,
-    LokiField
+    OxenField
   },
   data() {
     return {
@@ -256,9 +250,12 @@ export default {
 </script>
 
 <style lang="scss">
+.address-details {
+  color: #1f1c47;
+}
 .address-book-details {
   .address-book-modal {
-    > .loki-field {
+    > .oxen-field {
       margin-top: 16px;
     }
 

@@ -29,22 +29,22 @@
     <!-- TODO: Move this to it's own component -->
     <q-dialog ref="aboutModal" minimized>
       <div class="about-modal">
-        <img class="q-mb-md" src="oxen.svg" height="42" />
+        <img class="q-mb-md" src="gyuanx.svg" height="42" />
 
         <p class="q-my-sm">Wallet Version: v{{ version }}</p>
         <p class="q-my-sm">Deaemon Version: v{{ daemonVersion }}</p>
-        <p class="q-my-sm">Copyright (c) 2018-2021, Oxen</p>
+        <p class="q-my-sm">Copyright (c) 2018-2021, Gyuanx</p>
         <p class="q-my-sm">Copyright (c) 2018, Ryo Currency Project</p>
         <p class="q-my-sm">All rights reserved.</p>
 
         <div class="q-mt-md q-mb-lg external-links">
           <p>
-            <a href="#" @click="openExternal('https://oxen.io/')"
-              >https://oxen.io/</a
+            <a href="#" @click="openExternal('https://gyuan.online/')"
+              >https://gyuan.online/</a
             >
           </p>
           <p>
-            <a href="#" @click="openExternal('https://t.me/Oxen_Community')"
+            <a href="#" @click="openExternal('https://t.me/Gyuanx_Community')"
               >Telegram</a
             >
             -
@@ -54,10 +54,10 @@
               >Discord</a
             >
             -
-            <!-- readded once oxen subreddit is known -->
+            <!-- readded once gyuanx subreddit is known -->
             <!-- <a
               href="#"
-              @click="openExternal('https://www.reddit.com/r/LokiProject/')"
+              @click="openExternal('https://www.reddit.com/r/GyuanxProject/')"
               >Reddit</a
             >
             - -->
@@ -65,7 +65,7 @@
               href="#"
               @click="
                 openExternal(
-                  'https://github.com/loki-project/loki-electron-gui-wallet'
+                  'https://github.com/yuanxcoin/gyuanx-electron-gui-wallet'
                 )
               "
               >Github</a

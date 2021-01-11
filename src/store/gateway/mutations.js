@@ -22,8 +22,8 @@ export const set_sweep_all_status = (state, data) => {
   state.sweep_all_status = data;
 };
 export const set_snode_status = (state, data) => {
-  state.service_node_status = objectAssignDeep.noMutate(
-    state.service_node_status,
+  state.gnode_status = objectAssignDeep.noMutate(
+    state.gnode_status,
     data
   );
 };

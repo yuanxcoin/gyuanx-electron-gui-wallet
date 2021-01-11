@@ -137,7 +137,7 @@ function createWindow() {
             mainWindow,
             {
               title: "Startup error",
-              message: `Oxen Wallet is already open, or port ${config.port} is in use`,
+              message: `Gyuanx Wallet is already open, or port ${config.port} is in use`,
               type: "error",
               buttons: ["ok"]
             },

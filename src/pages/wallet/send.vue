@@ -10,7 +10,7 @@
         <div class="row gutter-md">
           <!-- Amount -->
           <div class="col-6 amount">
-            <OxenField
+            <GyuanxField
               :label="$t('fieldLabels.amount')"
               :error="$v.newTx.amount.$error"
             >
@@ -30,12 +30,12 @@
               >
                 {{ $t("buttons.all") }}
               </q-btn>
-            </OxenField>
+            </GyuanxField>
           </div>
 
           <!-- Priority -->
           <div class="col-6 priority">
-            <OxenField :label="$t('fieldLabels.priority')">
+            <GyuanxField :label="$t('fieldLabels.priority')">
               <q-select
                 v-model="newTx.priority"
                 emit-value
@@ -44,13 +44,13 @@
                 borderless
                 dense
               />
-            </OxenField>
+            </GyuanxField>
           </div>
         </div>
 
         <!-- Address -->
         <div class="col q-mt-sm">
-          <OxenField
+          <GyuanxField
             :label="$t('fieldLabels.address')"
             :error="$v.newTx.address.$error"
           >
@@ -64,21 +64,21 @@
             <q-btn color="primary" to="addressbook">
               {{ $t("buttons.contacts") }}
             </q-btn>
-          </OxenField>
+          </GyuanxField>
         </div>
 
         <!-- Notes -->
         <div class="col q-mt-sm">
-          <OxenField :label="$t('fieldLabels.notes')" optional>
+          <GyuanxField :label="$t('fieldLabels.notes')" optional>
             <q-input
               v-model="newTx.note"
-              class="full-width text-area-oxen"
+              class="full-width text-area-gyuanx"
               type="textarea"
               :placeholder="$t('placeholders.transactionNotes')"
               borderless
               dense
             />
-          </OxenField>
+          </GyuanxField>
         </div>
 
         <q-checkbox
@@ -86,25 +86,25 @@
           :label="$t('strings.saveToAddressBook')"
         />
         <div v-if="newTx.address_book.save">
-          <OxenField :label="$t('fieldLabels.name')" optional>
+          <GyuanxField :label="$t('fieldLabels.name')" optional>
             <q-input
               v-model="newTx.address_book.name"
               :placeholder="$t('placeholders.addressBookName')"
               borderless
               dense
             />
-          </OxenField>
-          <OxenField class="q-mt-sm" :label="$t('fieldLabels.notes')" optional>
+          </GyuanxField>
+          <GyuanxField class="q-mt-sm" :label="$t('fieldLabels.notes')" optional>
             <q-input
               v-model="newTx.address_book.description"
               type="textarea"
-              class="full-width text-area-oxen"
+              class="full-width text-area-gyuanx"
               rows="2"
               :placeholder="$t('placeholders.additionalNotes')"
               borderless
               dense
             />
-          </OxenField>
+          </GyuanxField>
         </div>
         <!-- div required so the button falls below the checkbox -->
         <div>
@@ -137,7 +137,7 @@
 import { mapState } from "vuex";
 import { required, decimal } from "vuelidate/lib/validators";
 import { address, greater_than_zero } from "src/validators/common";
-import OxenField from "components/oxen_field";
+import GyuanxField from "components/gyuanx_field";
 import WalletPassword from "src/mixins/wallet_password";
 import ConfirmDialogMixin from "src/mixins/confirm_dialog_mixin";
 import ConfirmTransactionDialog from "components/confirm_tx_dialog";
@@ -148,7 +148,7 @@ const DO_NOTHING = 10;
 
 export default {
   components: {
-    OxenField,
+    GyuanxField,
     ConfirmTransactionDialog
   },
   mixins: [WalletPassword, ConfirmDialogMixin],

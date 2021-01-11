@@ -43,8 +43,8 @@ export default {
       // don't update the pointer to the record (else it'll update on the records page)
       let recordCopy = _.cloneDeep(record);
 
-      if (record.type === "lokinet" && record.name.endsWith(".loki")) {
-        // The UI expects no ".loki" extension
+      if (record.type === "gyuanxnet" && record.name.endsWith(".gyuanx")) {
+        // The UI expects no ".gyuanx" extension
         recordCopy.name = recordCopy.name.slice(0, -5);
         recordCopy.value = recordCopy.value.slice(0, -5);
       }

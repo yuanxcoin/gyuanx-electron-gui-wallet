@@ -16,10 +16,10 @@
           />
         </template>
         <q-toolbar-title
-          v-if="page_title == 'Oxen'"
+          v-if="page_title == 'Gyuanx'"
           class="flex items-center justify-center"
         >
-          <img src="oxen-white.svg" height="32" />
+          <img src="gyuanx-white.svg" height="32" />
         </q-toolbar-title>
         <q-toolbar-title v-else class="flex items-center justify-center">{{
           page_title
@@ -70,7 +70,7 @@ export default {
 
         default:
         case "wallet-select":
-          return "Oxen";
+          return "Gyuanx";
       }
     }
   },

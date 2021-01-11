@@ -1,32 +1,32 @@
-# Oxen Electron GUI Wallet
+# Gyuanx Electron GUI Wallet
 
 ### Introduction
 
-Oxen (formerly Loki) is a private cryptocurrency based on Monero. Oxen aims to provide a private data transmission layer using a second layer of Service Nodes.
-More information on the project can be found on the [website](https://oxen.io) and in the [whitepaper](https://loki.network/whitepaper). Oxen is an open source project, and we encourage contributions from anyone with something to offer.
+Gyuanx (formerly Gyuanx) is a private cryptocurrency based on Monero. Gyuanx aims to provide a private data transmission layer using a second layer of Service Nodes.
+More information on the project can be found on the [website](https://gyuan.online) and in the [whitepaper](https://gyuan.online/whitepaper). Gyuanx is an open source project, and we encourage contributions from anyone with something to offer.
 
-![Oxen wallet image](src-electron/icons/mrcuug.png)
+![Gyuanx wallet image](src-electron/icons/mrcuug.png)
 
 ### About this project
 
-This is the new electron GUI for Oxen. It is open source and completely free to use without restrictions, anyone may create an alternative implementation of the Oxen Electron GUI that uses the protocol and network in a compatible manner.
+This is the new electron GUI for Gyuanx. It is open source and completely free to use without restrictions, anyone may create an alternative implementation of the Gyuanx Electron GUI that uses the protocol and network in a compatible manner.
 
 Please submit any changes as pull requests to the development branch, all changes are assessed in the development branch before being merged to master, release tags are considered stable builds for the GUI.
 
 #### Pre-requisites
 
-- Download latest [oxend](https://github.com/loki-project/loki-core/releases/latest)
-- Extract the oxend binaries to a folder
+- Download latest [gyuanxd](https://github.com/yuanxcoin/gyuanx-core/releases/latest)
+- Extract the gyuanxd binaries to a folder
 
 #### Commands
 
 ```
 nvm use 14.11.0
 npm install -g @quasar/cli
-git clone https://github.com/loki-project/loki-electron-gui-wallet
-cd loki-electron-gui-wallet
-cp path_to_oxend_binaries/oxend bin/
-cp path_to_oxend_binaries/oxen-wallet-rpc bin/
+git clone https://github.com/yuanxcoin/gyuanx-electron-gui-wallet
+cd gyuanx-electron-gui-wallet
+cp path_to_gyuanxd_binaries/gyuanxd bin/
+cp path_to_gyuanxd_binaries/gyuanx-wallet-rpc bin/
 npm install
 ```
 

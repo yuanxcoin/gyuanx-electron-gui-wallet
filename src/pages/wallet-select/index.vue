@@ -1,7 +1,7 @@
 <template>
   <q-page>
     <q-list
-      class="wallet-list oxen-light-teal"
+      class="wallet-list gyuanx-light-teal"
       no-border
       :dark="theme == 'dark'"
     >
@@ -128,7 +128,7 @@ export default {
     wallets: state => state.gateway.wallets,
     status: state => state.gateway.wallet.status,
     actions() {
-      // TODO: Add this in once LOKI has the functionality
+      // TODO: Add this in once GYUANX has the functionality
       // <q-item @click.native="restoreViewWallet()">
       //     <q-item-label label="Restore view-only wallet" />
       // </q-item>

@@ -241,7 +241,7 @@
           </div>
 
           <template v-if="modals.key_image.type == 'Export'">
-            <OxenField
+            <GyuanxField
               class="q-mt-lg"
               :label="$t('fieldLabels.keyImages.exportDirectory')"
               disable-hover
@@ -264,10 +264,10 @@
               <q-btn color="primary" @click="selectKeyImageExportPath">{{
                 $t("buttons.browse")
               }}</q-btn>
-            </OxenField>
+            </GyuanxField>
           </template>
           <template v-if="modals.key_image.type == 'Import'">
-            <OxenField
+            <GyuanxField
               class="q-mt-lg"
               :label="$t('fieldLabels.keyImages.importFile')"
               disable-hover
@@ -288,7 +288,7 @@
               <q-btn color="primary" @click="selectKeyImageImportPath">{{
                 $t("buttons.browse")
               }}</q-btn>
-            </OxenField>
+            </GyuanxField>
           </template>
 
           <div class="q-mt-lg text-right">
@@ -357,12 +357,12 @@
 const { clipboard } = require("electron");
 import { mapState } from "vuex";
 import WalletPassword from "src/mixins/wallet_password";
-import OxenField from "components/oxen_field";
+import GyuanxField from "components/gyuanx_field";
 
 export default {
   name: "WalletSettings",
   components: {
-    OxenField
+    GyuanxField
   },
   mixins: [WalletPassword],
   data() {
@@ -761,7 +761,7 @@ export default {
   min-width: 400px;
   width: 45vw;
 
-  .oxen-field {
+  .gyuanx-field {
     flex: 1;
   }
 }

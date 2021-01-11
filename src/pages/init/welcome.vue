@@ -8,7 +8,7 @@
         class="first-step"
       >
         <div class="welcome-container">
-          <img src="oxen.svg" height="100" class="q-mb-md" />
+          <img src="gyuanx.svg" height="100" class="q-mb-md" />
           <div>Wallet Version: v{{ version }}</div>
           <div>Daemon Version: {{ daemonVersion }}</div>
           <LanguageSelect class="q-mt-lg" @select="onLanguageSelected" />

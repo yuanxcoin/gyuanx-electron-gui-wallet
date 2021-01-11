@@ -1,16 +1,16 @@
 {
-  "name": "oxen-electron-wallet",
+  "name": "gyuanx-electron-wallet",
   "version": "1.5.5",
-  "description": "Modern GUI interface for Oxen Currency",
-  "productName": "Oxen Electron Wallet",
+  "description": "Modern GUI interface for Gyuanx Currency",
+  "productName": "Gyuanx Electron Wallet",
   "repository": {
     "type": "git",
-    "url": "https://github.com/loki-project/loki-electron-gui-wallet.git"
+    "url": "https://github.com/yuanxcoin/gyuanx-electron-gui-wallet.git"
   },
-  "cordovaId": "com.oxen.wallet",
+  "cordovaId": "com.gyuanx.wallet",
   "author": {
-    "name": "Oxen",
-    "email": "oxen@oxen.io"
+    "name": "Gyuanx",
+    "email": "gyuanx@gyuan.online"
   },
   "private": true,
   "scripts": {

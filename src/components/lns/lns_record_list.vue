@@ -3,7 +3,7 @@
     <q-item
       v-for="record in recordList"
       :key="record.name_hash"
-      class="oxen-list-item"
+      class="gyuanx-list-item"
     >
       <q-item-section class="type" avatar>
         <q-icon :name="isLocked(record) ? 'lock' : 'lock_open'" size="24px" />
@@ -27,7 +27,7 @@
                 @click="onUpdate(record)"
               />
               <q-btn
-                v-if="isLokinet"
+                v-if="isGyuanxnet"
                 color="primary"
                 :label="$t('buttons.renew')"
                 @click="onRenew(record)"
@@ -40,7 +40,7 @@
         <span v-if="record.type === 'session'">{{
           record.update_height | blockHeight
         }}</span>
-        <span v-else class="lokinet-expiration">{{
+        <span v-else class="gyuanxnet-expiration">{{
           record.expiration_height | expirationHeight
         }}</span>
       </q-item-section>
@@ -76,7 +76,7 @@ export default {
       type: Array,
       required: true
     },
-    isLokinet: {
+    isGyuanxnet: {
       type: Boolean,
       required: true
     }
@@ -111,19 +111,19 @@ export default {
       if (record.type === "session") {
         return "menuItems.copyName";
       } else {
-        return "menuItems.copyLokinetName";
+        return "menuItems.copyGyuanxnetName";
       }
     },
     copyValueI18nLabel(record) {
       if (record.type === "session") {
         return "menuItems.copySessionId";
-      } else if (record.type === "lokinet") {
-        return "menuItems.copyLokinetAddress";
+      } else if (record.type === "gyuanxnet") {
+        return "menuItems.copyGyuanxnetAddress";
       }
       return "menuItems.copyAddress";
     },
     validMenuItems(record) {
-      // change name depending on if lokinet or session
+      // change name depending on if gyuanxnet or session
       const lockedItems = [
         { action: "nameCopy", i18n: this.copyNameI18nLabel(record) },
         { action: "copyValue", i18n: this.copyValueI18nLabel(record) }
@@ -142,7 +142,7 @@ export default {
     },
     // can copy a value on unlock
     copyValue(record) {
-      let message = this.$t("notification.positive.lokinetAddressCopied");
+      let message = this.$t("notification.positive.gyuanxnetAddressCopied");
       if (record.type === "session") {
         message = this.$t("notification.positive.sessionIdCopied");
       }
@@ -162,7 +162,7 @@ export default {
 </script>
 
 <style lang="scss">
-.lokinet-expiration {
+.gyuanxnet-expiration {
   width: 180px;
 }
 

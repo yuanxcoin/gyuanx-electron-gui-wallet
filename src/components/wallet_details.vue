@@ -1,24 +1,24 @@
 <template>
   <div class="column wallet-info">
-    <div class="row justify-between items-center wallet-header oxen-teal">
+    <div class="row justify-between items-center wallet-header gyuanx-teal">
       <div class="title">{{ info.name }}</div>
       <WalletSettings />
     </div>
-    <div class="wallet-content oxen-navy">
+    <div class="wallet-content gyuanx-navy">
       <div class="row justify-center">
         <div class="funds column items-center">
           <div class="balance">
             <div class="text">
-              <span>{{ $t("strings.oxenBalance") }}</span>
+              <span>{{ $t("strings.gyuanxBalance") }}</span>
             </div>
             <div class="value">
-              <span><FormatOxen :amount="info.balance"/></span>
+              <span><FormatGyuanx :amount="info.balance"/></span>
             </div>
           </div>
           <div class="row unlocked">
             <span
-              >{{ $t("strings.oxenUnlockedShort") }}:
-              <FormatOxen :amount="info.unlocked_balance"
+              >{{ $t("strings.gyuanxUnlockedShort") }}:
+              <FormatGyuanx :amount="info.unlocked_balance"
             /></span>
           </div>
         </div>
@@ -33,13 +33,13 @@
 
 <script>
 import { mapState } from "vuex";
-import FormatOxen from "components/format_oxen";
+import FormatGyuanx from "components/format_gyuanx";
 import WalletSettings from "components/menus/wallet_settings";
 import CopyIcon from "components/icons/copy_icon";
 export default {
   name: "WalletDetails",
   components: {
-    FormatOxen,
+    FormatGyuanx,
     WalletSettings,
     CopyIcon
   },

@@ -137,8 +137,8 @@ export class WalletRPC {
 
         const rpcExecutable =
           process.platform === "win32"
-            ? "oxen-wallet-rpc.exe"
-            : "oxen-wallet-rpc";
+            ? "gyuanx-wallet-rpc.exe"
+            : "gyuanx-wallet-rpc";
         // eslint-disable-next-line no-undef
         const rpcPath = path.join(__ryo_bin, rpcExecutable);
 
@@ -146,7 +146,7 @@ export class WalletRPC {
         if (!fs.existsSync(rpcPath)) {
           reject(
             new Error(
-              "Failed to find Oxen Wallet RPC. Please make sure you anti-virus has not removed it."
+              "Failed to find Gyuanx Wallet RPC. Please make sure you anti-virus has not removed it."
             )
           );
           return;
@@ -286,7 +286,7 @@ export class WalletRPC {
         break;
 
       case "restore_view_wallet":
-        // TODO: Decide if we want this for Oxen
+        // TODO: Decide if we want this for Gyuanx
         this.restoreViewWallet(
           params.name,
           params.password,
@@ -320,18 +320,18 @@ export class WalletRPC {
         );
         break;
 
-      case "register_service_node":
+      case "register_gnode":
         this.registerSnode(params.password, params.string);
         break;
 
-      case "update_service_node_list":
+      case "update_gnode_list":
         this.updateServiceNodeList();
         break;
 
       case "unlock_stake":
         this.unlockStake(
           params.password,
-          params.service_node_key,
+          params.gnode_key,
           params.confirmed || false
         );
         break;
@@ -1078,17 +1078,17 @@ export class WalletRPC {
   }
 
   /*
-  Renews an LNS (Lokinet) mapping, since they can expire
+  Renews an LNS (Gyuanxnet) mapping, since they can expire
   type can be:
-  lokinet_1y, lokinet_2y, lokinet_5y, lokinet_10y
+  gyuanxnet_1y, gyuanxnet_2y, gyuanxnet_5y, gyuanxnet_10y
   */
   lnsRenewMapping(password, type, name) {
     let _name = name.trim().toLowerCase();
 
-    // the RPC accepts names with the .loki already appeneded only
-    // can be lokinet_1y, lokinet_2y, lokinet_5y, lokinet_10y
-    if (type.startsWith("lokinet")) {
-      _name = _name + ".loki";
+    // the RPC accepts names with the .gyuanx already appeneded only
+    // can be gyuanxnet_1y, gyuanxnet_2y, gyuanxnet_5y, gyuanxnet_10y
+    if (type.startsWith("gyuanxnet")) {
+      _name = _name + ".gyuanx";
     }
 
     crypto.pbkdf2(
@@ -1153,9 +1153,9 @@ export class WalletRPC {
   */
   async decryptLNSRecord(type, name) {
     let _type = type;
-    // type can initially be "lokinet_1y" etc. on a purchase
-    if (type.startsWith("lokinet")) {
-      _type = "lokinet";
+    // type can initially be "gyuanxnet_1y" etc. on a purchase
+    if (type.startsWith("gyuanxnet")) {
+      _type = "gyuanxnet";
     }
     try {
       const record = await this.getLNSRecord(_type, name);
@@ -1199,8 +1199,8 @@ export class WalletRPC {
   Get a LNS record associated with the given name
   */
   async getLNSRecord(type, name) {
-    // We currently only support session and lokinet
-    const types = ["session", "lokinet"];
+    // We currently only support session and gyuanxnet
+    const types = ["session", "gyuanxnet"];
     if (!types.includes(type)) return null;
 
     if (!name || name.trim().length === 0) return null;
@@ -1208,8 +1208,8 @@ export class WalletRPC {
     const lowerCaseName = name.toLowerCase();
 
     let fullName = lowerCaseName;
-    if (type === "lokinet" && !name.endsWith(".loki")) {
-      fullName = fullName + ".loki";
+    if (type === "gyuanxnet" && !name.endsWith(".gyuanx")) {
+      fullName = fullName + ".gyuanx";
     }
 
     const nameHash = await this.hashLNSName(type, lowerCaseName);
@@ -1236,8 +1236,8 @@ export class WalletRPC {
     if (!type || !name) return null;
 
     let fullName = name;
-    if (type === "lokinet" && !name.endsWith(".loki")) {
-      fullName = fullName + ".loki";
+    if (type === "gyuanxnet" && !name.endsWith(".gyuanx")) {
+      fullName = fullName + ".gyuanx";
     }
 
     try {
@@ -1264,8 +1264,8 @@ export class WalletRPC {
     if (!type || !name || !encrypted_value) return null;
 
     let fullName = name;
-    if (type === "lokinet" && !name.endsWith(".loki")) {
-      fullName = fullName + ".loki";
+    if (type === "gyuanxnet" && !name.endsWith(".gyuanx")) {
+      fullName = fullName + ".gyuanx";
     }
 
     try {
@@ -1387,7 +1387,7 @@ export class WalletRPC {
     }
   }
 
-  stake(password, amount, service_node_key, destination) {
+  stake(password, amount, gnode_key, destination) {
     crypto.pbkdf2(
       password,
       this.auth[2],
@@ -1421,7 +1421,7 @@ export class WalletRPC {
         this.sendRPC("stake", {
           amount,
           destination,
-          service_node_key
+          gnode_key
         }).then(data => {
           if (data.hasOwnProperty("error")) {
             let error =
@@ -1452,7 +1452,7 @@ export class WalletRPC {
     );
   }
 
-  registerSnode(password, register_service_node_str) {
+  registerSnode(password, register_gnode_str) {
     crypto.pbkdf2(
       password,
       this.auth[2],
@@ -1482,8 +1482,8 @@ export class WalletRPC {
           return;
         }
 
-        this.sendRPC("register_service_node", {
-          register_service_node_str
+        this.sendRPC("register_gnode", {
+          register_gnode_str
         }).then(data => {
           if (data.hasOwnProperty("error")) {
             const error =
@@ -1518,7 +1518,7 @@ export class WalletRPC {
     this.backend.daemon.updateServiceNodes();
   }
 
-  unlockStake(password, service_node_key, confirmed = false) {
+  unlockStake(password, gnode_key, confirmed = false) {
     const sendError = (message, i18n = true) => {
       const key = i18n ? "i18n" : "message";
       this.sendGateway("set_snode_status", {
@@ -1550,7 +1550,7 @@ export class WalletRPC {
 
         const sendRPC = path => {
           return this.sendRPC(path, {
-            service_node_key
+            gnode_key
           }).then(data => {
             if (data.hasOwnProperty("error")) {
               const error =
@@ -1789,11 +1789,11 @@ export class WalletRPC {
     const _owner = owner.trim() === "" ? null : owner;
     const backup_owner = backupOwner.trim() === "" ? null : backupOwner;
 
-    // the RPC accepts names with the .loki already appeneded only
-    // can be lokinet_1y, lokinet_2y, lokinet_5y, lokinet_10y
-    if (type.startsWith("lokinet")) {
-      _name = _name + ".loki";
-      value = value + ".loki";
+    // the RPC accepts names with the .gyuanx already appeneded only
+    // can be gyuanxnet_1y, gyuanxnet_2y, gyuanxnet_5y, gyuanxnet_10y
+    if (type.startsWith("gyuanxnet")) {
+      _name = _name + ".gyuanx";
+      value = value + ".gyuanx";
     }
 
     crypto.pbkdf2(
@@ -1861,11 +1861,11 @@ export class WalletRPC {
     const _owner = owner.trim() === "" ? null : owner;
     const backup_owner = backupOwner.trim() === "" ? null : backupOwner;
 
-    // updated records have type "lokinet" or "session"
+    // updated records have type "gyuanxnet" or "session"
     // UI passes the values without the extension
-    if (type === "lokinet") {
-      _name = _name + ".loki";
-      value = value + ".loki";
+    if (type === "gyuanxnet") {
+      _name = _name + ".gyuanx";
+      value = value + ".gyuanx";
     }
 
     crypto.pbkdf2(
@@ -2638,9 +2638,9 @@ export class WalletRPC {
       wallets.legacy = [];
       let legacy_paths = [];
       if (os.platform() == "win32") {
-        legacy_paths = ["C:\\ProgramData\\Loki"];
+        legacy_paths = ["C:\\ProgramData\\Gyuanx"];
       } else {
-        legacy_paths = [path.join(os.homedir(), "Loki")];
+        legacy_paths = [path.join(os.homedir(), "Gyuanx")];
       }
       for (var i = 0; i < legacy_paths.length; i++) {
         try {

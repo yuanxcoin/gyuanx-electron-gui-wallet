@@ -12,12 +12,12 @@
           link
           no-border
           :dark="theme == 'dark'"
-          class="oxen-list tx-list"
+          class="gyuanx-list tx-list"
         >
           <q-item
             v-for="(tx, i) in tx_list_paged"
             :key="`${tx.txid}-${tx.type}-${i}`"
-            class="oxen-list-item transaction"
+            class="gyuanx-list-item transaction"
             :class="'tx-' + tx.type"
             @click.native="details(tx)"
           >
@@ -26,7 +26,7 @@
             </q-item-section>
             <q-item-label class="main">
               <q-item-label class="amount">
-                <FormatOxen :amount="tx.amount || 0" />
+                <FormatGyuanx :amount="tx.amount || 0" />
               </q-item-label>
               <q-item-label caption>{{ tx.txid }}</q-item-label>
             </q-item-label>
@@ -61,7 +61,7 @@ const { clipboard } = require("electron");
 import { mapState } from "vuex";
 import { QSpinnerDots } from "quasar";
 import TxDetails from "components/tx_details";
-import FormatOxen from "components/format_oxen";
+import FormatGyuanx from "components/format_gyuanx";
 import { i18n } from "boot/i18n";
 import ContextMenu from "components/menus/contextmenu";
 
@@ -95,7 +95,7 @@ export default {
   components: {
     QSpinnerDots,
     TxDetails,
-    FormatOxen,
+    FormatGyuanx,
     ContextMenu
   },
   props: {
@@ -328,7 +328,7 @@ export default {
 
 <style lang="scss">
 .tx-list {
-  .oxen-list-item {
+  .gyuanx-list-item {
     padding-top: 0;
     padding-bottom: 0;
   }

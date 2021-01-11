@@ -10,7 +10,7 @@
       <div v-else>
         <div class="text-h6 header">{{ $t("titles.advanced.sign") }}</div>
         <div class="row justify-between items-end">
-          <OxenField :label="$t('fieldLabels.data')">
+          <GyuanxField :label="$t('fieldLabels.data')">
             <q-input
               v-model.trim="toSign"
               :dark="theme == 'dark'"
@@ -18,7 +18,7 @@
               dense
               :placeholder="$t('placeholders.dataToSign')"
             />
-          </OxenField>
+          </GyuanxField>
           <div class="btn-wrapper q-ml-md q-py-sm">
             <q-btn
               color="primary"
@@ -34,7 +34,7 @@
         {{ $t("titles.advanced.verify") }}
       </div>
       <div class="justify-between items-end">
-        <OxenField class="q-mt-md" :label="$t('fieldLabels.signature')">
+        <GyuanxField class="q-mt-md" :label="$t('fieldLabels.signature')">
           <q-input
             v-model.trim="signatureToVerify"
             :dark="theme == 'dark'"
@@ -42,8 +42,8 @@
             dense
             :placeholder="$t('placeholders.signature')"
           />
-        </OxenField>
-        <OxenField class="q-mt-md" :label="$t('fieldLabels.data')">
+        </GyuanxField>
+        <GyuanxField class="q-mt-md" :label="$t('fieldLabels.data')">
           <q-input
             v-model.trim="unsignedData"
             :dark="theme == 'dark'"
@@ -51,8 +51,8 @@
             dense
             :placeholder="$t('placeholders.unsignedData')"
           />
-        </OxenField>
-        <OxenField class="q-mt-md" :label="$t('fieldLabels.address')">
+        </GyuanxField>
+        <GyuanxField class="q-mt-md" :label="$t('fieldLabels.address')">
           <q-input
             v-model.trim="address"
             :dark="theme == 'dark'"
@@ -60,7 +60,7 @@
             dense
             :placeholder="$t('placeholders.addressOfSigner')"
           />
-        </OxenField>
+        </GyuanxField>
         <div class="submit-button">
           <q-btn
             color="primary"
@@ -92,13 +92,13 @@
 
 <script>
 const { clipboard } = require("electron");
-import OxenField from "components/oxen_field";
+import GyuanxField from "components/gyuanx_field";
 import SignatureDialog from "./signature_dialog";
 import { mapState } from "vuex";
 export default {
   name: "SignAndVerify",
   components: {
-    OxenField,
+    GyuanxField,
     SignatureDialog
   },
   data() {
@@ -228,7 +228,7 @@ export default {
     cursor: default;
   }
 
-  .oxen-field {
+  .gyuanx-field {
     flex: 1;
   }
 }

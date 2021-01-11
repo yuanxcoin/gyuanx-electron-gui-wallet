@@ -9,23 +9,23 @@
         <table>
           <tr>
             <td>{{ $t("strings.lns.sessionID") }}:</td>
-            <td>15 OXEN</td>
+            <td>15 GYUANX</td>
           </tr>
           <tr>
-            <td>{{ $t("strings.lns.lokinetName1Year") }}:</td>
-            <td>15 OXEN</td>
+            <td>{{ $t("strings.lns.gyuanxnetName1Year") }}:</td>
+            <td>15 GYUANX</td>
           </tr>
           <tr>
-            <td>{{ $t("strings.lns.lokinetNameXYears", { years: 2 }) }}:</td>
-            <td>30 OXEN</td>
+            <td>{{ $t("strings.lns.gyuanxnetNameXYears", { years: 2 }) }}:</td>
+            <td>30 GYUANX</td>
           </tr>
           <tr>
-            <td>{{ $t("strings.lns.lokinetNameXYears", { years: 5 }) }}:</td>
-            <td>60 OXEN</td>
+            <td>{{ $t("strings.lns.gyuanxnetNameXYears", { years: 5 }) }}:</td>
+            <td>60 GYUANX</td>
           </tr>
           <tr>
-            <td>{{ $t("strings.lns.lokinetNameXYears", { years: 10 }) }}:</td>
-            <td>90 OXEN</td>
+            <td>{{ $t("strings.lns.gyuanxnetNameXYears", { years: 10 }) }}:</td>
+            <td>90 GYUANX</td>
           </tr>
         </table>
       </div>
@@ -55,12 +55,12 @@ export default {
 .lns-purchase {
   .description {
     white-space: pre-line;
-    // oxen-navy
+    // gyuanx-navy
     color: #1f1c47;
   }
 
   .prices {
-    // oxen-navy
+    // gyuanx-navy
     margin-top: 20px;
     color: #1f1c47;
   }

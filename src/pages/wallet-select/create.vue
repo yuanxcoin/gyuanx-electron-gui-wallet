@@ -1,7 +1,7 @@
 <template>
   <q-page class="create-wallet">
     <div class="fields q-mx-md q-mt-md">
-      <OxenField
+      <GyuanxField
         :label="$t('fieldLabels.walletName')"
         :error="$v.wallet.name.$error"
       >
@@ -14,9 +14,9 @@
           @keyup.enter="create"
           @blur="$v.wallet.name.$touch"
         />
-      </OxenField>
+      </GyuanxField>
 
-      <OxenField :label="$t('fieldLabels.seedLanguage')">
+      <GyuanxField :label="$t('fieldLabels.seedLanguage')">
         <q-select
           v-model="wallet.language"
           :options="languageOptions"
@@ -25,9 +25,9 @@
           emit-value
           map-options
         />
-      </OxenField>
+      </GyuanxField>
 
-      <OxenField :label="$t('fieldLabels.password')" optional>
+      <GyuanxField :label="$t('fieldLabels.password')" optional>
         <q-input
           v-model="wallet.password"
           type="password"
@@ -37,9 +37,9 @@
           dense
           @keyup.enter="create"
         />
-      </OxenField>
+      </GyuanxField>
 
-      <OxenField :label="$t('fieldLabels.confirmPassword')">
+      <GyuanxField :label="$t('fieldLabels.confirmPassword')">
         <q-input
           v-model="wallet.password_confirm"
           type="password"
@@ -48,7 +48,7 @@
           dense
           @keyup.enter="create"
         />
-      </OxenField>
+      </GyuanxField>
 
       <q-btn
         class="submit-button"
@@ -63,10 +63,10 @@
 <script>
 import { required } from "vuelidate/lib/validators";
 import { mapState } from "vuex";
-import OxenField from "components/oxen_field";
+import GyuanxField from "components/gyuanx_field";
 export default {
   components: {
-    OxenField
+    GyuanxField
   },
   data() {
     const languageOptions = [

@@ -28,7 +28,7 @@
       </q-header>
       <q-page-container class="detail-page">
         <div class="address-book-modal q-mx-md">
-          <OxenField
+          <GyuanxField
             :label="$t('fieldLabels.address')"
             :error="$v.newEntry.address.$error"
           >
@@ -46,20 +46,20 @@
               :icon="newEntry.starred ? 'star' : 'star_border'"
               @click="updateStarred"
             />
-          </OxenField>
-          <OxenField :label="$t('fieldLabels.name')">
+          </GyuanxField>
+          <GyuanxField :label="$t('fieldLabels.name')">
             <q-input v-model.trim="newEntry.name" borderless dense />
-          </OxenField>
-          <OxenField :label="$t('fieldLabels.notes')" optional>
+          </GyuanxField>
+          <GyuanxField :label="$t('fieldLabels.notes')" optional>
             <q-input
               v-model="newEntry.description"
               :placeholder="$t('placeholders.additionalNotes')"
               type="textarea"
-              class="full-width text-area-oxen"
+              class="full-width text-area-gyuanx"
               borderless
               dense
             />
-          </OxenField>
+          </GyuanxField>
 
           <q-btn
             v-if="mode == 'edit'"
@@ -134,7 +134,7 @@
 import { mapState } from "vuex";
 import AddressHeader from "components/address_header";
 import TxList from "components/tx_list";
-import OxenField from "components/oxen_field";
+import GyuanxField from "components/gyuanx_field";
 import { address } from "src/validators/common";
 import { required } from "vuelidate/lib/validators";
 export default {
@@ -142,7 +142,7 @@ export default {
   components: {
     AddressHeader,
     TxList,
-    OxenField
+    GyuanxField
   },
   data() {
     return {
@@ -255,7 +255,7 @@ export default {
 }
 .address-book-details {
   .address-book-modal {
-    > .oxen-field {
+    > .gyuanx-field {
       margin-top: 16px;
     }
 

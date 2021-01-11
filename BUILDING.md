@@ -1,6 +1,6 @@
 # Building
 
-Building oxen electron wallet binaries is done using github actions. Windows and linux binaries will build right out of the box but there are some extra steps needed for Mac OS
+Building gyuanx electron wallet binaries is done using github actions. Windows and linux binaries will build right out of the box but there are some extra steps needed for Mac OS
 
 ## Mac OS
 

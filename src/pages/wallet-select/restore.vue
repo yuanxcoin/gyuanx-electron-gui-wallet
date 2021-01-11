@@ -1,7 +1,7 @@
 <template>
   <q-page>
     <div class="q-mx-md">
-      <OxenField
+      <GyuanxField
         class="q-mt-md"
         :label="$t('fieldLabels.walletName')"
         :error="$v.wallet.name.$error"
@@ -14,27 +14,27 @@
           @keyup.enter="restore_wallet"
           @blur="$v.wallet.name.$touch"
         />
-      </OxenField>
+      </GyuanxField>
 
-      <OxenField
+      <GyuanxField
         class="q-mt-md"
         :label="$t('fieldLabels.mnemonicSeed')"
         :error="$v.wallet.seed.$error"
       >
         <q-input
           v-model="wallet.seed"
-          class="full-width text-area-oxen"
+          class="full-width text-area-gyuanx"
           :placeholder="$t('placeholders.mnemonicSeed')"
           type="textarea"
           borderless
           dense
           @blur="$v.wallet.seed.$touch"
         />
-      </OxenField>
+      </GyuanxField>
 
       <div class="row items-end q-mt-md">
         <div class="col-md-9 col-sm-8">
-          <OxenField
+          <GyuanxField
             v-if="wallet.refresh_type == 'date'"
             :label="$t('fieldLabels.restoreFromDate')"
           >
@@ -72,8 +72,8 @@
                 </q-icon>
               </template>
             </q-input>
-          </OxenField>
-          <OxenField
+          </GyuanxField>
+          <GyuanxField
             v-else-if="wallet.refresh_type == 'height'"
             :label="$t('fieldLabels.restoreFromBlockHeight')"
             :error="$v.wallet.refresh_start_height.$error"
@@ -87,7 +87,7 @@
               dense
               @blur="$v.wallet.refresh_start_height.$touch"
             />
-          </OxenField>
+          </GyuanxField>
         </div>
         <div class="col-sm-4 col-md-3">
           <template v-if="wallet.refresh_type == 'date'">
@@ -117,7 +117,7 @@
         </div>
       </div>
 
-      <OxenField class="q-mt-md" :label="$t('fieldLabels.password')">
+      <GyuanxField class="q-mt-md" :label="$t('fieldLabels.password')">
         <q-input
           v-model="wallet.password"
           :placeholder="$t('placeholders.walletPassword')"
@@ -127,9 +127,9 @@
           dense
           @keyup.enter="restore_wallet"
         />
-      </OxenField>
+      </GyuanxField>
 
-      <OxenField class="q-mt-md" :label="$t('fieldLabels.confirmPassword')">
+      <GyuanxField class="q-mt-md" :label="$t('fieldLabels.confirmPassword')">
         <q-input
           v-model="wallet.password_confirm"
           type="password"
@@ -138,7 +138,7 @@
           dense
           @keyup.enter="restore_wallet"
         />
-      </OxenField>
+      </GyuanxField>
       <q-btn
         class="submit-button"
         color="primary"
@@ -152,7 +152,7 @@
 <script>
 import { required, numeric } from "vuelidate/lib/validators";
 import { mapState } from "vuex";
-import OxenField from "components/oxen_field";
+import GyuanxField from "components/gyuanx_field";
 import { date } from "quasar";
 import _ from "lodash";
 
@@ -162,7 +162,7 @@ let dateFirstBlock = date.formatDate(timeStampFirstBlock, qDateFormat);
 
 export default {
   components: {
-    OxenField
+    GyuanxField
   },
   data() {
     return {

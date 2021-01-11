@@ -1,7 +1,7 @@
 <template>
   <q-page>
     <div class="q-mx-md import-wallet">
-      <OxenField
+      <GyuanxField
         :label="$t('fieldLabels.newWalletName')"
         :error="$v.wallet.name.$error"
       >
@@ -14,9 +14,9 @@
           @keyup.enter="import_wallet"
           @blur="$v.wallet.name.$touch"
         />
-      </OxenField>
+      </GyuanxField>
 
-      <OxenField
+      <GyuanxField
         :label="$t('fieldLabels.walletFile')"
         disable-hover
         :error="$v.wallet.path.$error"
@@ -42,9 +42,9 @@
           :text-color="theme == 'dark' ? 'white' : 'dark'"
           @click="selectFile"
         />
-      </OxenField>
+      </GyuanxField>
 
-      <OxenField :label="$t('fieldLabels.password')">
+      <GyuanxField :label="$t('fieldLabels.password')">
         <q-input
           v-model="wallet.password"
           :placeholder="$t('placeholders.walletPassword')"
@@ -54,9 +54,9 @@
           dense
           @keyup.enter="import_wallet"
         />
-      </OxenField>
+      </GyuanxField>
 
-      <OxenField :label="$t('fieldLabels.confirmPassword')">
+      <GyuanxField :label="$t('fieldLabels.confirmPassword')">
         <q-input
           v-model="wallet.password_confirm"
           type="password"
@@ -65,7 +65,7 @@
           dense
           @keyup.enter="import_wallet"
         />
-      </OxenField>
+      </GyuanxField>
       <q-btn
         class="submit-button"
         color="primary"
@@ -79,10 +79,10 @@
 <script>
 import { required } from "vuelidate/lib/validators";
 import { mapState } from "vuex";
-import OxenField from "components/oxen_field";
+import GyuanxField from "components/gyuanx_field";
 export default {
   components: {
-    OxenField
+    GyuanxField
   },
   data() {
     return {
@@ -190,7 +190,7 @@ export default {
     }
   }
 
-  .oxen-field {
+  .gyuanx-field {
     margin-top: 16px;
   }
 }

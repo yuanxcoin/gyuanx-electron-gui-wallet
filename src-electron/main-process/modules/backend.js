@@ -35,22 +35,22 @@ export class Backend {
 
   init(config) {
     let configDir;
-    let legacyLokiConfigDir;
+    let legacyGyuanxConfigDir;
     if (os.platform() === "win32") {
-      configDir = "C:\\ProgramData\\oxen";
-      legacyLokiConfigDir = "C:\\ProgramData\\loki\\";
-      this.wallet_dir = `${os.homedir()}\\Documents\\Oxen`;
+      configDir = "C:\\ProgramData\\gyuanx";
+      legacyGyuanxConfigDir = "C:\\ProgramData\\gyuanx\\";
+      this.wallet_dir = `${os.homedir()}\\Documents\\Gyuanx`;
     } else {
-      configDir = path.join(os.homedir(), ".oxen");
-      legacyLokiConfigDir = path.join(os.homedir(), ".loki/");
-      this.wallet_dir = path.join(os.homedir(), "Oxen");
+      configDir = path.join(os.homedir(), ".gyuanx");
+      legacyGyuanxConfigDir = path.join(os.homedir(), ".gyuanx/");
+      this.wallet_dir = path.join(os.homedir(), "Gyuanx");
     }
 
-    // if the user has used loki before, just keep the same stuff
-    if (fs.existsSync(legacyLokiConfigDir)) {
-      this.config_dir = legacyLokiConfigDir;
+    // if the user has used gyuanx before, just keep the same stuff
+    if (fs.existsSync(legacyGyuanxConfigDir)) {
+      this.config_dir = legacyGyuanxConfigDir;
     } else {
-      // create the new, Oxen location
+      // create the new, Gyuanx location
       this.config_dir = configDir;
       if (!fs.existsSync(configDir)) {
         fs.mkdirpSync(configDir);
@@ -66,9 +66,9 @@ export class Backend {
     const daemon = {
       type: "remote",
       p2p_bind_ip: "0.0.0.0",
-      p2p_bind_port: 22022,
+      p2p_bind_port: 11011,
       rpc_bind_ip: "127.0.0.1",
-      rpc_bind_port: 22023,
+      rpc_bind_port: 11013,
       zmq_rpc_bind_ip: "127.0.0.1",
       out_peers: -1,
       in_peers: -1,
@@ -80,20 +80,20 @@ export class Backend {
     const daemons = {
       mainnet: {
         ...daemon,
-        remote_host: "imaginary.stream",
-        remote_port: 22023
+        remote_host: "seed1.gyuan.online",
+        remote_port: 11013
       },
       stagenet: {
         ...daemon,
         type: "local",
-        p2p_bind_port: 38153,
-        rpc_bind_port: 38154
+        p2p_bind_port: 48153,
+        rpc_bind_port: 48154
       },
       testnet: {
         ...daemon,
         type: "local",
-        p2p_bind_port: 38156,
-        rpc_bind_port: 38157
+        p2p_bind_port: 48156,
+        rpc_bind_port: 48157
       }
     };
 
@@ -122,20 +122,20 @@ export class Backend {
 
     this.remotes = [
       {
-        host: "imaginary.stream",
-        port: "22023"
+        host: "seed1.gyuan.online",
+        port: "11013"
       },
       {
-        host: "nodes.hashvault.pro",
-        port: "22023"
+        host: "seed2.gyuan.online",
+        port: "11013"
       },
       {
-        host: "explorer.loki.aussie-pools.com",
+        host: "explorer1.gyuan.online",
         port: "18081"
       },
       {
-        host: "public.loki.foundation",
-        port: "22023"
+        host: "public.gyuan.online",
+        port: "11013"
       }
     ];
 
@@ -287,15 +287,15 @@ export class Backend {
         let path = null;
         if (params.type === "tx") {
           path = "tx";
-        } else if (params.type === "service_node") {
-          path = "service_node";
+        } else if (params.type === "gnode") {
+          path = "gnode";
         }
 
         if (path) {
           const baseUrl =
             net_type === "testnet"
-              ? "https://lokitestnet.com"
-              : "https://lokiblocks.com";
+              ? "https://testnet.gyuan.online"
+              : "https://explorer.gyuan.online";
           const url = `${baseUrl}/${path}/`;
           require("electron").shell.openExternal(url + params.id);
         }
@@ -348,7 +348,7 @@ export class Backend {
   async checkVersion() {
     try {
       const { data } = await axios.get(
-        "https://api.github.com/repos/loki-project/loki-electron-gui-wallet/releases/latest"
+        "https://api.github.com/repos/yuanxcoin/gyuanx-electron-gui-wallet/releases/latest"
       );
       // remove the 'v' from front of the version
       const latestVersion = data.tag_name.substring(1);

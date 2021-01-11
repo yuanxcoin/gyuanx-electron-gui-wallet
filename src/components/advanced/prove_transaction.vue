@@ -5,7 +5,7 @@
         {{ $t("strings.proveTransactionDescription") }}
       </div>
       <div>
-        <OxenField
+        <GyuanxField
           :label="$t('fieldLabels.transactionId')"
           :error="$v.txid.$error"
         >
@@ -17,8 +17,8 @@
             dense
             @blur="$v.txid.$touch"
           />
-        </OxenField>
-        <OxenField
+        </GyuanxField>
+        <GyuanxField
           class="q-mt-md"
           :label="$t('fieldLabels.address')"
           :error="$v.address.$error"
@@ -32,8 +32,8 @@
             dense
             @blur="$v.address.$touch"
           />
-        </OxenField>
-        <OxenField class="q-mt-md" :label="$t('fieldLabels.message')" optional>
+        </GyuanxField>
+        <GyuanxField class="q-mt-md" :label="$t('fieldLabels.message')" optional>
           <q-input
             v-model.trim="message"
             :dark="theme == 'dark'"
@@ -41,7 +41,7 @@
             borderless
             dense
           />
-        </OxenField>
+        </GyuanxField>
         <div class="buttons submit-button">
           <q-btn
             color="primary"
@@ -79,13 +79,13 @@
 import { mapState } from "vuex";
 import { required } from "vuelidate/lib/validators";
 import { address } from "src/validators/common";
-import OxenField from "components/oxen_field";
+import GyuanxField from "components/gyuanx_field";
 import { clipboard } from "electron";
 
 export default {
   name: "ProveTransaction",
   components: {
-    OxenField
+    GyuanxField
   },
   data() {
     return {

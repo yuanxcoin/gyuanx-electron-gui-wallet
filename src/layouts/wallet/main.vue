@@ -2,9 +2,9 @@
   <q-layout view="hHh Lpr lFf">
     <q-header class="shift-title">
       <MainMenu />
-      <q-toolbar-title class="oxen-light-teal">
+      <q-toolbar-title class="gyuanx-light-teal">
         <div class="flex items-center justify-center" style="margin:8px">
-          <img src="oxen.svg" height="32" />
+          <img src="gyuanx.svg" height="32" />
         </div>
       </q-toolbar-title>
     </q-header>

@@ -242,7 +242,7 @@ export default {
     copyViewKey: "Copiar clave de visualización",
     createNewWallet: "Crear nuevo monedero",
     deleteWallet: "Eliminar monedero",
-    exit: "Cerrar la interfaz del monedero Oxen",
+    exit: "Cerrar la interfaz del monedero Gyuanx",
     importOldGUIWallet: "Importar monedero de una interfaz gráfica antigua",
     manageKeyImages: "Administrar Imágenes de Clave",
     openWallet: "Abrir monedero",
@@ -330,7 +330,7 @@ export default {
       noKeyImageExport: "No se han encontrado claves para exportar",
       usingLocalNode:
         "No se ha podido acceder al nodo remoto, volviendo al modo local",
-      usingRemoteNode: "oxend no encontrado, utilizando nodo remoto"
+      usingRemoteNode: "gyuanxd no encontrado, utilizando nodo remoto"
     }
   },
   placeholders: {
@@ -403,9 +403,9 @@ export default {
     destinationUnknown: "Destino Desconocido",
     editAddressBookEntry: "Modificar un registro de la libreta de direcciones",
     loadingSettings: "Cargando configuración",
-    oxenBalance: "Saldo",
-    oxenUnlockedBalance: "Saldo libre",
-    oxenUnlockedShort: "Libre",
+    gyuanxBalance: "Saldo",
+    gyuanxUnlockedBalance: "Saldo libre",
+    gyuanxUnlockedShort: "Libre",
     noTransactionsFound: "No se han encontrado transacciones",
     notes: "Notas",
     numberOfUnspentOutputs: "Número de salidas no gastadas",
@@ -431,7 +431,7 @@ export default {
     seedWords: "Palabras semilla",
     selectLanguage: "Escoja un idioma",
     serviceNodeRegistrationDescription:
-      'Introduzca la orden {registerCommand} generada por el servicio (oxend) que se está intentado registrar como Nodo de Servicio usando la instrucción "{prepareCommand}"',
+      'Introduzca la orden {registerCommand} generada por el servicio (gyuanxd) que se está intentado registrar como Nodo de Servicio usando la instrucción "{prepareCommand}"',
     spendKey: "Clave de gasto",
     startingDaemon: "Iniciando servicio",
     startingWallet: "Iniciando monedero",

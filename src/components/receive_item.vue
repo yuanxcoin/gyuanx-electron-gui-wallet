@@ -1,5 +1,5 @@
 <template>
-  <q-list class="oxen-list-item" no-border @click.native="details(address)">
+  <q-list class="gyuanx-list-item" no-border @click.native="details(address)">
     <q-item>
       <q-item-section class="flex">
         <q-item-label class="ellipsis">{{ address.address }}</q-item-label>
@@ -42,12 +42,12 @@
         <q-item-section>
           <div class="row info-section">
             <span class="col-sm-4">
-              <span>{{ $t("strings.oxenBalance") }}</span>
+              <span>{{ $t("strings.gyuanxBalance") }}</span>
               <br />
               <span class="value">{{ address.balance | currency }}</span>
             </span>
             <span class="col-sm-4">
-              <span>{{ $t("strings.oxenUnlockedBalance") }}</span>
+              <span>{{ $t("strings.gyuanxUnlockedBalance") }}</span>
               <br />
               <span class="value">{{
                 address.unlocked_balance | currency

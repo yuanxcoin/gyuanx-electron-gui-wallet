@@ -5,7 +5,7 @@
         {{ $t("strings.checkTransaction.description") }}
       </div>
       <div>
-        <OxenField
+        <GyuanxField
           :label="$t('fieldLabels.transactionId')"
           :error="$v.txid.$error"
         >
@@ -17,8 +17,8 @@
             dense
             @blur="$v.txid.$touch"
           />
-        </OxenField>
-        <OxenField
+        </GyuanxField>
+        <GyuanxField
           class="q-mt-md"
           :label="$t('fieldLabels.address')"
           :error="$v.address.$error"
@@ -32,8 +32,8 @@
             dense
             @blur="$v.address.$touch"
           />
-        </OxenField>
-        <OxenField class="q-mt-md" :label="$t('fieldLabels.message')" optional>
+        </GyuanxField>
+        <GyuanxField class="q-mt-md" :label="$t('fieldLabels.message')" optional>
           <q-input
             v-model.trim="message"
             :dark="theme == 'dark'"
@@ -41,8 +41,8 @@
             borderless
             dense
           />
-        </OxenField>
-        <OxenField
+        </GyuanxField>
+        <GyuanxField
           class="q-mt-md"
           :label="$t('fieldLabels.signature')"
           :error="$v.signature.$error"
@@ -54,7 +54,7 @@
             borderless
             dense
           />
-        </OxenField>
+        </GyuanxField>
         <div class="submit-button">
           <q-btn color="primary" :label="$t('buttons.check')" @click="check" />
           <q-btn
@@ -83,7 +83,7 @@
             {{ $t("strings.checkTransaction.infoTitles.received") }}
           </div>
           <div>
-            <FormatOxen :amount="status.state.received" raw-value />
+            <FormatGyuanx :amount="status.state.received" raw-value />
           </div>
         </div>
         <div v-if="status.state.in_pool != null" class="q-mb-sm">
@@ -108,14 +108,14 @@ import { mapState } from "vuex";
 import { required } from "vuelidate/lib/validators";
 import { address } from "src/validators/common";
 import { i18n } from "boot/i18n";
-import OxenField from "components/oxen_field";
-import FormatOxen from "components/format_oxen";
+import GyuanxField from "components/gyuanx_field";
+import FormatGyuanx from "components/format_gyuanx";
 
 export default {
   name: "CheckTransaction",
   components: {
-    OxenField,
-    FormatOxen
+    GyuanxField,
+    FormatGyuanx
   },
   data() {
     return {

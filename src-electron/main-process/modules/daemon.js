@@ -29,25 +29,25 @@ export class Daemon {
   checkVersion() {
     return new Promise(resolve => {
       if (process.platform === "win32") {
-        let oxend_path = path.join(__ryo_bin, "oxend.exe");
-        let oxend_version_cmd = `"${oxend_path}" --version`;
-        if (!fs.existsSync(oxend_path)) {
+        let gyuanxd_path = path.join(__ryo_bin, "gyuanxd.exe");
+        let gyuanxd_version_cmd = `"${gyuanxd_path}" --version`;
+        if (!fs.existsSync(gyuanxd_path)) {
           resolve(false);
         }
-        child_process.exec(oxend_version_cmd, (error, stdout) => {
+        child_process.exec(gyuanxd_version_cmd, (error, stdout) => {
           if (error) {
             resolve(false);
           }
           resolve(stdout);
         });
       } else {
-        let oxend_path = path.join(__ryo_bin, "oxend");
-        let oxend_version_cmd = `"${oxend_path}" --version`;
-        if (!fs.existsSync(oxend_path)) {
+        let gyuanxd_path = path.join(__ryo_bin, "gyuanxd");
+        let gyuanxd_version_cmd = `"${gyuanxd_path}" --version`;
+        if (!fs.existsSync(gyuanxd_path)) {
           resolve(false);
         }
         child_process.exec(
-          oxend_version_cmd,
+          gyuanxd_version_cmd,
           { detached: true },
           (error, stdout) => {
             if (error) {
@@ -148,7 +148,7 @@ export class Daemon {
         args.push("--stagenet");
       }
 
-      args.push("--log-file", path.join(dirs[net_type], "logs", "oxend.log"));
+      args.push("--log-file", path.join(dirs[net_type], "logs", "gyuanxd.log"));
       if (daemon.rpc_bind_ip !== "127.0.0.1") {
         args.push("--confirm-external-bind");
       }
@@ -173,12 +173,12 @@ export class Daemon {
           if (status === "closed") {
             if (process.platform === "win32") {
               this.daemonProcess = child_process.spawn(
-                path.join(__ryo_bin, "oxend.exe"),
+                path.join(__ryo_bin, "gyuanxd.exe"),
                 args
               );
             } else {
               this.daemonProcess = child_process.spawn(
-                path.join(__ryo_bin, "oxend"),
+                path.join(__ryo_bin, "gyuanxd"),
                 args,
                 {
                   detached: true
@@ -468,19 +468,19 @@ export class Daemon {
   }
 
   updateServiceNodes() {
-    const service_nodes = {
+    const gnodes = {
       fetching: true
     };
-    this.sendGateway("set_daemon_data", { service_nodes });
-    this.getRPC("service_nodes").then(data => {
+    this.sendGateway("set_daemon_data", { gnodes });
+    this.getRPC("gnodes").then(data => {
       if (!data.hasOwnProperty("result")) return;
-      const nodes = data.result.service_node_states;
+      const nodes = data.result.gnode_states;
 
-      const service_nodes = {
+      const gnodes = {
         nodes,
         fetching: false
       };
-      this.sendGateway("set_daemon_data", { service_nodes });
+      this.sendGateway("set_daemon_data", { gnodes });
     });
   }
 
@@ -519,7 +519,7 @@ export class Daemon {
         {
           name_hash: nameHash,
           // 0 = session
-          // 2 = lokinet
+          // 2 = gyuanxnet
           types: [0, 2]
         }
       ]
@@ -538,8 +538,8 @@ export class Daemon {
     return (records || []).map(record => {
       // Record type is in uint16 format
       // Session = 0
-      // Lokinet = 2
-      let type = "lokinet";
+      // Gyuanxnet = 2
+      let type = "gyuanxnet";
       if (record.type === 0) {
         type = "session";
       }

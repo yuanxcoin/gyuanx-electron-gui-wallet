@@ -2,21 +2,21 @@
   <div class="lns-input-form">
     <!-- Type -->
     <div class="col q-mt-sm">
-      <OxenField :label="$t('fieldLabels.lnsType')" :disable="updating">
+      <GyuanxField :label="$t('fieldLabels.lnsType')" :disable="updating">
         <q-select
           v-model.trim="record.type"
           emit-value
           map-options
-          :options="renewing ? lokinetOptions : typeOptions"
+          :options="renewing ? gyuanxnetOptions : typeOptions"
           :disable="updating"
           borderless
           dense
         />
-      </OxenField>
+      </GyuanxField>
     </div>
     <!-- Name -->
     <div class="col q-mt-sm">
-      <OxenField
+      <GyuanxField
         :label="$t('fieldLabels.name')"
         :disable="disableName"
         :error="$v.record.name.$error"
@@ -28,15 +28,15 @@
           :disable="disableName"
           borderless
           dense
-          :suffix="record.type === 'session' ? '' : '.loki'"
+          :suffix="record.type === 'session' ? '' : '.gyuanx'"
           @blur="$v.record.name.$touch"
         />
-      </OxenField>
+      </GyuanxField>
     </div>
 
-    <!-- Value (Session ID, Wallet Address or .loki address) -->
+    <!-- Value (Session ID, Wallet Address or .gyuanx address) -->
     <div class="col q-mt-sm">
-      <OxenField
+      <GyuanxField
         class="q-mt-md"
         :label="value_field_label"
         :error="$v.record.value.$error"
@@ -48,15 +48,15 @@
           borderless
           dense
           :disable="renewing"
-          :suffix="record.type === 'session' ? '' : '.loki'"
+          :suffix="record.type === 'session' ? '' : '.gyuanx'"
           @blur="$v.record.value.$touch"
         />
-      </OxenField>
+      </GyuanxField>
     </div>
 
     <!-- Owner -->
     <div class="col q-mt-sm">
-      <OxenField
+      <GyuanxField
         class="q-mt-md"
         :label="$t('fieldLabels.owner')"
         :error="$v.record.owner.$error"
@@ -71,12 +71,12 @@
           :disable="renewing"
           @blur="$v.record.owner.$touch"
         />
-      </OxenField>
+      </GyuanxField>
     </div>
 
     <!-- Backup owner -->
     <div class="col q-mt-sm">
-      <OxenField
+      <GyuanxField
         class="q-mt-md"
         :label="$t('fieldLabels.backupOwner')"
         :error="$v.record.backup_owner.$error"
@@ -91,7 +91,7 @@
           dense
           @blur="$v.record.backup_owner.$touch"
         />
-      </OxenField>
+      </GyuanxField>
     </div>
     <div class="buttons">
       <q-btn
@@ -115,17 +115,17 @@ import { required, maxLength } from "vuelidate/lib/validators";
 import {
   address,
   session_id,
-  lokinet_address,
-  lokinet_name,
+  gyuanxnet_address,
+  gyuanxnet_name,
   session_name
 } from "src/validators/common";
-import OxenField from "components/oxen_field";
+import GyuanxField from "components/gyuanx_field";
 import WalletPassword from "src/mixins/wallet_password";
 
 export default {
   name: "LNSInputForm",
   components: {
-    OxenField
+    GyuanxField
   },
   mixins: [WalletPassword],
   props: {
@@ -167,25 +167,25 @@ export default {
     let sessionOptions = [
       { label: this.$t("strings.lns.sessionID"), value: "session" }
     ];
-    let lokinetOptions = [
-      { label: this.$t("strings.lns.lokinetName1Year"), value: "lokinet_1y" },
+    let gyuanxnetOptions = [
+      { label: this.$t("strings.lns.gyuanxnetName1Year"), value: "gyuanxnet_1y" },
       {
-        label: this.$t("strings.lns.lokinetNameXYears", { years: 2 }),
-        value: "lokinet_2y"
+        label: this.$t("strings.lns.gyuanxnetNameXYears", { years: 2 }),
+        value: "gyuanxnet_2y"
       },
       {
-        label: this.$t("strings.lns.lokinetNameXYears", { years: 5 }),
-        value: "lokinet_5y"
+        label: this.$t("strings.lns.gyuanxnetNameXYears", { years: 5 }),
+        value: "gyuanxnet_5y"
       },
       {
-        label: this.$t("strings.lns.lokinetNameXYears", { years: 10 }),
-        value: "lokinet_10y"
+        label: this.$t("strings.lns.gyuanxnetNameXYears", { years: 10 }),
+        value: "gyuanxnet_10y"
       }
     ];
-    let typeOptions = [...sessionOptions, ...lokinetOptions];
+    let typeOptions = [...sessionOptions, ...gyuanxnetOptions];
 
     const initialRecord = {
-      // Lokinet 1 year is valid on renew or purchase
+      // Gyuanxnet 1 year is valid on renew or purchase
       type: typeOptions[1].value,
       name: "",
       value: "",
@@ -195,7 +195,7 @@ export default {
     return {
       record: { ...initialRecord },
       typeOptions,
-      lokinetOptions
+      gyuanxnetOptions
     };
   },
   computed: mapState({
@@ -208,7 +208,7 @@ export default {
       if (this.record.type === "session") {
         return this.$t("fieldLabels.sessionId");
       } else {
-        return this.$t("fieldLabels.lokinetFullAddress");
+        return this.$t("fieldLabels.gyuanxnetFullAddress");
       }
     },
     can_update() {
@@ -232,7 +232,7 @@ export default {
       if (this.record.type === "session") {
         return this.$t("placeholders.sessionId");
       } else {
-        return this.$t("placeholders.lokinetFullAddress");
+        return this.$t("placeholders.gyuanxnetFullAddress");
       }
     },
     owner_placeholder() {
@@ -356,8 +356,8 @@ export default {
           if (this.record.type === "session") {
             return session_name(_value);
           } else {
-            // shortened lokinet LNS name
-            return lokinet_name(_value);
+            // shortened gyuanxnet LNS name
+            return gyuanxnet_name(_value);
           }
         }
       },
@@ -373,8 +373,8 @@ export default {
           if (this.record.type === "session") {
             return session_id(_value);
           } else {
-            // full lokinet address
-            return lokinet_address(_value);
+            // full gyuanxnet address
+            return gyuanxnet_address(_value);
           }
         }
       },

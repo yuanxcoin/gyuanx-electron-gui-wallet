@@ -206,7 +206,7 @@ export class Gateway extends EventEmitter {
       case "set_snode_status": {
         const data = { ...decrypted_data.data };
 
-        // We have multiple nested objects in service_node_status
+        // We have multiple nested objects in gnode_status
         for (const key in data) {
           if (data[key].i18n) {
             data[key].message = this.geti18n(data[key].i18n);

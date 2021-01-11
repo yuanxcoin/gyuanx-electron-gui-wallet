@@ -28,9 +28,9 @@
 </template>
 
 <script>
-import ServiceNodeStaking from "components/service_node/service_node_staking";
-import ServiceNodeRegistration from "components/service_node/service_node_registration";
-import ServiceNodeUnlock from "components/service_node/service_node_unlock";
+import ServiceNodeStaking from "components/gnode/gnode_staking";
+import ServiceNodeRegistration from "components/gnode/gnode_registration";
+import ServiceNodeUnlock from "components/gnode/gnode_unlock";
 export default {
   components: {
     ServiceNodeStaking,

@@ -7,11 +7,11 @@
     </div>
 
     <template v-if="address_book_combined.length">
-      <q-list link no-border :dark="theme == 'dark'" class="oxen-list">
+      <q-list link no-border :dark="theme == 'dark'" class="gyuanx-list">
         <q-item
           v-for="(entry, index) in address_book_combined"
           :key="`${entry.address}-${entry.name}-${index}`"
-          class="oxen-list-item"
+          class="gyuanx-list-item"
           @click.native="details(entry)"
         >
           <q-item-section>
@@ -129,7 +129,7 @@ export default {
     color: #1f1c47;
   }
 
-  .oxen-list-item {
+  .gyuanx-list-item {
     cursor: pointer;
     padding-top: 12px;
     padding-bottom: 12px;

@@ -1,7 +1,7 @@
 <template>
   <div class="lns-record-list">
     <div v-if="needsDecryption" class="decrypt row justify-between items-end">
-      <OxenField
+      <GyuanxField
         :label="$t('fieldLabels.decryptRecord')"
         :disable="decrypting"
         :error="$v.name.$error"
@@ -15,7 +15,7 @@
           :disable="decrypting"
           @blur="$v.name.$touch"
         />
-      </OxenField>
+      </GyuanxField>
       <div class="btn-wrapper q-ml-md row items-center">
         <q-btn
           color="primary"
@@ -31,17 +31,17 @@
       }}</span>
       <LNSRecordList
         :record-list="session_records"
-        :is-lokinet="false"
+        :is-gyuanxnet="false"
         @onUpdate="onUpdate"
       />
     </div>
-    <div v-if="lokinet_records.length > 0" class="records-group">
+    <div v-if="gyuanxnet_records.length > 0" class="records-group">
       <span class="record-type-title">{{
-        $t("titles.lnsLokinetRecords")
+        $t("titles.lnsGyuanxnetRecords")
       }}</span>
       <LNSRecordList
-        :record-list="lokinet_records"
-        :is-lokinet="true"
+        :record-list="gyuanxnet_records"
+        :is-gyuanxnet="true"
         @onUpdate="onUpdate"
         @onRenew="onRenew"
       />
@@ -51,14 +51,14 @@
 
 <script>
 import { mapState } from "vuex";
-import OxenField from "components/oxen_field";
-import { session_name_or_lokinet_name } from "src/validators/common";
+import GyuanxField from "components/gyuanx_field";
+import { session_name_or_gyuanxnet_name } from "src/validators/common";
 import LNSRecordList from "./lns_record_list";
 
 export default {
   name: "LNSRecords",
   components: {
-    OxenField,
+    GyuanxField,
     LNSRecordList
   },
   data() {
@@ -81,11 +81,11 @@ export default {
     session_records(state) {
       return this.records_of_type(state, "session");
     },
-    lokinet_records(state) {
-      return this.records_of_type(state, "lokinet");
+    gyuanxnet_records(state) {
+      return this.records_of_type(state, "gyuanxnet");
     },
     needsDecryption() {
-      const records = [...this.lokinet_records, ...this.session_records];
+      const records = [...this.gyuanxnet_records, ...this.session_records];
       return records.find(r => this.isLocked(r));
     }
   }),
@@ -168,8 +168,8 @@ export default {
 
       let type = "session";
       // session names cannot have a "." so this is safe
-      if (name.endsWith(".loki")) {
-        type = "lokinet";
+      if (name.endsWith(".gyuanx")) {
+        type = "gyuanxnet";
       }
 
       this.$gateway.send("wallet", "decrypt_record", {
@@ -182,7 +182,7 @@ export default {
 
   validations: {
     name: {
-      session_name_or_lokinet_name
+      session_name_or_gyuanxnet_name
     }
   }
 };
@@ -197,7 +197,7 @@ export default {
     cursor: default;
   }
 
-  .oxen-field {
+  .gyuanx-field {
     flex: 1;
   }
 

@@ -1945,11 +1945,11 @@ return{_strlen:lb,_ge_mul8:Va,_keccak:db,_ge_scalarmult:Ta,_ge_fromfe_frombytes_
 
 
 
-var oxenConfig = {
+var gyuanxConfig = {
     coinUnitPlaces: 12,
-    coinSymbol: 'OXEN',
-    coinName: 'Oxen',
-    coinUriPrefix: 'oxen:',
+    coinSymbol: 'GYUANX',
+    coinName: 'Gyuanx',
+    coinUriPrefix: 'gyuanx:',
     addressPrefix: 114,
 };
 
@@ -2386,7 +2386,7 @@ var cnUtilGen = function(initConfig) {
 
     return this;
 };
-var cnUtil = cnUtilGen(oxenConfig);
+var cnUtil = cnUtilGen(gyuanxConfig);
 /*
  mnemonic.js : Converts between 4-byte aligned strings and a human-readable
  sequence of words. Uses 1626 common words taken from wikipedia article:
@@ -3327,7 +3327,7 @@ var mn_words = {
             "orcar", "orfao", "orixa", "orla", "ornitologo", "orquidea", "ortorrombico", "orvalho",
             "osculo", "osmotico", "ossudo", "ostrogodo", "otario", "otite", "ouro", "ousar",
             "outubro", "ouvir", "ovario", "overnight", "oviparo", "ovni", "ovoviviparo", "ovulo",
-            "oxala", "oxente", "oxiuro", "oxossi", "ozonizar", "paciente", "pactuar", "padronizar",
+            "oxala", "gyuanxte", "oxiuro", "oxossi", "ozonizar", "paciente", "pactuar", "padronizar",
             "paete", "pagodeiro", "paixao", "pajem", "paludismo", "pampas", "panturrilha", "papudo",
             "paquistanes", "pastoso", "patua", "paulo", "pauzinhos", "pavoroso", "paxa", "pazes",
             "peao", "pecuniario", "pedunculo", "pegaso", "peixinho", "pejorativo", "pelvis", "penuria",

@@ -15,10 +15,10 @@
           </div>
           <br />
           <span class="label">{{ $t("strings.transactions.amount") }}: </span>
-          {{ amount }} GYUANX
+          {{ amount }} GYNX
           <br />
           <span class="label">{{ $t("strings.transactions.fee") }}: </span>
-          {{ fee }} GYUANX
+          {{ fee }} GYNX
           <br />
           <span class="label"
             >{{ $t("dialog.confirmTransaction.priority") }}:

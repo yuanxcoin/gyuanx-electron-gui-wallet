@@ -9,23 +9,23 @@
         <table>
           <tr>
             <td>{{ $t("strings.lns.sessionID") }}:</td>
-            <td>15 GYUANX</td>
+            <td>15 GYNX</td>
           </tr>
           <tr>
             <td>{{ $t("strings.lns.gyuanxnetName1Year") }}:</td>
-            <td>15 GYUANX</td>
+            <td>15 GYNX</td>
           </tr>
           <tr>
             <td>{{ $t("strings.lns.gyuanxnetNameXYears", { years: 2 }) }}:</td>
-            <td>30 GYUANX</td>
+            <td>30 GYNX</td>
           </tr>
           <tr>
             <td>{{ $t("strings.lns.gyuanxnetNameXYears", { years: 5 }) }}:</td>
-            <td>60 GYUANX</td>
+            <td>60 GYNX</td>
           </tr>
           <tr>
             <td>{{ $t("strings.lns.gyuanxnetNameXYears", { years: 10 }) }}:</td>
-            <td>90 GYUANX</td>
+            <td>90 GYNX</td>
           </tr>
         </table>
       </div>

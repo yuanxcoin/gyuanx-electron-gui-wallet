@@ -33,8 +33,7 @@
 
         <p class="q-my-sm">Wallet Version: v{{ version }}</p>
         <p class="q-my-sm">Deaemon Version: v{{ daemonVersion }}</p>
-        <p class="q-my-sm">Copyright (c)      2021, Gyuanx</p>
-        <p class="q-my-sm">Copyright (c) 2018-2021, Oxen</p>
+        <p class="q-my-sm">Copyright (c) 2018-2021, Gyuanx</p>
         <p class="q-my-sm">Copyright (c) 2018, Ryo Currency Project</p>
         <p class="q-my-sm">All rights reserved.</p>
 
@@ -51,7 +50,7 @@
             -
             <a
               href="#"
-              @click="openExternal('https://discord.gg/U9E3a4fuP5')"
+              @click="openExternal('https://discordapp.com/invite/67GXfD6')"
               >Discord</a
             >
             -

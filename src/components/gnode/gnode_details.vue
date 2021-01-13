@@ -245,7 +245,7 @@ export default {
   }),
   methods: {
     openUserWalletInfo(contributorAddress) {
-      const url = `https://contribute.gyuan.online/user/${contributorAddress}`;
+      const url = `https://www.gyuanxsn.com/user/${contributorAddress}`;
       this.$gateway.send("core", "open_url", {
         url
       });

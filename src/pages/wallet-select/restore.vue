@@ -156,7 +156,7 @@ import GyuanxField from "components/gyuanx_field";
 import { date } from "quasar";
 import _ from "lodash";
 
-const timeStampFirstBlock = 1609944910;
+const timeStampFirstBlock = 1525305600000;
 const qDateFormat = "YYYY/MM/DD";
 let dateFirstBlock = date.formatDate(timeStampFirstBlock, qDateFormat);
 

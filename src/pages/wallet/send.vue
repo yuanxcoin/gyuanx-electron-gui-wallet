@@ -18,7 +18,7 @@
                 v-model="newTx.amount"
                 type="number"
                 min="0"
-                :max="unlocked_balance / 1e9"
+                :max="unlocked_balance / 1e12"
                 placeholder="0"
                 borderless
                 dense
@@ -26,7 +26,7 @@
               />
               <q-btn
                 color="primary"
-                @click="newTx.amount = unlocked_balance / 1e9"
+                @click="newTx.amount = unlocked_balance / 1e12"
               >
                 {{ $t("buttons.all") }}
               </q-btn>
@@ -338,7 +338,7 @@ export default {
           message: this.$t("notification.errors.zeroAmount")
         });
         return;
-      } else if (this.newTx.amount > this.unlocked_balance / 1e9) {
+      } else if (this.newTx.amount > this.unlocked_balance / 1e12) {
         this.$q.notify({
           type: "negative",
           timeout: 1000,

@@ -9,7 +9,7 @@ export default {
           ? openContributionRemaining /
             (MAX_NUMBER_OF_CONTRIBUTORS - node.contributors.length)
           : 0;
-      const minContributionGyuanx = minContributionAtomicUnits / 1e9;
+      const minContributionGyuanx = minContributionAtomicUnits / 1e12;
       // ceiling to 4 decimal places
       return minContributionGyuanx.toFixed(4);
     },
@@ -21,7 +21,7 @@ export default {
       return openContributionRemaining;
     },
     openForContriubtionGyuanx(node) {
-      return (this.openForContribution(node) / 1e9).toFixed(4);
+      return (this.openForContribution(node) / 1e12).toFixed(4);
     }
   }
 };

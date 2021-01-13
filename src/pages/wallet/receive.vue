@@ -105,7 +105,7 @@ export default {
     currency: function(value) {
       if (typeof value !== "number") return "N/A";
 
-      const amount = value / 1e9;
+      const amount = value / 1e12;
       return amount.toLocaleString();
     }
   },

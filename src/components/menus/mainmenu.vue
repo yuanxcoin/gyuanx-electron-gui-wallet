@@ -33,7 +33,8 @@
 
         <p class="q-my-sm">Wallet Version: v{{ version }}</p>
         <p class="q-my-sm">Deaemon Version: v{{ daemonVersion }}</p>
-        <p class="q-my-sm">Copyright (c) 2018-2021, Gyuanx</p>
+         <p class="q-my-sm">Copyright (c)      2021, Gyuanx</p>
+        <p class="q-my-sm">Copyright (c) 2018-2021, Oxen</p>
         <p class="q-my-sm">Copyright (c) 2018, Ryo Currency Project</p>
         <p class="q-my-sm">All rights reserved.</p>
 

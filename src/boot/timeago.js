@@ -8,7 +8,8 @@ export default ({ Vue }) => {
       de: require("date-fns/locale/de"),
       fr: require("date-fns/locale/fr"),
       es: require("date-fns/locale/es"),
-      pt: require("date-fns/locale/pt")
+      pt: require("date-fns/locale/pt"),
+      cn: require("date-fns/locale/cn")
     }
   });
 };

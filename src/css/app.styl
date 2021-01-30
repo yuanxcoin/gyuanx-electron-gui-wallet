@@ -1,0 +1,832 @@
+// app global css
+@import 'quasar.variables'
+@import 'flags'
+
+@font-face {
+    font-family: 'RobotoMono-Light';
+    src: url(themes/RobotoMono-Light.ttf)
+}
+
+::selection {
+    background: #63c9f3;
+}
+::-moz-selection {
+    background: #63c9f3;
+}
+
+* {
+    scrollbar-track-color: #111;
+    scrollbar-arrow-color: #111;
+    &::-webkit-scrollbar-corner { background-color: #111;}
+    &::-webkit-scrollbar-track-piece { background-color: #111;}
+
+    scrollbar-face-color: #646464;
+    scrollbar-base-color: #646464;
+    scrollbar-3dlight-color: #646464;
+    scrollbar-highlight-color: #646464;
+    scrollbar-shadow-color: #646464;
+    scrollbar-dark-shadow-color: #646464;
+    &::-webkit-scrollbar { width: 8px; height: 8px;}
+    &::-webkit-scrollbar-button {  background-color: #646464; height:0; width: 0; }
+    &::-webkit-scrollbar-track {  background-color: #646464;}
+    &::-webkit-scrollbar-thumb { height: 50px; background-color: #646464; border-radius: 3px;}
+    &::-webkit-resizer { background-color: #646464;}
+}
+
+
+h1,h2,h3,h4,h5,h6,
+img,
+.q-list-header,
+.q-header,
+.q-menu .q-item-label,
+.q-list-link .q-item,
+.q-checkbox .q-option-label,
+.infoBox .text,
+.modal-header,
+footer,
+{
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+}
+
+.monospace {
+    font-family: 'RobotoMono-Light', monospace
+}
+
+
+.break-all {
+    word-break: break-all
+}
+
+.ellipsis {
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.q-field {
+    margin: 20px 0;
+
+    &.q-ma-none {
+        margin: 0;
+    }
+}
+
+.text-area-gyuanx {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+.q-inner-loading {
+    z-index: 2;
+}
+
+.q-btn {
+    text-transform: none;
+}
+
+// At bottom of forms
+.submit-button {
+    margin-top: 6px;
+}
+
+.layout-padding {
+    padding: 15px 16px !important;
+}
+
+.advanced-options-label .q-item-side-right {
+    margin: 0;
+    text-align: left;
+}
+
+.q-layout, .app-content {
+    background: $gyuanx-light-teal;
+    color:white;
+}
+
+.q-header {
+    background: #0A0A0A;
+    box-shadow: none;
+    border-bottom: 1px solid #333;
+    height: 48px;
+
+    &.shift-title {
+        .q-toolbar {
+            text-align: center;
+
+            .q-toolbar-title {
+                font-size: 16px;
+                line-height: 48px;
+                font-weight: 300;
+            }
+        }
+    }
+
+    .q-btn.menu {
+        height: 48px;
+        width: 50px;
+        position: absolute;
+        top: 0;
+        z-index: 1;
+        border-radius: 0;
+    }
+    .q-btn.cancel {
+        position: absolute;
+        top: 7px;
+        left: 8px;
+        z-index: 1;
+    }
+
+    .q-toolbar-inverted {
+        background: $gyuanx-navy;
+        padding-top: 0;
+    }
+
+    .q-tabs {
+        padding-left: 50px;
+
+        .q-tabs-head {
+            padding: 0;
+            background: none;
+        }
+
+        .q-tab {
+            text-transform: none;
+
+            // &:hover {
+            //     background-color: rgba(12,12,12,0.15)
+            // }
+
+            .q-icon {
+                font-size: 22px;
+            }
+
+        }
+
+    }
+}
+
+.q-layout-page {
+    min-height: 0 !important;
+}
+
+.infoBox {
+    height: 75px;
+    cursor: default;
+    position: relative;
+    overflow: hidden;
+    margin: 10px 0;
+
+    .infoBoxIcon {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        width: 64px;
+        color: #cecece;
+
+        svg {
+            width: 60px;
+            height: 60px;
+        }
+    }
+
+    .infoBoxContent {
+        display: inline-block;
+
+        .text {
+            font-size: 14px;
+            margin-top: 8px;
+            color: $gyuanx-navy;
+        }
+
+        .value {
+            font-size: 24px;
+            margin-top: 4px;
+            font-weight: 300;
+            color: $gyuanx-navy;
+        }
+    }
+}
+
+.q-checkbox {
+    color: $gyuanx-navy    
+}
+
+.q-loading + .modal {
+    z-index: 9999 !important;
+}
+
+.modal-scroll {
+    max-height: 230px;
+    max-width: 640px;
+    word-break: break-word;
+}
+
+.q-footer.status-footer {
+    background: $gyuanx-navy;
+    color: rgba(255, 255, 255, 0.51);
+    border-top: 1px solid #333;
+    padding-top: 2px;
+    box-shadow: none;
+    font-size: 12px;
+
+    .status-line {
+        padding: 8px;
+        margin-bottom: 5px;
+
+        .status {
+            flex: 1;
+            span {
+                margin-right: 4px;
+            }
+
+            .status-text {
+                font-weight: bold;
+            }
+
+            .ready {
+              color: $positive;
+            }
+
+            .scanning, .syncing {
+                color: goldenrod;
+            }
+
+            .updateRequired {
+                color: $negative;
+            }
+        }
+
+        div {
+            padding: 0 8px;
+        }
+    }
+
+    .status-bars {
+
+        div {
+            height: 3px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            -webkit-transition: width 0.5s ease-out;
+            transition: width 0.5s ease-out;
+        }
+
+        div:first-child {
+            // TODO: should first and last child be different, where even is this?
+            background-color: $positive;
+        }
+
+        div:last-child {
+            background-color: $positive;
+        }
+    }
+
+    .status-bars.syncing, .status-bars.scanning {
+        div:first-child {
+            background-color: goldenrod;
+        }
+
+        div:last-child {
+            background-color:goldenrod;
+        }
+    }
+
+    .status-bars.updateRequired {
+        div:first-child {
+            color: $negative;
+            background-color: $negative;
+        }
+
+        div:last-child {
+            color: $negative;
+            background-color: $negative;
+        }
+    }
+
+}
+
+.tx-list {
+
+    .meta {
+        text-align:right;
+    }
+
+    .q-item.tx-in,
+    .q-item.tx-pool,
+    .q-item.tx-miner,
+    .q-item.tx-snode,
+    .q-item.tx-gov {
+        .amount span {
+            color: $gyuanx-navy;
+            &:before {
+                content: "+";
+                color: $gyuanx-navy;
+            }
+        }
+    }
+
+    .q-item.tx-stake {
+        .amount span {
+            color: goldenrod;
+        }
+    }
+
+    .q-item.tx-out,
+    .q-item.tx-pending {
+        .amount span {
+            // color: white;
+            &:before {
+                content: "-";
+                font-weight: bold;
+                // color: white;
+            }
+        }
+    }
+
+    .q-item.tx-failed {
+        .amount span {
+            color: orangered;
+        }
+    }
+}
+
+.q-list-dark .q-item,
+.q-item-dark .q-item,
+.q-list-header {
+    color: #cecece;
+}
+
+.q-stepper-tab.step-waiting,
+.q-stepper-step-content{
+    color: #cecece;
+}
+
+.q-menu {
+    background: white;
+    color: $gyuanx-navy !important;
+
+    * {
+        color: $gyuanx-navy;
+    }
+
+    .q-list-separator > .q-item-division + .q-item-division, .q-item-division + .q-separator {
+        border-top: 1px solid #333;
+    }
+}
+
+.menu-list {
+
+    background: white;
+
+    .q-item * {
+        color: $gyuanx-navy;
+    }
+}
+
+.context-menu-list {
+  min-width: 150px;
+  max-height: 300px;
+}
+
+.confirm-tx-card {
+  width: 450px;
+  max-width: 450x;
+
+  color: $gyuanx-navy !important;
+
+  .confirm-list {
+    .q-item {
+      max-height: 100%;
+      margin-top: 0;
+      margin-bottom: 4px;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+  }
+
+  .label {
+    color: $gyuanx-purple;
+    padding-right: 6px;
+  }
+  .address-value {
+    word-break: break-word;
+  }
+
+  .confirm-send-btn {
+    color: white;
+    background: $primary;
+  }
+}
+
+
+.header-popover {
+    background: $primary;
+    color: white;
+    max-width: 250px !important;
+}
+
+.modal.minimized {
+    .q-input {
+        .q-input-target {
+            color: #cecece;
+        }
+        &.q-if:hover:before {
+            color: #cecece;
+        }
+    }
+}
+
+.modal {
+    color: #cecece;
+
+    .modal-header {
+        margin-top: 6px;
+        margin-left: 24px;
+        text-align: left;
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .q-header {
+
+        .q-toolbar {
+            &>* {
+                color: #cecece;
+            }
+        }
+    }
+
+}
+
+.q-toolbar {
+    background-color: $gyuanx-navy;
+}
+
+.header {
+    color: $gyuanx-navy;
+}
+
+.detail-page {
+    color: $gyuanx-navy;
+}
+
+.q-radio {
+    color: $gyuanx-navy;
+    svg {
+        color: $gyuanx-navy;
+    }
+}
+
+.qr-code-modal {
+  padding: "25px";
+  color: white;
+
+  .qr-code-card {
+    background-color: white;
+  }
+}
+
+.gyuanx-light-teal {
+    background: $gyuanx-light-teal;
+    color: white;
+}
+
+.gyuanx-navy {
+    background: $gyuanx-navy;
+    color: white;
+}
+
+.gyuanx-teal {
+    background: $gyuanx-teal;
+    color: white;
+}
+
+.startup-icons {
+    .solid {
+        color:$gyuanx-teal;
+        g,path {
+            fill: $gyuanx-teal;
+        }
+    }
+}
+
+.hr-separator {
+    height: 2px;
+    background: $secondary;
+    opacity: 0.4;
+}
+
+.navigation {
+    .q-btn {
+        background: $gyuanx-navy;
+        color: white;
+        
+        .q-icon {
+            color: $gyuanx-teal;
+        }
+    }
+
+    .router-link-exact-active > .q-btn {
+        color: $gyuanx-navy
+        background: $gyuanx-teal;
+
+        .q-icon {
+            color: $gyuanx-navy;
+        }
+    }
+
+}
+.wallet-list {
+    .q-item-label {
+        color: white;
+    }
+
+    .q-item {
+        background: $gyuanx-navy;
+        .wallet-icon {
+            color: $gyuanx-teal;
+            g,path {
+                fill: $gyuanx-teal;
+            }
+        }
+    }
+
+    .q-item:hover, .q-item.selected {
+        background: $gyuanx-purple !important;
+
+        .wallet-icon {
+            color: $gyuanx-teal;
+            g,path {
+                fill: $gyuanx-teal;
+            }
+        }
+
+        .q-icon {
+            color: white;
+        }
+    }
+}
+
+.receive {
+
+    .list-header {
+        color: $gyuanx-navy;
+    }
+
+    .q-separator-component {
+        background-color: white;
+        opacity: 0.4;
+    }
+
+    .primary-address {
+        background: $gyuanx-teal !important;
+
+        .q-item, .q-item-side {
+            color: white;
+
+            .text-caption {
+                color: white;
+            }
+        }
+
+        .q-btn {
+            color: white;
+        }
+    }
+
+    .primary-address:hover {
+        background: $gyuanx-navy !important;
+    }
+
+}
+
+.gyuanx-list {
+    .gyuanx-list-item {
+        background: white;
+        -webkit-transition: background-color 0.2s ease-in;
+        transition: background-color 0.2s ease-in;
+
+        font-size: 16px;
+        color: $gyuanx-navy;
+        padding-top: 6px;
+        padding-bottom: 6px;
+
+        margin: 0 16px;
+        border-radius: 3px;
+
+        + .gyuanx-list-item {
+            margin-top: 10px;
+        }
+    }
+
+    .text-caption {
+        color: $gyuanx-navy;
+    }
+
+    .gyuanx-list-item:hover {
+        background: $gyuanx-teal;
+
+
+    }
+
+}
+
+.record-type-title {
+  font-weight: bold;
+  margin-bottom: 40px;
+  padding-bottom: 40px;
+  color: $gyuanx-navy;
+}
+
+.records-group {
+  padding-bottom: 40px;
+}
+
+.service-node-list {
+    .q-item {
+        cursor: pointer;
+        color: $gyuanx-navy;
+        background: white;
+        -webkit-transition: background-color 0.2s ease-in;
+        transition: background-color 0.2s ease-in;
+
+        border-radius: 3px;
+
+        + .q-item {
+            margin-top: 10px;
+        }
+
+        .contrib-amounts {
+            color: $gyuanx-navy;
+        }
+    }
+    
+
+
+    .q-item-label {
+        color: $gyuanx-navy;
+    }
+
+    .q-item:hover {
+        background: $gyuanx-navy;
+        color: white;
+
+        .contrib-amounts {
+            color: white;
+        }
+    }
+
+}
+
+.tx-list {
+    .transaction .main {
+            border-left: 1px solid #252525;
+    }
+}
+
+.tab-desc {
+    color: $gyuanx-navy;
+    font-style: normal;
+    b {
+        color: $gyuanx-teal;
+        font-style: italic;
+    }
+}
+
+.gyuanx-field {
+    .content {
+        border: 1px solid #484848;
+        background: white;
+        -webkit-transition: background-color 0.2s ease-in, border-color 0.2s ease-in;
+        transition: background-color 0.2s ease-in, border-color 0.2s ease-in;
+    }
+
+    &:not(.disable):not(.disable-hover) {
+        .content:hover {
+            background: white;
+        }
+    }
+
+    &.disable {
+        .content {
+            border-color: #404040 !important;
+        }
+    }
+
+    .content.error {
+        border-color: red;
+    }
+
+    .label {
+        color: $gyuanx-navy;
+
+        .optional {
+            color: #7C7C7C;
+        }
+    }
+}
+
+.welcome {
+    .q-footer {
+        background: $secondary
+    }
+}
+
+.welcome-container {
+    color: $gyuanx-navy;
+}
+
+.address-book, .address-header {
+    .q-item-label, .header {
+        color: white;
+    }
+}
+
+.prove-transaction {
+    .signature {
+        background: rgba(0,0,0,0.5);
+        border: #0a0a0a 1px solid;
+        border-radius: 2px;
+        color: #b7b7b7;
+    }
+}
+
+.signature-dialog {
+    color: $gyuanx-navy;    
+}
+
+.check-transaction {
+    .good {
+        color: #43bd43;
+    }
+
+    .bad {
+        color: $negative;
+    }
+}
+
+.check-transaction, .prove-transaction {
+    .title {
+        color: #b7b7b7;
+        font-size: 14px;
+    }
+}
+
+.serviceNodeDetails {
+    .address {
+        color: white;
+    }
+    .name {
+        color: #979797;
+    }
+}
+
+.non-selectable {
+    color: #979797;
+}
+
+.created {
+    color: $gyuanx-navy;
+    
+  .wallet h6 {
+    text-align: center;
+  }
+
+  .address {
+    text-align: center;
+    word-break: break-all;
+  }
+
+  .seed-box {
+    border: 1px solid white;
+    border-radius: 3px;
+    margin: 16px;
+    padding: 16px;
+
+    div,
+    h6 {
+      text-align: center;
+    }
+
+    .seed {
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .warning {
+      color: goldenrod;
+    }
+  }
+  h6 {
+    font-size: 18px;
+    margin: 8px 0;
+    font-weight: 450;
+  }
+  .advanced-options-label {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}

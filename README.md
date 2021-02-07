@@ -1,8 +1,9 @@
 # Gyuanx Electron GUI Wallet
 
+
 ### Introduction
 
-Gyuanx (formerly Gyuanx) is a private cryptocurrency based on Monero. Gyuanx aims to provide a private data transmission layer using a second layer of Service Nodes.
+Gyuanx (formerly Gyuanx) is a private cryptocurrency based on Monero and Oxen. This project was folked from Oxen. Gyuanx aims to provide a private data transmission layer using a second layer of Service Nodes.
 More information on the project can be found on the [website](https://gyuan.online) and in the [whitepaper](https://gyuan.online/whitepaper). Gyuanx is an open source project, and we encourage contributions from anyone with something to offer.
 
 ![Gyuanx wallet image](src-electron/icons/mrcuug.png)
